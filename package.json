@@ -1,0 +1,35 @@
+{
+  "name": "google-appsscript-typescript-webpack-test",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --config webpack.config.mjs",
+    "push": "npm run build && clasp push",
+    "test": "mocha --require ts-node/register --ui tdd --reporter spec \"test/**/*.test.ts\"",
+    "test:debug": "npm test -- --inspect-brk"
+  },
+  "author": "Federico I. Pacheco Pilan",
+  "license": "ISC",
+  "description": "A simple test project for Google Apps Script using TypeScript and Webpack",
+  "devDependencies": {
+    "@google/clasp": "^3.0.3-alpha",
+    "@types/chai": "^5.2.1",
+    "@types/google-apps-script": "^1.0.97",
+    "@types/mocha": "^10.0.10",
+    "@types/sinon": "^17.0.4",
+    "@typescript-eslint/eslint-plugin": "^8.31.0",
+    "@typescript-eslint/parser": "^8.31.0",
+    "chai": "^5.2.0",
+    "eslint": "^8.57.1",
+    "gas-webpack-plugin": "^2.6.0",
+    "mocha": "^11.1.0",
+    "prettier": "^3.5.3",
+    "prettier-eslint": "^16.4.1",
+    "sinon": "^20.0.0",
+    "ts-loader": "^9.5.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3",
+    "webpack": "^5.99.7",
+    "webpack-cli": "^6.0.1"
+  }
+}
