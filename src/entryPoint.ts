@@ -11,8 +11,15 @@ export function entryPointFunction(): void {
 
 // Use multiple github accounts:
 // Source: https://stackoverflow.com/a/27407168
-// Make sure to run: git remote set-url origin https://<USERNAME>@github.com/<USERNAME>/<REMOTE-NAME>
+// Make sure to run: git remote set-url origin https://<USERNAME>:<TOKEN>@github.com/<USERNAME>/<REMOTE-NAME>
 // Then, login on the browser.
+// Get the token by going to: Github > Settings > Developer settings > Personal access tokens > Tokens (classic) > Generate new token
+// Also set the git email and name:
+// git config user.email "<email>"
+// git config user.name "<name>"
+// Check:
+// git config user.email
+// git config user.name
 
 // General info:
 // https://developers.google.com/apps-script/guides/typescript
