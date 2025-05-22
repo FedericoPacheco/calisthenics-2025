@@ -2,7 +2,7 @@
 import { suite, test } from "mocha";
 import { assert } from "chai";
 import sinon from "sinon";
-import { moduleBFunction } from "../src/ModuleB";
+import { moduleBFunction } from "../../src/example/moduleB";
 
 suite("Module B Test Suite", function () {
   test("should call console.log from moduleBfunction", function () {

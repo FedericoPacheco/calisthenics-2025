@@ -1,4 +1,4 @@
-import { moduleBFunction } from "./moduleB";
+import { moduleBFunction } from "./example/moduleB";
 
 export function entryPointFunction(): void {
   moduleBFunction();

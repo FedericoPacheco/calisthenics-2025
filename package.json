@@ -2,10 +2,13 @@
   "name": "google-appsscript-typescript-webpack-test",
   "version": "1.0.0",
   "main": "index.js",
+  "engines": {
+    "node": ">=22.16.0"
+  },
   "scripts": {
     "build": "webpack --config webpack.config.mjs",
     "push": "npm run build && clasp push",
-    "test": "mocha --require ts-node/register --ui tdd --reporter spec \"test/**/*.test.ts\"",
+    "test": "mocha --require ts-node/register --ui tdd --reporter spec \"test/**/*.test.{ts,js}\"",
     "test:debug": "npm test -- --inspect-brk"
   },
   "author": "Federico I. Pacheco Pilan",
@@ -16,6 +19,7 @@
     "@types/chai": "^5.2.1",
     "@types/google-apps-script": "^1.0.97",
     "@types/mocha": "^10.0.10",
+    "@types/node": "^22.15.21",
     "@types/sinon": "^17.0.4",
     "@typescript-eslint/eslint-plugin": "^8.31.0",
     "@typescript-eslint/parser": "^8.31.0",
