@@ -76,7 +76,7 @@ export default class SpreadsheetIOAdapter {
     return values;
   }
 
-  public write(data: any | any[] | any[][], reference: string): void {
+  public write(data: any | any[] | any[][], reference?: string): void {
     if (typeof data === "undefined" || data === null) {
       throw new Error("Data not provided");
     }
