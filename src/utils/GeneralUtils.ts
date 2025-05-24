@@ -1,5 +1,5 @@
 export default class GeneralUtils {
-  static concatMatricesHorizontally(A, B) {
+  static concatMatricesHorizontally<T>(A: T[][], B: T[][]): T[][] {
     if (!Array.isArray(A) || !Array.isArray(A[0])) {
       throw new Error("First argument is not a matrix");
     }
@@ -12,7 +12,7 @@ export default class GeneralUtils {
     return A.map((row, idx) => row.concat(B[idx]));
   }
 
-  static round(num, lower = 0, upper = 5) {
+  static round(num: number, lower: number = 0, upper: number = 5): number {
     const delta = upper - lower;
     const digits = delta.toString().length;
     const scale = 10 ** digits;
