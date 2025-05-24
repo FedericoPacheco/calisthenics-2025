@@ -1,8 +1,13 @@
 export default class SpreadsheetIOAdapter {
-  constructor(sheetName, defaultReference = undefined) {
+  private sheet: GoogleAppsScript.Spreadsheet.Sheet | null;
+  private sheetName: string;
+  private defaultReference: string = "";
+
+  constructor(sheetName: string, defaultReference?: string) {
     if (!sheetName) {
       throw new Error("Sheet name not provided");
     }
+
     this.sheet =
       SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
     if (!this.sheet) {
@@ -15,28 +20,42 @@ export default class SpreadsheetIOAdapter {
     }
   }
 
-  read(reference, minRows, minCols) {
+  public read(
+    reference?: string,
+    minRows?: number,
+    minCols?: number
+  ): any | any[][] {
     const ref = reference || this.defaultReference;
-    let values;
+    if (!ref) {
+      throw new Error("Reference not provided");
+    }
+
+    if (!this.sheet) {
+      throw new Error(`Sheet "${this.sheetName}" not found`);
+    }
+
+    let values: any[][];
     try {
-      const range = this.sheet.getRange(ref);
+      const range: GoogleAppsScript.Spreadsheet.Range =
+        this.sheet.getRange(ref);
       if (this.isCell(ref)) return range.getValue();
       values = range.getValues();
     } catch (error) {
-      throw new Error(`Error reading reference "${ref}": ${error.message}`);
+      throw new Error(`Error reading reference "${ref}`);
     }
 
     // Remove empty rows and columns
-    const hasData = (matrix) =>
+    const hasData = (matrix: any[][]) =>
       matrix.reduce(
         (hasData, row) =>
           hasData || row.some((value) => value.length > 0 || value > 0),
         false
       );
-    const isValidMinDim = (min) => typeof min === "number" && min >= 0;
+    const isValidMinDim = (min: number | undefined) =>
+      typeof min === "number" && min >= 0;
     if (values.length > 0 && values[0].length > 0) {
-      let i, rows;
-      const finalMinRows = isValidMinDim(minRows) ? minRows - 1 : 0;
+      let i: number, rows: any[][];
+      const finalMinRows = isValidMinDim(minRows) ? (minRows as number) - 1 : 0;
       for (i = 0; i < values.length; i++) {
         rows = values.slice(i);
         if (i > finalMinRows && !hasData(rows)) {
@@ -44,8 +63,8 @@ export default class SpreadsheetIOAdapter {
         }
       }
 
-      let j, cols;
-      const finalMinCols = isValidMinDim(minCols) ? minCols - 1 : 0;
+      let j: number, cols: any[][];
+      const finalMinCols = isValidMinDim(minCols) ? (minCols as number) - 1 : 0;
       for (j = 0; j < values[0].length; j++) {
         cols = values.map((row) => row.slice(j));
         if (j > finalMinCols && !hasData(cols)) {
@@ -57,20 +76,28 @@ export default class SpreadsheetIOAdapter {
     return values;
   }
 
-  write(data, reference) {
-    const ref = reference || this.defaultReference;
+  public write(data: any | any[] | any[][], reference: string): void {
     if (typeof data === "undefined" || data === null) {
       throw new Error("Data not provided");
     }
 
-    let range;
+    const ref = reference || this.defaultReference;
+    if (!ref) {
+      throw new Error("Reference not provided");
+    }
+
+    if (!this.sheet) {
+      throw new Error(`Sheet "${this.sheetName}" not found`);
+    }
+
+    let range: GoogleAppsScript.Spreadsheet.Range;
     try {
       range = this.sheet.getRange(ref);
     } catch (error) {
-      throw new Error(`Error reading range "${ref}"`);
+      throw new Error(`Error reading reference "${ref}"`);
     }
 
-    let finalData;
+    let finalData: any | any[][];
     if (this.isCell(ref)) {
       if (Array.isArray(data)) {
         if (Array.isArray(data[0])) {
@@ -129,25 +156,23 @@ export default class SpreadsheetIOAdapter {
     try {
       this.isCell(ref) ? range.setValue(finalData) : range.setValues(finalData);
     } catch (error) {
-      throw new Error(`Error writing to reference "${ref}": ${error.message}`);
+      throw new Error(`Error writing to reference "${ref}"`);
     }
   }
 
-  // Private
-  isCell(reference) {
+  private isCell(reference: string): boolean {
     const ref = reference || this.defaultReference;
     const cellRegex = /^[A-Z]+[0-9]+$/;
     return cellRegex.test(ref);
   }
 
-  // Private
-  isRange(reference) {
+  private isRange(reference: string): boolean {
     const ref = reference || this.defaultReference;
     const rangeRegex = /^[A-Z]+[0-9]+:[A-Z]+[0-9]+$/;
     return rangeRegex.test(ref);
   }
 
-  setReference(reference) {
+  public setReference(reference: string): void {
     if (!this.isCell(reference) && !this.isRange(reference)) {
       throw new Error(`Invalid reference: "${reference}"`);
     }
