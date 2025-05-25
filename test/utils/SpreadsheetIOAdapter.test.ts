@@ -3,6 +3,10 @@ import { assert } from "chai";
 import { stub, restore } from "sinon";
 import SpreadsheetIOAdapter from "../../src/utils/SpreadsheetIOAdapter";
 
+// Docs:
+// https://developers.google.com/apps-script/reference/spreadsheet/sheet
+// https://developers.google.com/apps-script/reference/spreadsheet/range
+
 global.SpreadsheetApp = {
   getActiveSpreadsheet: () => ({}) as GoogleAppsScript.Spreadsheet.Spreadsheet,
 } as GoogleAppsScript.Spreadsheet.SpreadsheetApp;
@@ -20,6 +24,9 @@ suite("SpreadsheetIOAdapter", function () {
       getValues: stub(),
       getNumRows: stub(),
       getNumColumns: stub(),
+      getRow: stub(),
+      getColumn: stub(),
+      getA1Notation: stub(),
     } as unknown as GoogleAppsScript.Spreadsheet.Range;
     sheetStub = {
       getRange: stub().returns(rangeStub),
@@ -223,6 +230,29 @@ suite("SpreadsheetIOAdapter", function () {
       assert.throws(
         () => IOAdapter.write("data", "A1"),
         /Error writing to reference/
+      );
+    });
+  });
+
+  suite("moveReference()", function () {
+    let IOAdapter: SpreadsheetIOAdapter;
+
+    setup(function () {
+      (spreadsheetStub.getSheetByName as sinon.SinonStub).returns(sheetStub);
+      IOAdapter = new SpreadsheetIOAdapter("Sheet1", "B2:D4");
+    });
+
+    test("moves matrix reference correctly", function () {
+      (rangeStub.getRow as sinon.SinonStub).returns(2);
+      (rangeStub.getColumn as sinon.SinonStub).returns(2);
+      (rangeStub.getNumRows as sinon.SinonStub).returns(3);
+      (rangeStub.getNumColumns as sinon.SinonStub).returns(3);
+
+      // From B2:D4, move to E4:G6
+      IOAdapter.moveReference(2, 3);
+
+      assert.isTrue(
+        (sheetStub.getRange as sinon.SinonStub).calledWith(4, 5, 3, 3)
       );
     });
   });

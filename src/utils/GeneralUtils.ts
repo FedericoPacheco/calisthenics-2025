@@ -12,20 +12,25 @@ export default class GeneralUtils {
     return A.map((row, idx) => row.concat(B[idx]));
   }
 
-  public static round(
-    num: number,
-    lower: number = 0,
-    upper: number = 5
-  ): number {
-    const delta = upper - lower;
-    const digits = delta.toString().length;
-    const scale = 10 ** digits;
+  // public static round(
+  //   num: number,
+  //   lower: number = 0,
+  //   upper: number = 5
+  // ): number {
+  //   const delta = upper - lower;
+  //   const digits = delta.toString().length;
+  //   const scale = 10 ** digits;
 
-    const base = scale * Math.floor(Math.abs(num) / scale);
-    const remainder = Math.abs(num) % scale;
+  //   const base = scale * Math.floor(Math.abs(num) / scale);
+  //   const remainder = Math.abs(num) % scale;
 
-    const multiples = Math.round((remainder - lower) / delta);
-    const nearest = lower + multiples * delta;
-    return Math.sign(num) * (base + nearest);
+  //   const multiples = Math.round((remainder - lower) / delta);
+  //   const nearest = lower + multiples * delta;
+  //   return Math.sign(num) * (base + nearest);
+  // }
+
+  public static round(num: number, decimalPlaces: number): number {
+    const factor = Math.pow(10, decimalPlaces);
+    return Math.round(num * factor) / factor;
   }
 }
