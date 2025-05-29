@@ -1,6 +1,8 @@
 import SpreadsheetIOAdapter from "../../utils/SpreadsheetIOAdapter";
 import GeneralUtils from "../../utils/GeneralUtils";
 
+// https://refactoring.guru/design-patterns/template-method
+
 export abstract class ControlPanelTemplateMethod {
   private inputs: SpreadsheetIOAdapter[];
   private output: SpreadsheetIOAdapter;

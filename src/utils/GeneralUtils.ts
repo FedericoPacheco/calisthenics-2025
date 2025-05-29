@@ -29,7 +29,8 @@ export default class GeneralUtils {
   //   return Math.sign(num) * (base + nearest);
   // }
 
-  public static round(num: number, decimalPlaces: number): number {
+  public static round(num: number, decimalPlaces: number = 2): number {
+    if (isNaN(num)) throw new Error("Input is not a valid number");
     const factor = Math.pow(10, decimalPlaces);
     return Math.round(num * factor) / factor;
   }
