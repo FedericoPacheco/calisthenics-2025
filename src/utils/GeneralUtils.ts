@@ -12,23 +12,6 @@ export default class GeneralUtils {
     return A.map((row, idx) => row.concat(B[idx]));
   }
 
-  // public static round(
-  //   num: number,
-  //   lower: number = 0,
-  //   upper: number = 5
-  // ): number {
-  //   const delta = upper - lower;
-  //   const digits = delta.toString().length;
-  //   const scale = 10 ** digits;
-
-  //   const base = scale * Math.floor(Math.abs(num) / scale);
-  //   const remainder = Math.abs(num) % scale;
-
-  //   const multiples = Math.round((remainder - lower) / delta);
-  //   const nearest = lower + multiples * delta;
-  //   return Math.sign(num) * (base + nearest);
-  // }
-
   public static round(num: number, decimalPlaces: number = 2): number {
     if (isNaN(num)) throw new Error("Input is not a valid number");
     const factor = Math.pow(10, decimalPlaces);

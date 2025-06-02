@@ -27,7 +27,7 @@ suite("STControlPanel", function () {
     test("should parse entry correctly", function () {
       // sets, reps, targetRPE, intensity1, RPE1, TEC1, ..., intensity_N, RPE_N, TEC_N, avg RPE, avg TEC
       (inputStub1.read as any).returns([
-        3, 5, 6, 80, 6, 8, 75, 6, 8, 70, 6, 8, 6, 8,
+        [3, 5, 6, 80, 6, 8, 75, 6, 8, 70, 6, 8, 6, 8],
       ]);
 
       const entry = controlPanel.parseEntry(inputStub1);
@@ -140,16 +140,18 @@ suite("STControlPanel", function () {
       // sets, reps, targetRPE, intensity1, RPE1, TEC1, ..., intensity_N, RPE_N, TEC_N, avg RPE, avg TEC
       (inputStub1.read as any)
         .onCall(0)
-        .returns([2, 12, 4, 11.24, 3, 9, 11.25, 5, 10, "", "", "", 4.0, 9.5]);
+        .returns([[2, 12, 4, 11.24, 3, 9, 11.25, 5, 10, "", "", "", 4.0, 9.5]]);
       (inputStub1.read as any)
         .onCall(1)
-        .returns([2, 10, 5, 25, 3, 9, 30, 5, 9, "", "", "", 4.0, 9.0]);
+        .returns([[2, 10, 5, 25, 3, 9, 30, 5, 9, "", "", "", 4.0, 9.0]]);
       (inputStub2.read as any)
         .onCall(0)
-        .returns([3, 12, 6, 38.75, 7, 7, 33.75, 8, 7, 23.75, 6, 8, 7.0, 7.3]);
+        .returns([[3, 12, 6, 38.75, 7, 7, 33.75, 8, 7, 23.75, 6, 8, 7.0, 7.3]]);
       (inputStub2.read as any)
         .onCall(1)
-        .returns([3, 10, 7, 52.5, 7.5, 7.5, 50, 7, 7.5, 45.0, 7, 7, 7.2, 7.3]);
+        .returns([
+          [3, 10, 7, 52.5, 7.5, 7.5, 50, 7, 7.5, 45.0, 7, 7, 7.2, 7.3],
+        ]);
 
       controlPanel.run();
 

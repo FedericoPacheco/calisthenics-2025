@@ -67,7 +67,9 @@ type STEntryMetrics = {
 export class STControlPanel extends ControlPanelTemplateMethod {
   // Format: Sets, Reps, RPE(target), Intensity1, RPE1, TEC1, ..., Intensity_N, RPE_N, TEC_N, avg RPE, avg TEC
   public parseEntry(input: SpreadsheetIOAdapter): STEntry {
-    const [sets, reps, targetRPE, ...setsData] = input.read();
+    const raw = input.read();
+    const [sets, reps, targetRPE, ...setsData] = raw[0];
+
     const intensity = [],
       RPE = [],
       TEC = [];
@@ -77,7 +79,7 @@ export class STControlPanel extends ControlPanelTemplateMethod {
       TEC.push(setsData[i + 2]);
     }
 
-    input.moveReference(0, 3 + 3 * sets + 2);
+    input.moveReference(0, raw[0].length);
 
     return {
       sets,

@@ -156,7 +156,7 @@ export default class SpreadsheetIOAdapter {
     try {
       this.isCell(ref) ? range.setValue(finalData) : range.setValues(finalData);
     } catch (error) {
-      throw new Error(`Error writing to reference "${ref}"`);
+      throw new Error(`Error writing to reference "${ref}: ${error}"`);
     }
   }
 
@@ -188,7 +188,7 @@ export default class SpreadsheetIOAdapter {
     );
     const row = oldRange.getRow() + i;
     const col = oldRange.getColumn() + j;
-    const newRange = this.sheet?.getRange(
+    const newRange = this.sheet.getRange(
       row,
       col,
       oldRange.getNumRows(),
