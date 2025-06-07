@@ -104,9 +104,7 @@ export default class SpreadsheetIOAdapter {
           data[0].length > range.getNumColumns()
         ) {
           // Truncate data
-          finalData = data
-            .slice(0, range.getNumRows())
-            .map((row) => row.slice(0, range.getNumColumns()));
+          finalData = this.writeBigMatrixToRange(data, range);
         } else {
           // Use data as is
           finalData = data;
@@ -119,6 +117,15 @@ export default class SpreadsheetIOAdapter {
     } catch (error) {
       throw new Error(`Error writing to reference "${ref}: ${error}"`);
     }
+  }
+
+  private writeBigMatrixToRange(
+    data: any[],
+    range: GoogleAppsScript.Spreadsheet.Range
+  ) {
+    return data
+      .slice(0, range.getNumRows())
+      .map((row) => row.slice(0, range.getNumColumns()));
   }
 
   private writeSmallMatrixToRange(
