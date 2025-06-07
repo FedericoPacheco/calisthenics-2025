@@ -94,11 +94,13 @@ export default class SpreadsheetIOAdapter {
   }
 
   private writeRange(data: any, range: GoogleAppsScript.Spreadsheet.Range) {
+    const isSingleValue = !Array.isArray(data) && !Array.isArray(data[0]);
+    const isMatrix = Array.isArray(data) && Array.isArray(data[0]);
+
     let finalData: any[][];
-    const isNotMatrix = !Array.isArray(data) || !Array.isArray(data[0]);
-    if (isNotMatrix) {
+    if (isSingleValue) {
       finalData = this.writeSingleValueToRange(data, range);
-    } else {
+    } else if (isMatrix) {
       const isMatrixSmaller =
         data.length < range.getNumRows() ||
         data[0].length < range.getNumColumns();
@@ -115,7 +117,8 @@ export default class SpreadsheetIOAdapter {
         // Use data as is
         finalData = data;
       }
-    }
+    } else throw new Error("Unsupported data structure");
+
     return finalData;
   }
 
