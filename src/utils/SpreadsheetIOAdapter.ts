@@ -143,13 +143,23 @@ export default class SpreadsheetIOAdapter {
   ) {
     let finalData = [];
     let row;
-    for (let i = 0; i < range.getNumRows(); i++) {
+
+    for (let i = 0; i < data[0].length; i++) {
       row = [];
       for (let j = data[i]?.length || 0; j < range.getNumColumns(); j++) {
         row.push("");
       }
       finalData.push([...(data[i] ? data[i] : []), ...row]);
     }
+
+    for (let i = data[0].length; i < range.getNumRows(); i++) {
+      row = [];
+      for (let j = data[i]?.length || 0; j < range.getNumColumns(); j++) {
+        row.push("");
+      }
+      finalData.push([...(data[i] ? data[i] : []), ...row]);
+    }
+
     return finalData;
   }
 
