@@ -85,15 +85,9 @@ export default class SpreadsheetIOAdapter {
       throw new Error(`Error reading reference "${ref}"`);
     }
 
-    let finalData: any | any[][];
-    if (this.isCell(ref)) {
-      finalData = this.writeSingleCell(data);
-    } else {
-      finalData = this.writeRange(data, range);
-    }
-
     try {
-      this.isCell(ref) ? range.setValue(finalData) : range.setValues(finalData);
+      if (this.isCell(ref)) range.setValue(this.writeSingleCell(data));
+      else range.setValues(this.writeRange(data, range));
     } catch (error) {
       throw new Error(`Error writing to reference "${ref}: ${error}"`);
     }
@@ -103,14 +97,14 @@ export default class SpreadsheetIOAdapter {
     let finalData: any[][];
     const isNotMatrix = !Array.isArray(data) || !Array.isArray(data[0]);
     if (isNotMatrix) {
-      finalData = this.writeSingleValueToRange(range, data);
+      finalData = this.writeSingleValueToRange(data, range);
     } else {
       const isMatrixSmaller =
         data.length < range.getNumRows() ||
         data[0].length < range.getNumColumns();
       if (isMatrixSmaller) {
         // Fill remaining space
-        finalData = this.writeSmallMatrixToRange(range, data);
+        finalData = this.writeSmallMatrixToRange(data, range);
       } else if (
         data.length > range.getNumRows() ||
         data[0].length > range.getNumColumns()
@@ -135,8 +129,8 @@ export default class SpreadsheetIOAdapter {
   }
 
   private writeSmallMatrixToRange(
-    range: GoogleAppsScript.Spreadsheet.Range,
-    data: any[]
+    data: any[],
+    range: GoogleAppsScript.Spreadsheet.Range
   ) {
     let finalData = [];
     let row;
@@ -151,8 +145,8 @@ export default class SpreadsheetIOAdapter {
   }
 
   private writeSingleValueToRange(
-    range: GoogleAppsScript.Spreadsheet.Range,
-    data: any
+    data: any,
+    range: GoogleAppsScript.Spreadsheet.Range
   ) {
     let finalData = [];
     let row;
