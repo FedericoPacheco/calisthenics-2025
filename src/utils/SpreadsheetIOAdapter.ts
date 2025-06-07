@@ -93,20 +93,12 @@ export default class SpreadsheetIOAdapter {
       if (isNotMatrix) {
         finalData = this.writeSingleValueToRange(range, data);
       } else {
-        if (
+        const isMatrixSmaller =
           data.length < range.getNumRows() ||
-          data[0].length < range.getNumColumns()
-        ) {
+          data[0].length < range.getNumColumns();
+        if (isMatrixSmaller) {
           // Fill remaining space
-          finalData = [];
-          let row;
-          for (let i = 0; i < range.getNumRows(); i++) {
-            row = [];
-            for (let j = data[i]?.length || 0; j < range.getNumColumns(); j++) {
-              row.push("");
-            }
-            finalData.push([...(data[i] ? data[i] : []), ...row]);
-          }
+          finalData = this.writeSmallMatrixToRange(range, data);
         } else if (
           data.length > range.getNumRows() ||
           data[0].length > range.getNumColumns()
@@ -127,6 +119,22 @@ export default class SpreadsheetIOAdapter {
     } catch (error) {
       throw new Error(`Error writing to reference "${ref}: ${error}"`);
     }
+  }
+
+  private writeSmallMatrixToRange(
+    range: GoogleAppsScript.Spreadsheet.Range,
+    data: any[]
+  ) {
+    let finalData = [];
+    let row;
+    for (let i = 0; i < range.getNumRows(); i++) {
+      row = [];
+      for (let j = data[i]?.length || 0; j < range.getNumColumns(); j++) {
+        row.push("");
+      }
+      finalData.push([...(data[i] ? data[i] : []), ...row]);
+    }
+    return finalData;
   }
 
   private writeSingleValueToRange(
