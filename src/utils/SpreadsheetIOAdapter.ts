@@ -101,24 +101,33 @@ export default class SpreadsheetIOAdapter {
     if (isSingleValue) {
       finalData = this.writeSingleValueToRange(data, range);
     } else if (isMatrix) {
-      const isMatrixSmaller =
-        data.length < range.getNumRows() ||
-        data[0].length < range.getNumColumns();
-      if (isMatrixSmaller) {
-        // Fill remaining space
-        finalData = this.writeSmallMatrixToRange(data, range);
-      } else if (
-        data.length > range.getNumRows() ||
-        data[0].length > range.getNumColumns()
-      ) {
-        // Truncate data
-        finalData = this.writeBigMatrixToRange(data, range);
-      } else {
-        // Use data as is
-        finalData = data;
-      }
+      finalData = this.writeMatrixToRange(data, range);
     } else throw new Error("Unsupported data structure");
 
+    return finalData;
+  }
+
+  private writeMatrixToRange(
+    data: any[],
+    range: GoogleAppsScript.Spreadsheet.Range
+  ) {
+    let finalData: any[][];
+    const isMatrixSmaller =
+      data.length < range.getNumRows() ||
+      data[0].length < range.getNumColumns();
+    if (isMatrixSmaller) {
+      // Fill remaining space
+      finalData = this.writeSmallMatrixToRange(data, range);
+    } else if (
+      data.length > range.getNumRows() ||
+      data[0].length > range.getNumColumns()
+    ) {
+      // Truncate data
+      finalData = this.writeBigMatrixToRange(data, range);
+    } else {
+      // Use data as is
+      finalData = data;
+    }
     return finalData;
   }
 
