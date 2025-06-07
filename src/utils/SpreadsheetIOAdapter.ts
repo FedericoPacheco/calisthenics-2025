@@ -141,17 +141,25 @@ export default class SpreadsheetIOAdapter {
     data: any[],
     range: GoogleAppsScript.Spreadsheet.Range
   ) {
-    let finalData = [];
+    let finalData = this.fillCols(data, range);
+    finalData = this.fillRows(finalData, range);
+    return finalData;
+  }
 
-    data.forEach((row, i) => {
+  private fillRows(data: any[], range: GoogleAppsScript.Spreadsheet.Range) {
+    let finalData: any[][] = [...data];
+    for (let i = data.length; i < range.getNumRows(); i++) {
+      finalData.push(Array(range.getNumColumns()).fill(""));
+    }
+    return finalData;
+  }
+
+  private fillCols(data: any[], range: GoogleAppsScript.Spreadsheet.Range) {
+    const finalData: any[][] = [];
+    data.forEach((row) => {
       const missingValues = Array(range.getNumColumns() - row.length).fill("");
       finalData.push([...row, ...missingValues]);
     });
-
-    for (let i = data[0].length; i < range.getNumRows(); i++) {
-      finalData.push(Array(range.getNumColumns()).fill(""));
-    }
-
     return finalData;
   }
 
