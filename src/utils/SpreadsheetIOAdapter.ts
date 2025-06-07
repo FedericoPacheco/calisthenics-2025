@@ -132,9 +132,11 @@ export default class SpreadsheetIOAdapter {
     data: any[],
     range: GoogleAppsScript.Spreadsheet.Range
   ) {
-    return data
-      .slice(0, range.getNumRows())
-      .map((row) => row.slice(0, range.getNumColumns()));
+    const slicedRows = data.slice(0, range.getNumRows());
+    const slicedCols = slicedRows.map((row) =>
+      row.slice(0, range.getNumColumns())
+    );
+    return slicedCols;
   }
 
   private writeSmallMatrixToRange(
