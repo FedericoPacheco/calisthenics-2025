@@ -28,7 +28,7 @@ const dipsParams = {
     new SpreadsheetIOAdapter("13-ST", "H19:U19"),
     new SpreadsheetIOAdapter("13-ST", "H29:U29"),
   ],
-  output: new SpreadsheetIOAdapter("03-ControlPanel", "B8:H61"),
+  output: new SpreadsheetIOAdapter("03-ControlPanel", "B8:J61"),
   microcycleCount: 4,
   args: {
     previous1RM: new SpreadsheetIOAdapter("03-ControlPanel", "J3").read(),
