@@ -176,6 +176,8 @@ export default class SpreadsheetIOAdapter {
     } else if (this.isMatrix(data)) {
       // Fill with the upper-left value of the matrix
       return data[0][0];
+    } else {
+      throw new Error("Unsupported data structure");
     }
   }
 

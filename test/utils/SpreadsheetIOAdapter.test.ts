@@ -212,7 +212,14 @@ suite("SpreadsheetIOAdapter", function () {
       );
     });
 
-    test("doesn't write array to range", function () {
+    test("throws on write array to single cell", function () {
+      assert.throws(
+        () => IOAdapter.write(["v1", "v2"], "A1"),
+        /Unsupported data structure/
+      );
+    });
+
+    test("throws on write array to range", function () {
       assert.throws(
         () => IOAdapter.write(["v1", "v2"], "A1:B2"),
         /Unsupported data structure/
