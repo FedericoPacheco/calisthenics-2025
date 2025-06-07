@@ -89,27 +89,7 @@ export default class SpreadsheetIOAdapter {
     if (this.isCell(ref)) {
       finalData = this.writeSingleCell(data);
     } else {
-      const isNotMatrix = !Array.isArray(data) || !Array.isArray(data[0]);
-      if (isNotMatrix) {
-        finalData = this.writeSingleValueToRange(range, data);
-      } else {
-        const isMatrixSmaller =
-          data.length < range.getNumRows() ||
-          data[0].length < range.getNumColumns();
-        if (isMatrixSmaller) {
-          // Fill remaining space
-          finalData = this.writeSmallMatrixToRange(range, data);
-        } else if (
-          data.length > range.getNumRows() ||
-          data[0].length > range.getNumColumns()
-        ) {
-          // Truncate data
-          finalData = this.writeBigMatrixToRange(data, range);
-        } else {
-          // Use data as is
-          finalData = data;
-        }
-      }
+      finalData = this.writeRange(data, range);
     }
 
     try {
@@ -117,6 +97,32 @@ export default class SpreadsheetIOAdapter {
     } catch (error) {
       throw new Error(`Error writing to reference "${ref}: ${error}"`);
     }
+  }
+
+  private writeRange(data: any, range: GoogleAppsScript.Spreadsheet.Range) {
+    let finalData: any[][];
+    const isNotMatrix = !Array.isArray(data) || !Array.isArray(data[0]);
+    if (isNotMatrix) {
+      finalData = this.writeSingleValueToRange(range, data);
+    } else {
+      const isMatrixSmaller =
+        data.length < range.getNumRows() ||
+        data[0].length < range.getNumColumns();
+      if (isMatrixSmaller) {
+        // Fill remaining space
+        finalData = this.writeSmallMatrixToRange(range, data);
+      } else if (
+        data.length > range.getNumRows() ||
+        data[0].length > range.getNumColumns()
+      ) {
+        // Truncate data
+        finalData = this.writeBigMatrixToRange(data, range);
+      } else {
+        // Use data as is
+        finalData = data;
+      }
+    }
+    return finalData;
   }
 
   private writeBigMatrixToRange(
