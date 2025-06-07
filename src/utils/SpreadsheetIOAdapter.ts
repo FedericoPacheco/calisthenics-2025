@@ -87,18 +87,7 @@ export default class SpreadsheetIOAdapter {
 
     let finalData: any | any[][];
     if (this.isCell(ref)) {
-      if (Array.isArray(data)) {
-        if (Array.isArray(data[0])) {
-          // Fill with the upper-left value of the matrix
-          finalData = data[0][0];
-        } else {
-          // Fill with the first value of the array
-          finalData = data[0];
-        }
-      } else {
-        // Fill with the single value
-        finalData = data;
-      }
+      finalData = this.writeSingleCell(data);
     } else {
       if (!Array.isArray(data) || !Array.isArray(data[0])) {
         // Fill the range with the single value
@@ -145,6 +134,22 @@ export default class SpreadsheetIOAdapter {
       this.isCell(ref) ? range.setValue(finalData) : range.setValues(finalData);
     } catch (error) {
       throw new Error(`Error writing to reference "${ref}: ${error}"`);
+    }
+  }
+
+  private writeSingleCell(data: any) {
+    let finalData: any | any[][];
+    if (Array.isArray(data)) {
+      if (Array.isArray(data[0])) {
+        // Fill with the upper-left value of the matrix
+        return data[0][0];
+      } else {
+        // Fill with the first value of the array
+        return data[0];
+      }
+    } else {
+      // Fill with the single value
+      return data;
     }
   }
 
