@@ -94,13 +94,10 @@ export default class SpreadsheetIOAdapter {
   }
 
   private writeRange(data: any, range: GoogleAppsScript.Spreadsheet.Range) {
-    const isSingleValue = !Array.isArray(data) && !Array.isArray(data[0]);
-    const isMatrix = Array.isArray(data) && Array.isArray(data[0]);
-
     let finalData: any[][];
-    if (isSingleValue) {
+    if (this.isSingleValue(data)) {
       finalData = this.writeSingleValueToRange(data, range);
-    } else if (isMatrix) {
+    } else if (this.isMatrix(data)) {
       finalData = this.writeMatrixToRange(data, range);
     } else throw new Error("Unsupported data structure");
 
@@ -173,19 +170,21 @@ export default class SpreadsheetIOAdapter {
   }
 
   private writeSingleCell(data: any) {
-    let finalData: any | any[][];
-    if (Array.isArray(data)) {
-      if (Array.isArray(data[0])) {
-        // Fill with the upper-left value of the matrix
-        return data[0][0];
-      } else {
-        // Fill with the first value of the array
-        return data[0];
-      }
-    } else {
+    if (this.isSingleValue(data)) {
       // Fill with the single value
       return data;
+    } else if (this.isMatrix(data)) {
+      // Fill with the upper-left value of the matrix
+      return data[0][0];
     }
+  }
+
+  private isMatrix(data: any) {
+    return Array.isArray(data) && Array.isArray(data[0]);
+  }
+
+  private isSingleValue(data: any) {
+    return !Array.isArray(data) && !Array.isArray(data[0]);
   }
 
   private isCell(reference: string): boolean {

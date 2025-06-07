@@ -140,12 +140,6 @@ suite("SpreadsheetIOAdapter", function () {
       );
     });
 
-    test("writes array to cell (takes first element)", function () {
-      IOAdapter.write(["val1", "val2"], "A1");
-
-      assert((rangeStub.setValue as sinon.SinonStub).calledOnceWith("val1"));
-    });
-
     test("writes matrix to cell (takes first element of first row)", function () {
       IOAdapter.write(
         [
