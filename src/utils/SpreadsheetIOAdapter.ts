@@ -89,17 +89,9 @@ export default class SpreadsheetIOAdapter {
     if (this.isCell(ref)) {
       finalData = this.writeSingleCell(data);
     } else {
-      if (!Array.isArray(data) || !Array.isArray(data[0])) {
-        // Fill the range with the single value
-        finalData = [];
-        let row;
-        for (let i = 0; i < range.getNumRows(); i++) {
-          row = [];
-          for (let j = 0; j < range.getNumColumns(); j++) {
-            row.push(data);
-          }
-          finalData.push(row);
-        }
+      const isNotMatrix = !Array.isArray(data) || !Array.isArray(data[0]);
+      if (isNotMatrix) {
+        finalData = this.writeSingleValueToRange(range, data);
       } else {
         if (
           data.length < range.getNumRows() ||
@@ -135,6 +127,22 @@ export default class SpreadsheetIOAdapter {
     } catch (error) {
       throw new Error(`Error writing to reference "${ref}: ${error}"`);
     }
+  }
+
+  private writeSingleValueToRange(
+    range: GoogleAppsScript.Spreadsheet.Range,
+    data: any
+  ) {
+    let finalData = [];
+    let row;
+    for (let i = 0; i < range.getNumRows(); i++) {
+      row = [];
+      for (let j = 0; j < range.getNumColumns(); j++) {
+        row.push(data);
+      }
+      finalData.push(row);
+    }
+    return finalData;
   }
 
   private writeSingleCell(data: any) {
