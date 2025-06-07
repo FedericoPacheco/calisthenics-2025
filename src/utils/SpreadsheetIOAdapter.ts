@@ -142,22 +142,14 @@ export default class SpreadsheetIOAdapter {
     range: GoogleAppsScript.Spreadsheet.Range
   ) {
     let finalData = [];
-    let row;
-
+    let missingValues;
     for (let i = 0; i < data[0].length; i++) {
-      row = [];
-      for (let j = data[i]?.length || 0; j < range.getNumColumns(); j++) {
-        row.push("");
-      }
-      finalData.push([...(data[i] ? data[i] : []), ...row]);
+      missingValues = Array(range.getNumColumns() - data[i].length).fill("");
+      finalData.push([...data[i], ...missingValues]);
     }
 
     for (let i = data[0].length; i < range.getNumRows(); i++) {
-      row = [];
-      for (let j = data[i]?.length || 0; j < range.getNumColumns(); j++) {
-        row.push("");
-      }
-      finalData.push([...(data[i] ? data[i] : []), ...row]);
+      finalData.push(Array(range.getNumColumns()).fill(""));
     }
 
     return finalData;
