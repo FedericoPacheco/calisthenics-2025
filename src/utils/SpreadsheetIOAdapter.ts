@@ -26,13 +26,8 @@ export default class SpreadsheetIOAdapter {
     minCols?: number
   ): any | any[][] {
     const ref = reference || this.defaultReference;
-    if (!ref) {
-      throw new Error("Reference not provided");
-    }
-
-    if (!this.sheet) {
-      throw new Error(`Sheet "${this.sheetName}" not found`);
-    }
+    if (!ref) throw new Error("Reference not provided");
+    if (!this.sheet) throw new Error(`Sheet "${this.sheetName}" not found`);
 
     let values: any[][];
     try {
@@ -77,18 +72,11 @@ export default class SpreadsheetIOAdapter {
   }
 
   public write(data: any | any[] | any[][], reference?: string): void {
-    if (typeof data === "undefined" || data === null) {
+    if (typeof data === "undefined" || data === null)
       throw new Error("Data not provided");
-    }
-
     const ref = reference || this.defaultReference;
-    if (!ref) {
-      throw new Error("Reference not provided");
-    }
-
-    if (!this.sheet) {
-      throw new Error(`Sheet "${this.sheetName}" not found`);
-    }
+    if (!ref) throw new Error("Reference not provided");
+    if (!this.sheet) throw new Error(`Sheet "${this.sheetName}" not found`);
 
     let range: GoogleAppsScript.Spreadsheet.Range;
     try {
