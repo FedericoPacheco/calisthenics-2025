@@ -1,19 +1,23 @@
+import SpreadsheetIOAdapter from "../../utils/SpreadsheetIOAdapter";
+
 // https://developers.google.com/apps-script/guides/triggers
 export function onPeriodizationEdit(
   e: GoogleAppsScript.Events.SheetsOnEdit
 ): void {
   const E1M_CELL = "H44";
-  const FRACTIONS_RANGE = "G45:G84";
   const SHEET_NAME = "02-Periodization";
+  const fractionsInput = new SpreadsheetIOAdapter(SHEET_NAME, "G45:G84");
+  const weightsOutput = new SpreadsheetIOAdapter(SHEET_NAME, "H45:H84");
 
-  const sheet = e.range.getSheet();
-  if (sheet.getName() === SHEET_NAME && e.range.getA1Notation() === E1M_CELL) {
-    const fractionsRange = sheet.getRange(FRACTIONS_RANGE);
+  if (
+    e.range.getSheet().getName() === SHEET_NAME &&
+    e.range.getA1Notation() === E1M_CELL
+  ) {
     const plateWeights = getPlateWeights(
       e.range.getValue(),
-      fractionsRange.getValues().map((row) => row[0])
+      fractionsInput.read().map((row: any[]) => row[0])
     );
-    fractionsRange.offset(0, 1).setValues(plateWeights);
+    weightsOutput.write(plateWeights);
   }
 }
 
