@@ -131,18 +131,28 @@ export default class SpreadsheetIOAdapter {
     return data.slice(0, range.getNumRows());
   }
 
-  private fillRows(data: any[], range: GoogleAppsScript.Spreadsheet.Range) {
+  private fillRows(
+    data: any[],
+    range: GoogleAppsScript.Spreadsheet.Range,
+    value: string | number = ""
+  ) {
     let finalData: any[][] = [...data];
     for (let i = data.length; i < range.getNumRows(); i++) {
-      finalData.push(Array(range.getNumColumns()).fill(""));
+      finalData.push(Array(range.getNumColumns()).fill(value));
     }
     return finalData;
   }
 
-  private fillCols(data: any[], range: GoogleAppsScript.Spreadsheet.Range) {
+  private fillCols(
+    data: any[],
+    range: GoogleAppsScript.Spreadsheet.Range,
+    value: string | number = ""
+  ) {
     const finalData: any[][] = [];
     data.forEach((row) => {
-      const missingValues = Array(range.getNumColumns() - row.length).fill("");
+      const missingValues = Array(range.getNumColumns() - row.length).fill(
+        value
+      );
       finalData.push([...row, ...missingValues]);
     });
     return finalData;
@@ -152,15 +162,9 @@ export default class SpreadsheetIOAdapter {
     data: any,
     range: GoogleAppsScript.Spreadsheet.Range
   ) {
-    let finalData = [];
-    let row;
-    for (let i = 0; i < range.getNumRows(); i++) {
-      row = [];
-      for (let j = 0; j < range.getNumColumns(); j++) {
-        row.push(data);
-      }
-      finalData.push(row);
-    }
+    let finalData: any[][] = [[data]];
+    finalData = this.fillRows(finalData, range, data);
+    finalData = this.fillCols(finalData, range, data);
     return finalData;
   }
 
