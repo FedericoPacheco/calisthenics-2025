@@ -6,25 +6,26 @@ export function onPeriodizationEdit(
 ): void {
   const E1M_CELL = "H44";
   const SHEET_NAME = "02-Periodization";
-  const fractionsInput = new SpreadsheetIOAdapter(SHEET_NAME, "G45:G84");
-  const weightsOutput = new SpreadsheetIOAdapter(SHEET_NAME, "H45:H84");
+  const fractionsInput = new SpreadsheetIOAdapter(SHEET_NAME, "G45:G83");
+  const weightsOutput = new SpreadsheetIOAdapter(SHEET_NAME, "H45:H83");
 
   if (
     e.range.getSheet().getName() === SHEET_NAME &&
     e.range.getA1Notation() === E1M_CELL
   ) {
+    const fractions = fractionsInput.read();
     const plateWeights = getPlateWeights(
       e.range.getValue(),
-      fractionsInput.read().map((row: any[]) => row[0])
+      fractions.map((fractionRow: number[]) => fractionRow[0])
     );
-    weightsOutput.write(plateWeights);
+    weightsOutput.write(plateWeights.map((weight) => [weight]));
   }
 }
 
-function getPlateWeights(e1RM: number, fractions: number[]): number[][] {
+function getPlateWeights(e1RM: number, fractions: number[]): number[] {
   const PLATES = [20, 10, 5, 2.5, 1.25];
 
-  const plateWeights: number[][] = [];
+  const plateWeights: number[] = [];
   let remainder: number,
     quotient: number,
     platesSum: number,
@@ -45,7 +46,7 @@ function getPlateWeights(e1RM: number, fractions: number[]): number[][] {
     ceil = platesSum + PLATES[PLATES.length - 1];
     const diffFloor = Math.abs(e1RM * fraction - floor);
     const diffCeil = Math.abs(e1RM * fraction - ceil);
-    plateWeights.push([diffFloor < diffCeil ? floor : ceil]);
+    plateWeights.push(diffFloor < diffCeil ? floor : ceil);
   });
 
   return plateWeights;
