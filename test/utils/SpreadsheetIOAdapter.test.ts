@@ -163,7 +163,7 @@ suite("SpreadsheetIOAdapter", function () {
       );
     });
 
-    test("writes matrix to range (adds padding since matrix is smaller than range)", function () {
+    test("writes small matrix to range adding padding (both axis)", function () {
       (rangeStub.getNumRows as sinon.SinonStub).returns(2);
       (rangeStub.getNumColumns as sinon.SinonStub).returns(2);
 
@@ -177,7 +177,7 @@ suite("SpreadsheetIOAdapter", function () {
       );
     });
 
-    test("writes matrix to range (truncates data since matrix is bigger than range)", function () {
+    test("writes big matrix to range slicing excess data (both axis)", function () {
       (rangeStub.getNumRows as sinon.SinonStub).returns(2);
       (rangeStub.getNumColumns as sinon.SinonStub).returns(2);
 
@@ -194,6 +194,48 @@ suite("SpreadsheetIOAdapter", function () {
         (rangeStub.setValues as sinon.SinonStub).calledOnceWith([
           ["v1", "v2"],
           ["v4", "v5"],
+        ])
+      );
+    });
+
+    test("writes mixed matrix to range adding padding to rows and slicing cols", function () {
+      (rangeStub.getNumRows as sinon.SinonStub).returns(3);
+      (rangeStub.getNumColumns as sinon.SinonStub).returns(2);
+
+      IOAdapter.write(
+        [
+          ["v1", "v2", "v3"],
+          ["v4", "v5", "v6"],
+        ],
+        "A1:B3"
+      );
+
+      assert(
+        (rangeStub.setValues as sinon.SinonStub).calledOnceWith([
+          ["v1", "v2"],
+          ["v4", "v5"],
+          ["", ""],
+        ])
+      );
+    });
+
+    test("writes mixed matrix to range slicing rows and adding padding to cols", function () {
+      (rangeStub.getNumRows as sinon.SinonStub).returns(2);
+      (rangeStub.getNumColumns as sinon.SinonStub).returns(4);
+
+      IOAdapter.write(
+        [
+          ["v1", "v2", "v3"],
+          ["v4", "v5", "v6"],
+          ["v7", "v8", "v9"],
+        ],
+        "A1:D2"
+      );
+
+      assert(
+        (rangeStub.setValues as sinon.SinonStub).calledOnceWith([
+          ["v1", "v2", "v3", ""],
+          ["v4", "v5", "v6", ""],
         ])
       );
     });

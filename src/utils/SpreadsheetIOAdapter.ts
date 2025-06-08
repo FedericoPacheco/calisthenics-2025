@@ -86,7 +86,7 @@ export default class SpreadsheetIOAdapter {
     }
 
     try {
-      if (this.isCell(ref)) range.setValue(this.writeSingleCell(data));
+      if (this.isCell(ref)) range.setValue(this.writeCell(data));
       else range.setValues(this.writeRange(data, range));
     } catch (error) {
       throw new Error(`Error writing to reference "${ref}: ${error}"`);
@@ -105,36 +105,22 @@ export default class SpreadsheetIOAdapter {
   }
 
   private writeMatrixToRange(
-    data: any[],
+    data: any[][],
     range: GoogleAppsScript.Spreadsheet.Range
   ) {
-    let finalData: any[][];
-    const isMatrixSmaller =
-      data.length < range.getNumRows() ||
-      data[0].length < range.getNumColumns();
-    if (isMatrixSmaller) {
-      // Fill remaining space
-      finalData = this.writeSmallMatrixToRange(data, range);
-    } else if (
-      data.length > range.getNumRows() ||
-      data[0].length > range.getNumColumns()
-    ) {
-      // Truncate data
-      finalData = this.writeBigMatrixToRange(data, range);
-    } else {
-      // Use data as is
-      finalData = data;
-    }
-    return finalData;
-  }
+    let finalData: any[][] = [...data];
 
-  private writeBigMatrixToRange(
-    data: any[],
-    range: GoogleAppsScript.Spreadsheet.Range
-  ) {
-    const slicedRows = this.sliceRows(data, range);
-    const slicedCols = this.sliceCols(slicedRows, range);
-    return slicedCols;
+    const areRowsSmaller = data.length < range.getNumRows();
+    const areRowsBigger = data.length > range.getNumRows();
+    if (areRowsSmaller) finalData = this.fillRows(finalData, range);
+    else if (areRowsBigger) finalData = this.sliceRows(finalData, range);
+
+    const areColsSmaller = data[0].length < range.getNumColumns();
+    const areColsBigger = data[0].length > range.getNumColumns();
+    if (areColsSmaller) finalData = this.fillCols(finalData, range);
+    else if (areColsBigger) finalData = this.sliceCols(finalData, range);
+
+    return finalData;
   }
 
   private sliceCols(data: any[], range: GoogleAppsScript.Spreadsheet.Range) {
@@ -143,15 +129,6 @@ export default class SpreadsheetIOAdapter {
 
   private sliceRows(data: any[], range: GoogleAppsScript.Spreadsheet.Range) {
     return data.slice(0, range.getNumRows());
-  }
-
-  private writeSmallMatrixToRange(
-    data: any[],
-    range: GoogleAppsScript.Spreadsheet.Range
-  ) {
-    let finalData = this.fillCols(data, range);
-    finalData = this.fillRows(finalData, range);
-    return finalData;
   }
 
   private fillRows(data: any[], range: GoogleAppsScript.Spreadsheet.Range) {
@@ -187,7 +164,7 @@ export default class SpreadsheetIOAdapter {
     return finalData;
   }
 
-  private writeSingleCell(data: any) {
+  private writeCell(data: any) {
     if (this.isSingleValue(data)) {
       // Fill with the single value
       return data;
