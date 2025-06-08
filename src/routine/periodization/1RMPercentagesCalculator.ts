@@ -4,9 +4,10 @@ export function onPeriodizationEdit(
 ): void {
   const E1M_CELL = "H44";
   const FRACTIONS_RANGE = "G45:G84";
+  const SHEET_NAME = "02-Periodization";
 
   const sheet = e.range.getSheet();
-  if (e.range.getA1Notation() === E1M_CELL) {
+  if (sheet.getName() === SHEET_NAME && e.range.getA1Notation() === E1M_CELL) {
     const fractionsRange = sheet.getRange(FRACTIONS_RANGE);
     const plateWeights = getPlateWeights(
       e.range.getValue(),
