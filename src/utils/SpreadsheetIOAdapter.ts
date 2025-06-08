@@ -93,6 +93,18 @@ export default class SpreadsheetIOAdapter {
     }
   }
 
+  private writeCell(data: any) {
+    if (this.isSingleValue(data)) {
+      // Fill with the single value
+      return data;
+    } else if (this.isMatrix(data)) {
+      // Fill with the upper-left value of the matrix
+      return data[0][0];
+    } else {
+      throw new Error("Unsupported data structure");
+    }
+  }
+
   private writeRange(data: any, range: GoogleAppsScript.Spreadsheet.Range) {
     let finalData: any[][];
     if (this.isSingleValue(data)) {
@@ -101,6 +113,16 @@ export default class SpreadsheetIOAdapter {
       finalData = this.writeMatrixToRange(data, range);
     } else throw new Error("Unsupported data structure");
 
+    return finalData;
+  }
+
+  private writeSingleValueToRange(
+    data: any,
+    range: GoogleAppsScript.Spreadsheet.Range
+  ) {
+    let finalData: any[][] = [[data]];
+    finalData = this.fillRows(finalData, range, data);
+    finalData = this.fillCols(finalData, range, data);
     return finalData;
   }
 
@@ -156,28 +178,6 @@ export default class SpreadsheetIOAdapter {
       finalData.push([...row, ...missingValues]);
     });
     return finalData;
-  }
-
-  private writeSingleValueToRange(
-    data: any,
-    range: GoogleAppsScript.Spreadsheet.Range
-  ) {
-    let finalData: any[][] = [[data]];
-    finalData = this.fillRows(finalData, range, data);
-    finalData = this.fillCols(finalData, range, data);
-    return finalData;
-  }
-
-  private writeCell(data: any) {
-    if (this.isSingleValue(data)) {
-      // Fill with the single value
-      return data;
-    } else if (this.isMatrix(data)) {
-      // Fill with the upper-left value of the matrix
-      return data[0][0];
-    } else {
-      throw new Error("Unsupported data structure");
-    }
   }
 
   private isMatrix(data: any) {
