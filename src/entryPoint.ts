@@ -23,49 +23,93 @@ import { onPeriodizationEdit } from "./routine/periodization/1RMPercentagesCalcu
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // Control panel
-const dipsParams = {
-  inputs: [
-    new SpreadsheetIOAdapter("13-ST", "H19:U19"),
-    new SpreadsheetIOAdapter("13-ST", "H29:U29"),
-  ],
-  output: new SpreadsheetIOAdapter("03-ControlPanel", "B8:J61"),
-  microcycleCount: 4,
-  args: {
-    previous1RM: new SpreadsheetIOAdapter("03-ControlPanel", "J3").read(),
-    bw: new SpreadsheetIOAdapter("03-ControlPanel", "J4").read(),
+
+const dipsPrevious1RM = new SpreadsheetIOAdapter(
+  "03-ControlPanel",
+  "J3"
+).read();
+const dipsBw = new SpreadsheetIOAdapter("03-ControlPanel", "J4").read();
+const dipsParams = [
+  {
+    inputs: [
+      new SpreadsheetIOAdapter("13-ST", "H19:U19"),
+      new SpreadsheetIOAdapter("13-ST", "H29:U29"),
+    ],
+    output: new SpreadsheetIOAdapter("03-ControlPanel", "B8:J27"),
+    microcycleCount: 4,
+    args: {
+      previous1RM: dipsPrevious1RM,
+      bw: dipsBw,
+    },
   },
-};
+  {
+    inputs: [
+      new SpreadsheetIOAdapter("23-ST", "H19:U19"),
+      new SpreadsheetIOAdapter("23-ST", "H29:U29"),
+    ],
+    output: new SpreadsheetIOAdapter("03-ControlPanel", "B28:J47"),
+    microcycleCount: 4,
+    args: {
+      previous1RM: dipsPrevious1RM,
+      bw: dipsBw,
+    },
+  },
+];
 export function runDipsControlPanel() {
-  const dipsControlPanel = new STControlPanel(
-    dipsParams.inputs,
-    dipsParams.output,
-    dipsParams.microcycleCount,
-    dipsParams.args
-  );
-  dipsControlPanel.run();
+  dipsParams.forEach((mesoParams) => {
+    new STControlPanel(
+      mesoParams.inputs,
+      mesoParams.output,
+      mesoParams.microcycleCount,
+      mesoParams.args
+    ).run();
+  });
 }
 (global as any).runDipsControlPanel = runDipsControlPanel;
 
-const pullUpParams = {
-  inputs: [
-    new SpreadsheetIOAdapter("13-ST", "H13:U13"),
-    new SpreadsheetIOAdapter("13-ST", "H23:U23"),
-  ],
-  output: new SpreadsheetIOAdapter("03-ControlPanel", "L8:T61"),
-  microcycleCount: 4,
-  args: {
-    previous1RM: new SpreadsheetIOAdapter("03-ControlPanel", "T3").read(),
-    bw: new SpreadsheetIOAdapter("03-ControlPanel", "T4").read(),
+// -------------------------------------------------------------------------------------
+
+const pullUpPrevious1RM = new SpreadsheetIOAdapter(
+  "03-ControlPanel",
+  "T3"
+).read();
+const pullUpBw = new SpreadsheetIOAdapter("03-ControlPanel", "T4").read();
+
+const pullUpParams = [
+  {
+    inputs: [
+      new SpreadsheetIOAdapter("13-ST", "H13:U13"),
+      new SpreadsheetIOAdapter("13-ST", "H23:U23"),
+    ],
+    output: new SpreadsheetIOAdapter("03-ControlPanel", "L8:T27"),
+    microcycleCount: 4,
+    args: {
+      previous1RM: pullUpPrevious1RM,
+      bw: pullUpBw,
+    },
   },
-};
+  {
+    inputs: [
+      new SpreadsheetIOAdapter("23-ST", "H13:U13"),
+      new SpreadsheetIOAdapter("23-ST", "H23:U23"),
+    ],
+    output: new SpreadsheetIOAdapter("03-ControlPanel", "L28:T47"),
+    microcycleCount: 4,
+    args: {
+      previous1RM: pullUpPrevious1RM,
+      bw: pullUpBw,
+    },
+  },
+];
 export function runPullUpsControlPanel() {
-  const pullUpControlPanel = new STControlPanel(
-    pullUpParams.inputs,
-    pullUpParams.output,
-    pullUpParams.microcycleCount,
-    pullUpParams.args
-  );
-  pullUpControlPanel.run();
+  pullUpParams.forEach((mesoParams) => {
+    new STControlPanel(
+      mesoParams.inputs,
+      mesoParams.output,
+      mesoParams.microcycleCount,
+      mesoParams.args
+    ).run();
+  });
 }
 (global as any).runPullUpsControlPanel = runPullUpsControlPanel;
 
