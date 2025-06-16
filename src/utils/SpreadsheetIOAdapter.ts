@@ -225,4 +225,21 @@ export default class SpreadsheetIOAdapter {
     this.defaultReference =
       newRange?.getA1Notation() || this.defaultReference || "";
   }
+
+  public resizeReference(newRowsCount: number, newColsCount: number): void {
+    if (!this.sheet) throw new Error(`Sheet "${this.sheetName}" not found`);
+    if (!this.defaultReference) throw new Error(`Reference not set`);
+
+    const oldRange: GoogleAppsScript.Spreadsheet.Range = this.sheet.getRange(
+      this.defaultReference
+    );
+    const newRange = this.sheet.getRange(
+      oldRange.getRow(),
+      oldRange.getColumn(),
+      newRowsCount,
+      newColsCount
+    );
+    this.defaultReference =
+      newRange?.getA1Notation() || this.defaultReference || "";
+  }
 }

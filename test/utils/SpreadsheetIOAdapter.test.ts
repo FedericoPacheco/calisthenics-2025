@@ -292,6 +292,10 @@ suite("SpreadsheetIOAdapter", function () {
       IOAdapter = new SpreadsheetIOAdapter("Sheet1", "B2:D4");
     });
 
+    teardown(function () {
+      restore();
+    });
+
     test("moves matrix reference correctly", function () {
       (rangeStub.getRow as sinon.SinonStub).returns(2);
       (rangeStub.getColumn as sinon.SinonStub).returns(2);
@@ -303,6 +307,32 @@ suite("SpreadsheetIOAdapter", function () {
 
       assert.isTrue(
         (sheetStub.getRange as sinon.SinonStub).calledWith(4, 5, 3, 3)
+      );
+    });
+  });
+
+  suite("resizeReference()", function () {
+    let IOAdapter: SpreadsheetIOAdapter;
+
+    setup(function () {
+      (spreadsheetStub.getSheetByName as sinon.SinonStub).returns(sheetStub);
+      IOAdapter = new SpreadsheetIOAdapter("Sheet1", "B2:D4");
+    });
+
+    teardown(function () {
+      restore();
+    });
+
+    test("resizes matrix reference correctly", function () {
+      (rangeStub.getRow as sinon.SinonStub).returns(2);
+      (rangeStub.getColumn as sinon.SinonStub).returns(2);
+      (rangeStub.getNumRows as sinon.SinonStub).returns(3);
+      (rangeStub.getNumColumns as sinon.SinonStub).returns(3);
+
+      IOAdapter.resizeReference(4, 5);
+
+      assert.isTrue(
+        (sheetStub.getRange as sinon.SinonStub).calledWith(2, 2, 4, 5)
       );
     });
   });
