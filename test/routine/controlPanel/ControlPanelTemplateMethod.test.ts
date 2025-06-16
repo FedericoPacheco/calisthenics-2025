@@ -70,7 +70,7 @@ suite("STControlPanel", function () {
         bw: 72,
       });
 
-      assert.deepEqual(metrics, [
+      assert.deepEqual(metrics.entry, [
         {
           RPEStability: [1, 0, -1],
           avgIntensity: 75,
@@ -109,22 +109,27 @@ suite("STControlPanel", function () {
           TEC: [7, 8],
         },
       ];
-      const metricsData = [
-        {
-          RPEStability: [1, 0, -1],
-          avgIntensity: 75,
-          avgTEC: 7.67,
-          e1RMChange: [25.42, 24.6, 23.6],
-          totalVolume: 15,
+      const metricsData = {
+        entry: [
+          {
+            RPEStability: [1, 0, -1],
+            avgIntensity: 75,
+            avgTEC: 7.67,
+            e1RMChange: [25.42, 24.6, 23.6],
+            totalVolume: 15,
+          },
+          {
+            RPEStability: [1, 0],
+            avgIntensity: 87.5,
+            avgTEC: 7.5,
+            e1RMChange: [26.55, 26.07],
+            totalVolume: 8,
+          },
+        ],
+        global: {
+          movingAverageIntensity: [],
         },
-        {
-          RPEStability: [1, 0],
-          avgIntensity: 87.5,
-          avgTEC: 7.5,
-          e1RMChange: [26.55, 26.07],
-          totalVolume: 8,
-        },
-      ];
+      };
 
       const transformed = controlPanel.transform(entryData, metricsData);
 

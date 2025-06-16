@@ -37,10 +37,7 @@ export abstract class ControlPanelTemplateMethod {
 
   public abstract parseEntry(input: SpreadsheetIOAdapter): object;
   public abstract computeMetrics(entryData: object[], args: object): any;
-  public abstract transform(
-    entryData: object[],
-    entryMetrics: object[]
-  ): any[][];
+  public abstract transform(entryData: object[], metrics: object): any[][];
 }
 
 type STEntry = {
@@ -63,6 +60,13 @@ type STEntryMetrics = {
   avgTEC: number;
   e1RMChange: number[];
   totalVolume: number;
+};
+type STGlobalMetrics = {
+  movingAverageIntensity: number[];
+};
+type STMetrics = {
+  entry: STEntryMetrics[];
+  global: STGlobalMetrics;
 };
 
 export class STControlPanel extends ControlPanelTemplateMethod {
@@ -97,8 +101,8 @@ export class STControlPanel extends ControlPanelTemplateMethod {
     };
   }
 
-  public computeMetrics(entryData: STEntry[], args: STArgs): STEntryMetrics[] {
-    return entryData.map((entry: STEntry) => {
+  public computeMetrics(entryData: STEntry[], args: STArgs): STMetrics {
+    const entryMetrics: STEntryMetrics[] = entryData.map((entry: STEntry) => {
       const RPEStability = entry.RPE.map((rpe) => rpe - entry.targetRPE);
 
       const avgIntensity = GeneralUtils.round(
@@ -133,6 +137,14 @@ export class STControlPanel extends ControlPanelTemplateMethod {
         totalVolume,
       };
     });
+
+    const globalMetrics: STGlobalMetrics = {
+      movingAverageIntensity: [],
+    };
+    return {
+      entry: entryMetrics,
+      global: globalMetrics,
+    };
   }
 
   private computeE1RM(weight: number, bw: number, reps: number): number {
@@ -145,27 +157,24 @@ export class STControlPanel extends ControlPanelTemplateMethod {
     return (epley + brzycki + berger) / 3;
   }
 
-  public transform(
-    entryData: STEntry[],
-    entryMetrics: STEntryMetrics[]
-  ): any[][] {
+  public transform(entryData: STEntry[], metrics: STMetrics): any[][] {
     const result: any[][] = [];
     let seq = 1,
-      metrics;
+      entryMetrics;
     entryData.forEach((entry, entryIdx) => {
-      metrics = entryMetrics[entryIdx];
+      entryMetrics = metrics.entry[entryIdx];
       for (let setIdx = 0; setIdx < entry.sets; setIdx++) {
         result.push([
           seq,
           entry.sets,
           entry.reps,
-          metrics.totalVolume,
+          entryMetrics.totalVolume,
           entry.targetRPE,
           entry.TEC[setIdx],
-          metrics.RPEStability[setIdx],
+          entryMetrics.RPEStability[setIdx],
           entry.intensity[setIdx],
-          metrics.avgIntensity,
-          metrics.e1RMChange[setIdx],
+          entryMetrics.avgIntensity,
+          entryMetrics.e1RMChange[setIdx],
         ]);
         seq++;
       }
