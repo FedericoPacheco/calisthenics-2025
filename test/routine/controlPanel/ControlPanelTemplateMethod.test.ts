@@ -76,12 +76,14 @@ suite("STControlPanel", function () {
           avgIntensity: 75,
           avgTEC: 7.67,
           e1RMChange: [25.42, 24.6, 23.6],
+          totalVolume: 15,
         },
         {
           RPEStability: [1, 0],
           avgIntensity: 87.5,
           avgTEC: 7.5,
           e1RMChange: [26.55, 26.07],
+          totalVolume: 8,
         },
       ]);
     });
@@ -113,24 +115,26 @@ suite("STControlPanel", function () {
           avgIntensity: 75,
           avgTEC: 7.67,
           e1RMChange: [25.42, 24.6, 23.6],
+          totalVolume: 15,
         },
         {
           RPEStability: [1, 0],
           avgIntensity: 87.5,
           avgTEC: 7.5,
           e1RMChange: [26.55, 26.07],
+          totalVolume: 8,
         },
       ];
 
       const transformed = controlPanel.transform(entryData, metricsData);
 
-      // seqNumber, sets, reps, targetRPE, TEC, RPEStability, intensity, avgIntensity, e1RMChange
+      // seqNumber, sets, reps, totalVolume, targetRPE, TEC, RPEStability, intensity, avgIntensity, e1RMChange
       assert.deepEqual(transformed, [
-        [1, 3, 5, 8, 7, 1, 80, 75, 25.42],
-        [2, 3, 5, 8, 8, 0, 75, 75, 24.6],
-        [3, 3, 5, 8, 8, -1, 70, 75, 23.6],
-        [4, 2, 4, 9, 7, 1, 90, 87.5, 26.55],
-        [5, 2, 4, 9, 8, 0, 85, 87.5, 26.07],
+        [1, 3, 5, 15, 8, 7, 1, 80, 75, 25.42],
+        [2, 3, 5, 15, 8, 8, 0, 75, 75, 24.6],
+        [3, 3, 5, 15, 8, 8, -1, 70, 75, 23.6],
+        [4, 2, 4, 8, 9, 7, 1, 90, 87.5, 26.55],
+        [5, 2, 4, 8, 9, 8, 0, 85, 87.5, 26.07],
       ]);
     });
   });
@@ -160,18 +164,18 @@ suite("STControlPanel", function () {
 
       controlPanel.run();
 
-      // seqNumber, sets, reps, targetRPE, TEC, RPEStability, intensity, avgIntensity, e1RMChange
+      // seqNumber, sets, reps, totalVolume, targetRPE, TEC, RPEStability, intensity, avgIntensity, e1RMChange
       assert.deepEqual((outputStub.write as any).getCall(0).args[0], [
-        [1, 2, 12, 4, 9, -1, 11.24, 11.25, -6.7],
-        [2, 2, 12, 4, 10, 1, 11.25, 11.25, -16.36],
-        [3, 3, 12, 6, 7, 1, 38.75, 32.08, 17.08],
-        [4, 3, 12, 6, 7, 2, 33.75, 32.08, 4.45],
-        [5, 3, 12, 6, 8, 0, 23.75, 32.08, -1.04],
-        [6, 2, 10, 5, 9, -2, 25, 27.5, 6.05],
-        [7, 2, 10, 5, 9, 0, 30, 27.5, 3.72],
-        [8, 3, 10, 7, 7.5, 0.5, 52.5, 49.17, 23.89],
-        [9, 3, 10, 7, 7.5, 0, 50, 49.17, 23],
-        [10, 3, 10, 7, 7, 0, 45, 49.17, 15.83],
+        [1, 2, 12, 24, 4, 9, -1, 11.24, 11.25, -6.7],
+        [2, 2, 12, 24, 4, 10, 1, 11.25, 11.25, -16.36],
+        [3, 3, 12, 36, 6, 7, 1, 38.75, 32.08, 17.08],
+        [4, 3, 12, 36, 6, 7, 2, 33.75, 32.08, 4.45],
+        [5, 3, 12, 36, 6, 8, 0, 23.75, 32.08, -1.04],
+        [6, 2, 10, 20, 5, 9, -2, 25, 27.5, 6.05],
+        [7, 2, 10, 20, 5, 9, 0, 30, 27.5, 3.72],
+        [8, 3, 10, 30, 7, 7.5, 0.5, 52.5, 49.17, 23.89],
+        [9, 3, 10, 30, 7, 7.5, 0, 50, 49.17, 23],
+        [10, 3, 10, 30, 7, 7, 0, 45, 49.17, 15.83],
       ]);
     });
   });

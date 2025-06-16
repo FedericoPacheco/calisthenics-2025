@@ -62,6 +62,7 @@ type STEntryMetrics = {
   avgIntensity: number;
   avgTEC: number;
   e1RMChange: number[];
+  totalVolume: number;
 };
 
 export class STControlPanel extends ControlPanelTemplateMethod {
@@ -122,11 +123,14 @@ export class STControlPanel extends ControlPanelTemplateMethod {
         )
       );
 
+      const totalVolume = entry.sets * entry.reps;
+
       return {
         RPEStability,
         avgIntensity,
         avgTEC,
         e1RMChange,
+        totalVolume,
       };
     });
   }
@@ -155,6 +159,7 @@ export class STControlPanel extends ControlPanelTemplateMethod {
           seq,
           entry.sets,
           entry.reps,
+          metrics.totalVolume,
           entry.targetRPE,
           entry.TEC[setIdx],
           metrics.RPEStability[setIdx],
