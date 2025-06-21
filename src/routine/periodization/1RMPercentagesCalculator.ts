@@ -1,13 +1,13 @@
-import SpreadsheetIOAdapter from "../../utils/SpreadsheetIOAdapter";
+import SpreadsheetIOAdapter from '../../utils/SpreadsheetIOAdapter';
 
 // https://developers.google.com/apps-script/guides/triggers
 export function onPeriodizationEdit(
   e: GoogleAppsScript.Events.SheetsOnEdit
 ): void {
-  const E1M_CELL = "H44";
-  const SHEET_NAME = "02-Periodization";
-  const fractionsInput = new SpreadsheetIOAdapter(SHEET_NAME, "G45:G83");
-  const weightsOutput = new SpreadsheetIOAdapter(SHEET_NAME, "H45:H83");
+  const E1M_CELL = 'J39';
+  const SHEET_NAME = '02-Periodization';
+  const fractionsInput = new SpreadsheetIOAdapter(SHEET_NAME, 'I40:I78');
+  const weightsOutput = new SpreadsheetIOAdapter(SHEET_NAME, 'J40:J78');
 
   if (
     e.range.getSheet().getName() === SHEET_NAME &&
@@ -23,31 +23,24 @@ export function onPeriodizationEdit(
 }
 
 function getPlateWeights(e1RM: number, fractions: number[]): number[] {
+  return fractions.map((fraction) => computePlateWeight(e1RM * fraction));
+}
+
+function computePlateWeight(weight: number) {
   const PLATES = [20, 10, 5, 2.5, 1.25];
 
-  const plateWeights: number[] = [];
-  let remainder: number,
-    quotient: number,
-    platesSum: number,
-    floor: number,
-    ceil: number;
-
-  fractions.forEach((fraction) => {
-    remainder = e1RM * fraction;
-    platesSum = 0;
-
-    PLATES.forEach((plate) => {
-      quotient = Math.floor(remainder / plate);
-      platesSum += quotient * plate;
-      remainder -= quotient * plate;
-    });
-
-    floor = platesSum;
-    ceil = platesSum + PLATES[PLATES.length - 1];
-    const diffFloor = Math.abs(e1RM * fraction - floor);
-    const diffCeil = Math.abs(e1RM * fraction - ceil);
-    plateWeights.push(diffFloor < diffCeil ? floor : ceil);
+  let remainder = weight;
+  let platesSum = 0;
+  let quotient: number;
+  PLATES.forEach((plate) => {
+    quotient = Math.floor(remainder / plate);
+    platesSum += quotient * plate;
+    remainder -= quotient * plate;
   });
 
-  return plateWeights;
+  const floor = platesSum;
+  const ceil = platesSum + PLATES[PLATES.length - 1];
+  const diffFloor = Math.abs(weight - floor);
+  const diffCeil = Math.abs(weight - ceil);
+  return diffFloor < diffCeil ? floor : ceil;
 }
