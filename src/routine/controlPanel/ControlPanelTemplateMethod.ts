@@ -26,7 +26,7 @@ export abstract class ControlPanelTemplateMethod {
     let current: object;
     for (let microcycle = 0; microcycle < this.microcycleCount; microcycle++) {
       this.inputs.forEach((input) => {
-        current = this.parseEntry(input);
+        current = this.parseEntry(input, microcycle);
         accumulated.push(current);
       });
     }
@@ -35,7 +35,10 @@ export abstract class ControlPanelTemplateMethod {
     this.output.write(output);
   }
 
-  public abstract parseEntry(input: SpreadsheetIOAdapter): object;
+  public abstract parseEntry(
+    input: SpreadsheetIOAdapter,
+    microcycle: number
+  ): object;
   public abstract computeMetrics(entryData: object[]): any;
   public abstract transform(entryData: object[], metrics: object): any[][];
 }
@@ -52,6 +55,7 @@ type STEntry = {
 type STArgs = {
   previous1RM: number;
   bw: number;
+  minSetsJumpPerMicrocycle: number[];
 };
 
 type STEntryMetrics = {
@@ -79,13 +83,19 @@ export class STControlPanel extends ControlPanelTemplateMethod {
   }
 
   // Format: Sets, Reps, RPE(target), Intensity1, RPE1, TEC1, ..., Intensity_N, RPE_N, TEC_N, avg RPE, avg TEC
-  public parseEntry(input: SpreadsheetIOAdapter): STEntry {
+  public parseEntry(input: SpreadsheetIOAdapter, microcycle: number): STEntry {
     const rawTarget = input.read()[0];
     const [sets, reps, targetRPE] = rawTarget;
 
-    const setsAndAvgsLength = sets * 3 + 2;
-    input.resizeReference(setsAndAvgsLength, 1);
-    input.moveReference(rawTarget.length, 0);
+    const setsAndAvgsLength =
+      Math.max(
+        sets,
+        (this.args as STArgs).minSetsJumpPerMicrocycle[microcycle]
+      ) *
+        3 +
+      2;
+    input.resizeReference(1, setsAndAvgsLength);
+    input.moveReference(0, rawTarget.length);
     const rawIntensity = input.read()[0];
     const intensity = [],
       RPE = [],
@@ -96,7 +106,7 @@ export class STControlPanel extends ControlPanelTemplateMethod {
       TEC.push(rawIntensity[i + 2]);
     }
 
-    input.resizeReference(rawTarget.length, 1);
+    input.resizeReference(1, rawTarget.length);
     input.moveReference(0, setsAndAvgsLength);
 
     return {

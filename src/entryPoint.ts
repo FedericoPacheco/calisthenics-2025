@@ -35,11 +35,12 @@ const dipsParams = [
       new SpreadsheetIOAdapter('13-ST', 'H14:J14'),
       new SpreadsheetIOAdapter('13-ST', 'H22:J22'),
     ],
-    output: new SpreadsheetIOAdapter('03-ControlPanel', 'B8:J27'),
+    output: new SpreadsheetIOAdapter('03-ControlPanel', 'B8:K27'),
     microcycleCount: 4,
     args: {
       previous1RM: dipsPrevious1RM,
       bw: dipsBw,
+      minSetsJumpPerMicrocycle: [4, 8, 7, 6],
     },
   },
 ];
@@ -69,11 +70,12 @@ const pullUpParams = [
       new SpreadsheetIOAdapter('13-ST', 'H10:J10'),
       new SpreadsheetIOAdapter('13-ST', 'H18:J18'),
     ],
-    output: new SpreadsheetIOAdapter('03-ControlPanel', 'L8:T27'),
+    output: new SpreadsheetIOAdapter('03-ControlPanel', 'M8:V27'),
     microcycleCount: 4,
     args: {
       previous1RM: pullUpPrevious1RM,
       bw: pullUpBw,
+      minSetsJumpPerMicrocycle: [4, 8, 7, 6],
     },
   },
 ];

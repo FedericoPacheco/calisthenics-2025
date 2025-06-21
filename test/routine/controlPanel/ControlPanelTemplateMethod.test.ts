@@ -13,10 +13,17 @@ suite('STControlPanel', function () {
     inputStub1 = createStubInstance(SpreadsheetIOAdapter);
     inputStub2 = createStubInstance(SpreadsheetIOAdapter);
     outputStub = createStubInstance(SpreadsheetIOAdapter);
-    controlPanel = new STControlPanel([inputStub1, inputStub2], outputStub, 2, {
-      previous1RM: 80,
-      bw: 72,
-    });
+    const minSetsJumpPerMicrocycle = [2, 2];
+    controlPanel = new STControlPanel(
+      [inputStub1, inputStub2],
+      outputStub,
+      minSetsJumpPerMicrocycle.length,
+      {
+        previous1RM: 80,
+        bw: 72,
+        minSetsJumpPerMicrocycle,
+      }
+    );
   });
 
   teardown(function () {
@@ -31,7 +38,7 @@ suite('STControlPanel', function () {
         .onCall(1)
         .returns([[80, 6, 8, 75, 6, 8, 70, 6, 8, 6, 8]]);
 
-      const entry = controlPanel.parseEntry(inputStub1);
+      const entry = controlPanel.parseEntry(inputStub1, 0);
 
       assert.deepEqual(entry, {
         sets: 3,
