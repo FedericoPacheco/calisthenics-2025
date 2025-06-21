@@ -4,10 +4,10 @@ import GeneralUtils from '../../utils/GeneralUtils';
 // https://refactoring.guru/design-patterns/template-method
 
 export abstract class ControlPanelTemplateMethod {
-  private inputs: SpreadsheetIOAdapter[];
-  private output: SpreadsheetIOAdapter;
-  private microcycleCount: number;
-  private args: object;
+  protected inputs: SpreadsheetIOAdapter[];
+  protected output: SpreadsheetIOAdapter;
+  protected microcycleCount: number;
+  protected args: object;
 
   public constructor(
     inputs: SpreadsheetIOAdapter[],
@@ -30,13 +30,13 @@ export abstract class ControlPanelTemplateMethod {
         accumulated.push(current);
       });
     }
-    const metrics = this.computeMetrics(accumulated, this.args);
+    const metrics = this.computeMetrics(accumulated);
     const output = this.transform(accumulated, metrics);
     this.output.write(output);
   }
 
   public abstract parseEntry(input: SpreadsheetIOAdapter): object;
-  public abstract computeMetrics(entryData: object[], args: object): any;
+  public abstract computeMetrics(entryData: object[]): any;
   public abstract transform(entryData: object[], metrics: object): any[][];
 }
 
@@ -69,6 +69,15 @@ type STMetrics = {
 };
 
 export class STControlPanel extends ControlPanelTemplateMethod {
+  public constructor(
+    inputs: SpreadsheetIOAdapter[],
+    output: SpreadsheetIOAdapter,
+    microcycleCount: number,
+    args: STArgs
+  ) {
+    super(inputs, output, microcycleCount, args);
+  }
+
   // Format: Sets, Reps, RPE(target), Intensity1, RPE1, TEC1, ..., Intensity_N, RPE_N, TEC_N, avg RPE, avg TEC
   public parseEntry(input: SpreadsheetIOAdapter): STEntry {
     const rawTarget = input.read()[0];
@@ -100,7 +109,7 @@ export class STControlPanel extends ControlPanelTemplateMethod {
     };
   }
 
-  public computeMetrics(entryData: STEntry[], args: STArgs): STMetrics {
+  public computeMetrics(entryData: STEntry[]): STMetrics {
     const entryMetrics: STEntryMetrics[] = entryData.map((entry: STEntry) => {
       const RPEStability = entry.RPE.map((rpe) => rpe - entry.targetRPE);
 
@@ -110,9 +119,9 @@ export class STControlPanel extends ControlPanelTemplateMethod {
         GeneralUtils.round(
           this.computeE1RM(
             intensity,
-            args.bw,
+            (this.args as STArgs).bw,
             entry.reps + (10 - entry.RPE[idx])
-          ) - args.previous1RM
+          ) - (this.args as STArgs).previous1RM
         )
       );
 

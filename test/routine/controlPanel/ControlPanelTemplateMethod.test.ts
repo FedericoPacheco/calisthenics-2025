@@ -65,10 +65,7 @@ suite('STControlPanel', function () {
         },
       ];
 
-      const metrics = controlPanel.computeMetrics(entryData, {
-        previous1RM: 80,
-        bw: 72,
-      });
+      const metrics = controlPanel.computeMetrics(entryData);
 
       assert.deepEqual(metrics, {
         entry: [
