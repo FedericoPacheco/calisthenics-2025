@@ -1,5 +1,5 @@
-import SpreadsheetIOAdapter from "../../utils/SpreadsheetIOAdapter";
-import GeneralUtils from "../../utils/GeneralUtils";
+import SpreadsheetIOAdapter from '../../utils/SpreadsheetIOAdapter';
+import GeneralUtils from '../../utils/GeneralUtils';
 
 // https://refactoring.guru/design-patterns/template-method
 
@@ -56,7 +56,6 @@ type STArgs = {
 
 type STEntryMetrics = {
   RPEStability: number[];
-  avgIntensity: number;
   avgTEC: number;
   e1RMChange: number[];
   totalVolume: number;
@@ -105,16 +104,7 @@ export class STControlPanel extends ControlPanelTemplateMethod {
     const entryMetrics: STEntryMetrics[] = entryData.map((entry: STEntry) => {
       const RPEStability = entry.RPE.map((rpe) => rpe - entry.targetRPE);
 
-      const avgIntensity = GeneralUtils.round(
-        entry.intensity.reduce((acc, curr) => acc + curr, 0) /
-          entry.intensity.length,
-        2
-      );
-
-      const avgTEC = GeneralUtils.round(
-        entry.TEC.reduce((acc, curr) => acc + curr, 0) / entry.TEC.length,
-        2
-      );
+      const avgTEC = GeneralUtils.average(entry.TEC);
 
       const e1RMChange = entry.intensity.map((intensity: number, idx: number) =>
         GeneralUtils.round(
@@ -122,8 +112,7 @@ export class STControlPanel extends ControlPanelTemplateMethod {
             intensity,
             args.bw,
             entry.reps + (10 - entry.RPE[idx])
-          ) - args.previous1RM,
-          2
+          ) - args.previous1RM
         )
       );
 
@@ -131,7 +120,6 @@ export class STControlPanel extends ControlPanelTemplateMethod {
 
       return {
         RPEStability,
-        avgIntensity,
         avgTEC,
         e1RMChange,
         totalVolume,
@@ -139,8 +127,12 @@ export class STControlPanel extends ControlPanelTemplateMethod {
     });
 
     const globalMetrics: STGlobalMetrics = {
-      movingAverageIntensity: [],
+      movingAverageIntensity: GeneralUtils.movingAverage(
+        entryData.map((entry) => entry.intensity).flat(),
+        3
+      ),
     };
+
     return {
       entry: entryMetrics,
       global: globalMetrics,
@@ -173,7 +165,7 @@ export class STControlPanel extends ControlPanelTemplateMethod {
           entry.TEC[setIdx],
           entryMetrics.RPEStability[setIdx],
           entry.intensity[setIdx],
-          entryMetrics.avgIntensity,
+          metrics.global.movingAverageIntensity[seq - 1],
           entryMetrics.e1RMChange[setIdx],
         ]);
         seq++;

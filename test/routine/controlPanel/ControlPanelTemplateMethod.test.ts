@@ -1,10 +1,10 @@
-import { suite, test, setup, teardown } from "mocha";
-import { assert } from "chai";
-import { createStubInstance, restore } from "sinon";
-import { STControlPanel } from "../../../src/routine/controlPanel/ControlPanelTemplateMethod";
-import SpreadsheetIOAdapter from "../../../src/utils/SpreadsheetIOAdapter";
+import { suite, test, setup, teardown } from 'mocha';
+import { assert } from 'chai';
+import { createStubInstance, restore } from 'sinon';
+import { STControlPanel } from '../../../src/routine/controlPanel/ControlPanelTemplateMethod';
+import SpreadsheetIOAdapter from '../../../src/utils/SpreadsheetIOAdapter';
 
-suite("STControlPanel", function () {
+suite('STControlPanel', function () {
   let controlPanel: STControlPanel;
   let inputStub1: SpreadsheetIOAdapter, inputStub2: SpreadsheetIOAdapter;
   let outputStub: SpreadsheetIOAdapter;
@@ -23,8 +23,8 @@ suite("STControlPanel", function () {
     restore();
   });
 
-  suite("parseEntry()", function () {
-    test("should parse entry correctly", function () {
+  suite('parseEntry()', function () {
+    test('should parse entry correctly', function () {
       // sets, reps, targetRPE, intensity1, RPE1, TEC1, ..., intensity_N, RPE_N, TEC_N, avg RPE, avg TEC
       (inputStub1.read as any).onCall(0).returns([[3, 5, 6]]);
       (inputStub1.read as any)
@@ -44,8 +44,8 @@ suite("STControlPanel", function () {
     });
   });
 
-  suite("computeMetrics()", function () {
-    test("should compute metrics correctly", function () {
+  suite('computeMetrics()', function () {
+    test('should compute metrics correctly', function () {
       const entryData = [
         {
           sets: 3,
@@ -70,27 +70,31 @@ suite("STControlPanel", function () {
         bw: 72,
       });
 
-      assert.deepEqual(metrics.entry, [
-        {
-          RPEStability: [1, 0, -1],
-          avgIntensity: 75,
-          avgTEC: 7.67,
-          e1RMChange: [25.42, 24.6, 23.6],
-          totalVolume: 15,
+      assert.deepEqual(metrics, {
+        entry: [
+          {
+            RPEStability: [1, 0, -1],
+            avgTEC: 7.67,
+            e1RMChange: [25.42, 24.6, 23.6],
+            totalVolume: 15,
+          },
+          {
+            RPEStability: [1, 0],
+            avgTEC: 7.5,
+            e1RMChange: [26.55, 26.07],
+            totalVolume: 8,
+          },
+        ],
+        global: {
+          // Use 3 last data points
+          movingAverageIntensity: [80, 77.5, 75, 78.33, 81.67],
         },
-        {
-          RPEStability: [1, 0],
-          avgIntensity: 87.5,
-          avgTEC: 7.5,
-          e1RMChange: [26.55, 26.07],
-          totalVolume: 8,
-        },
-      ]);
+      });
     });
   });
 
-  suite("transform()", function () {
-    test("should transform data correctly", function () {
+  suite('transform()', function () {
+    test('should transform data correctly', function () {
       const entryData = [
         {
           sets: 3,
@@ -127,35 +131,35 @@ suite("STControlPanel", function () {
           },
         ],
         global: {
-          movingAverageIntensity: [],
+          movingAverageIntensity: [80, 77.5, 75, 78.33, 81.67],
         },
       };
 
       const transformed = controlPanel.transform(entryData, metricsData);
 
-      // seqNumber, sets, reps, totalVolume, targetRPE, TEC, RPEStability, intensity, avgIntensity, e1RMChange
+      // seqNumber, sets, reps, totalVolume, targetRPE, TEC, RPEStability, intensity, movingAvgIntensity, e1RMChange
       assert.deepEqual(transformed, [
-        [1, 3, 5, 15, 8, 7, 1, 80, 75, 25.42],
-        [2, 3, 5, 15, 8, 8, 0, 75, 75, 24.6],
+        [1, 3, 5, 15, 8, 7, 1, 80, 80, 25.42],
+        [2, 3, 5, 15, 8, 8, 0, 75, 77.5, 24.6],
         [3, 3, 5, 15, 8, 8, -1, 70, 75, 23.6],
-        [4, 2, 4, 8, 9, 7, 1, 90, 87.5, 26.55],
-        [5, 2, 4, 8, 9, 8, 0, 85, 87.5, 26.07],
+        [4, 2, 4, 8, 9, 7, 1, 90, 78.33, 26.55],
+        [5, 2, 4, 8, 9, 8, 0, 85, 81.67, 26.07],
       ]);
     });
   });
 
-  suite("run()", function () {
-    test("should run the control panel process correctly", function () {
+  suite('run()', function () {
+    test('should run the control panel process correctly', function () {
       // sets, reps, targetRPE, intensity1, RPE1, TEC1, ..., intensity_N, RPE_N, TEC_N, avg RPE, avg TEC
       (inputStub1.read as any).onCall(0).returns([[2, 12, 4]]);
       (inputStub1.read as any)
         .onCall(1)
-        .returns([[11.24, 3, 9, 11.25, 5, 10, "", "", "", 4.0, 9.5]]);
+        .returns([[11.24, 3, 9, 11.25, 5, 10, '', '', '', 4.0, 9.5]]);
 
       (inputStub1.read as any).onCall(2).returns([[2, 10, 5]]);
       (inputStub1.read as any)
         .onCall(3)
-        .returns([[25, 3, 9, 30, 5, 9, "", "", "", 4.0, 9.0]]);
+        .returns([[25, 3, 9, 30, 5, 9, '', '', '', 4.0, 9.0]]);
 
       (inputStub2.read as any).onCall(0).returns([[3, 12, 6]]);
       (inputStub2.read as any)
@@ -169,17 +173,17 @@ suite("STControlPanel", function () {
 
       controlPanel.run();
 
-      // seqNumber, sets, reps, totalVolume, targetRPE, TEC, RPEStability, intensity, avgIntensity, e1RMChange
+      // seqNumber, sets, reps, totalVolume, targetRPE, TEC, RPEStability, intensity, movingAvgIntensity, e1RMChange
       assert.deepEqual((outputStub.write as any).getCall(0).args[0], [
-        [1, 2, 12, 24, 4, 9, -1, 11.24, 11.25, -6.7],
+        [1, 2, 12, 24, 4, 9, -1, 11.24, 11.24, -6.7],
         [2, 2, 12, 24, 4, 10, 1, 11.25, 11.25, -16.36],
-        [3, 3, 12, 36, 6, 7, 1, 38.75, 32.08, 17.08],
-        [4, 3, 12, 36, 6, 7, 2, 33.75, 32.08, 4.45],
+        [3, 3, 12, 36, 6, 7, 1, 38.75, 20.41, 17.08],
+        [4, 3, 12, 36, 6, 7, 2, 33.75, 27.92, 4.45],
         [5, 3, 12, 36, 6, 8, 0, 23.75, 32.08, -1.04],
         [6, 2, 10, 20, 5, 9, -2, 25, 27.5, 6.05],
-        [7, 2, 10, 20, 5, 9, 0, 30, 27.5, 3.72],
-        [8, 3, 10, 30, 7, 7.5, 0.5, 52.5, 49.17, 23.89],
-        [9, 3, 10, 30, 7, 7.5, 0, 50, 49.17, 23],
+        [7, 2, 10, 20, 5, 9, 0, 30, 26.25, 3.72],
+        [8, 3, 10, 30, 7, 7.5, 0.5, 52.5, 35.83, 23.89],
+        [9, 3, 10, 30, 7, 7.5, 0, 50, 44.17, 23],
         [10, 3, 10, 30, 7, 7, 0, 45, 49.17, 15.83],
       ]);
     });
