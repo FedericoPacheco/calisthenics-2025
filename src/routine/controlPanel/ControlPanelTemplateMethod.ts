@@ -1,5 +1,6 @@
 import SpreadsheetIOAdapter from '../../utils/SpreadsheetIOAdapter';
 import GeneralUtils from '../../utils/GeneralUtils';
+import STUtils from '../../STUtils';
 
 // https://refactoring.guru/design-patterns/template-method
 
@@ -127,7 +128,7 @@ export class STControlPanel extends ControlPanelTemplateMethod {
 
       const e1RMChange = entry.intensity.map((intensity: number, idx: number) =>
         GeneralUtils.round(
-          this.computeE1RM(
+          STUtils.computeE1RM(
             intensity,
             (this.args as STArgs).bw,
             entry.reps + (10 - entry.RPE[idx])
@@ -156,16 +157,6 @@ export class STControlPanel extends ControlPanelTemplateMethod {
       entry: entryMetrics,
       global: globalMetrics,
     };
-  }
-
-  private computeE1RM(weight: number, bw: number, reps: number): number {
-    const totalWeight = weight + bw;
-    const epley = totalWeight * (1 + reps / 30) - bw;
-    const brzycki = (totalWeight * 36) / (37 - reps) - bw;
-    const berger =
-      totalWeight * (1 / (1.0261 * Math.pow(Math.E, -0.0262 * reps))) - bw;
-
-    return (epley + brzycki + berger) / 3;
   }
 
   public transform(entryData: STEntry[], metrics: STMetrics): any[][] {
