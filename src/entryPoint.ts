@@ -1,6 +1,6 @@
-import SpreadsheetIOAdapter from "./utils/SpreadsheetIOAdapter";
-import { STControlPanel } from "./routine/controlPanel/ControlPanelTemplateMethod";
-import { onPeriodizationEdit } from "./routine/periodization/1RMPercentagesCalculator";
+import SpreadsheetIOAdapter from './utils/SpreadsheetIOAdapter';
+import { STControlPanel } from './routine/controlPanel/ControlPanelTemplateMethod';
+import { onPeriodizationEdit } from './routine/periodization/1RMPercentagesCalculator';
 
 // Don't forget to add this line. Otherwise, the function won't be exported to the global scope.
 // https://www.npmjs.com/package/gas-webpack-plugin
@@ -25,29 +25,17 @@ import { onPeriodizationEdit } from "./routine/periodization/1RMPercentagesCalcu
 // Control panel
 
 const dipsPrevious1RM = new SpreadsheetIOAdapter(
-  "03-ControlPanel",
-  "J3"
+  '03-ControlPanel',
+  'K3'
 ).read();
-const dipsBw = new SpreadsheetIOAdapter("03-ControlPanel", "J4").read();
+const dipsBw = new SpreadsheetIOAdapter('03-ControlPanel', 'K4').read();
 const dipsParams = [
   {
     inputs: [
-      new SpreadsheetIOAdapter("13-ST", "H19:U19"),
-      new SpreadsheetIOAdapter("13-ST", "H29:U29"),
+      new SpreadsheetIOAdapter('13-ST', 'H14:J14'),
+      new SpreadsheetIOAdapter('13-ST', 'H22:J22'),
     ],
-    output: new SpreadsheetIOAdapter("03-ControlPanel", "B8:J27"),
-    microcycleCount: 4,
-    args: {
-      previous1RM: dipsPrevious1RM,
-      bw: dipsBw,
-    },
-  },
-  {
-    inputs: [
-      new SpreadsheetIOAdapter("23-ST", "H19:U19"),
-      new SpreadsheetIOAdapter("23-ST", "H29:U29"),
-    ],
-    output: new SpreadsheetIOAdapter("03-ControlPanel", "B28:J47"),
+    output: new SpreadsheetIOAdapter('03-ControlPanel', 'B8:J27'),
     microcycleCount: 4,
     args: {
       previous1RM: dipsPrevious1RM,
@@ -70,30 +58,18 @@ export function runDipsControlPanel() {
 // -------------------------------------------------------------------------------------
 
 const pullUpPrevious1RM = new SpreadsheetIOAdapter(
-  "03-ControlPanel",
-  "T3"
+  '03-ControlPanel',
+  'V3'
 ).read();
-const pullUpBw = new SpreadsheetIOAdapter("03-ControlPanel", "T4").read();
+const pullUpBw = new SpreadsheetIOAdapter('03-ControlPanel', 'V4').read();
 
 const pullUpParams = [
   {
     inputs: [
-      new SpreadsheetIOAdapter("13-ST", "H13:U13"),
-      new SpreadsheetIOAdapter("13-ST", "H23:U23"),
+      new SpreadsheetIOAdapter('13-ST', 'H10:J10'),
+      new SpreadsheetIOAdapter('13-ST', 'H18:J18'),
     ],
-    output: new SpreadsheetIOAdapter("03-ControlPanel", "L8:T27"),
-    microcycleCount: 4,
-    args: {
-      previous1RM: pullUpPrevious1RM,
-      bw: pullUpBw,
-    },
-  },
-  {
-    inputs: [
-      new SpreadsheetIOAdapter("23-ST", "H13:U13"),
-      new SpreadsheetIOAdapter("23-ST", "H23:U23"),
-    ],
-    output: new SpreadsheetIOAdapter("03-ControlPanel", "L28:T47"),
+    output: new SpreadsheetIOAdapter('03-ControlPanel', 'L8:T27'),
     microcycleCount: 4,
     args: {
       previous1RM: pullUpPrevious1RM,
