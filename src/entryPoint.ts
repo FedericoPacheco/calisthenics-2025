@@ -1,6 +1,6 @@
 import SpreadsheetIOAdapter from './utils/SpreadsheetIOAdapter';
 import { STControlPanel } from './routine/controlPanel/ControlPanelTemplateMethod';
-import { onPeriodizationEdit } from './routine/periodization/1RMPercentagesCalculator';
+import { onPeriodizationEdit } from './routine/periodization/e1RMMatrix';
 
 // Don't forget to add this line. Otherwise, the function won't be exported to the global scope.
 // https://www.npmjs.com/package/gas-webpack-plugin
