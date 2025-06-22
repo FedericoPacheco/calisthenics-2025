@@ -1,5 +1,6 @@
 import SpreadsheetIOAdapter from '../../utils/SpreadsheetIOAdapter';
 import STUtils from '../../STUtils';
+import GeneralUtils from '../../utils/GeneralUtils';
 
 // https://developers.google.com/apps-script/guides/triggers
 // https://developers.google.com/apps-script/guides/properties
@@ -7,7 +8,7 @@ export function onPeriodizationEdit(
   e: GoogleAppsScript.Events.SheetsOnEdit
 ): void {
   const SHEET_NAME = '04-Utils';
-  // if (e.range.getSheet().getName() !== SHEET_NAME) return;
+  if (e.range.getSheet().getName() !== SHEET_NAME) return;
 
   // Use PropertiesService to persist values accross script executions
   const props = PropertiesService.getScriptProperties();
@@ -17,8 +18,8 @@ export function onPeriodizationEdit(
   const previousRPE = props.getProperty('previousRPE')
     ? Number(props.getProperty('previousRPE'))
     : 0;
-  const newE1RM = new SpreadsheetIOAdapter(SHEET_NAME, 'D10').read();
-  const newRPE = new SpreadsheetIOAdapter(SHEET_NAME, 'G3').read();
+  const newE1RM = new SpreadsheetIOAdapter(SHEET_NAME, 'D7').read();
+  const newRPE = new SpreadsheetIOAdapter(SHEET_NAME, 'D9').read();
   if (newE1RM === previousE1RM && newRPE === previousRPE) return;
 
   props.setProperty('previousE1RM', String(newE1RM));
@@ -28,24 +29,19 @@ export function onPeriodizationEdit(
     .read()
     .flat();
   const reps = new SpreadsheetIOAdapter(SHEET_NAME, 'H4:P4').read().flat();
-  const bw = new SpreadsheetIOAdapter(SHEET_NAME, 'D4').read();
+  const bw = new SpreadsheetIOAdapter(SHEET_NAME, 'D8').read();
 
-  console.log(
-    `fractions: ${fractions}`,
-    `reps: ${reps}`,
-    `previousE1RM: ${previousE1RM}`,
-    `previousRPE: ${previousRPE}`,
-    `newE1RM: ${newE1RM}`,
-    `newRPE: ${newRPE}`,
-    `bw: ${bw}`
-  );
-
-  const e1RMMatrix = computeE1RMMatrix(
+  const intensityVolumeMatrix = computeIntensityVolumeMatrix(
     { fractions, reps },
     { previousE1RM: newE1RM, requiredRPE: newRPE, bw }
   );
+  const plateWeights = GeneralUtils.transpose(
+    computePlateWeights(fractions, newE1RM)
+  );
 
-  new SpreadsheetIOAdapter(SHEET_NAME, 'H5:P44').write(e1RMMatrix);
+  new SpreadsheetIOAdapter(SHEET_NAME, 'H5:Q44').write(
+    GeneralUtils.concatMatricesHorizontally(intensityVolumeMatrix, plateWeights)
+  );
 }
 
 function computePlateWeight(weight: number) {
@@ -67,7 +63,16 @@ function computePlateWeight(weight: number) {
   return diffFloor < diffCeil ? floor : ceil;
 }
 
-export function computeE1RMMatrix(
+function computePlateWeights(
+  fractions: number[],
+  previousE1RM: number
+): number[][] {
+  return [
+    fractions.map((fraction) => computePlateWeight(previousE1RM * fraction)),
+  ];
+}
+
+export function computeIntensityVolumeMatrix(
   axes: { fractions: number[]; reps: number[] },
   input: { previousE1RM: number; requiredRPE: number; bw: number }
 ): number[][] {

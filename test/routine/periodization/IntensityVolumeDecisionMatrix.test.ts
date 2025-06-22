@@ -1,6 +1,6 @@
 import { suite, test, setup, teardown } from 'mocha';
 import { assert } from 'chai';
-import { computeE1RMMatrix } from '../../../src/routine/periodization/e1RMMatrix';
+import { computeIntensityVolumeMatrix } from '../../../src/routine/periodization/IntensityVolumeDecisionMatrix';
 
 suite('e1RMMatrix', function () {
   suite('computeE1RMMatrix()', function () {
@@ -15,7 +15,7 @@ suite('e1RMMatrix', function () {
         bw: 72,
       };
 
-      const result = computeE1RMMatrix(axes, input);
+      const result = computeIntensityVolumeMatrix(axes, input);
 
       assert.deepEqual(result, [
         [2.5, 12.5, 22.5],

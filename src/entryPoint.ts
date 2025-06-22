@@ -1,6 +1,7 @@
 import SpreadsheetIOAdapter from './utils/SpreadsheetIOAdapter';
 import { STControlPanel } from './routine/controlPanel/ControlPanelTemplateMethod';
-import { onPeriodizationEdit } from './routine/periodization/e1RMMatrix';
+import { onPeriodizationEdit } from './routine/periodization/IntensityVolumeDecisionMatrix';
+import STUtils from './STUtils';
 
 // Don't forget to add this line. Otherwise, the function won't be exported to the global scope.
 // https://www.npmjs.com/package/gas-webpack-plugin
@@ -95,3 +96,9 @@ export function runPullUpsControlPanel() {
 // Periodization
 
 (global as any).onPeriodizationEdit = onPeriodizationEdit;
+
+/** @customfunction */
+function E1RM(weight: number, bw: number, reps: number): number {
+  return STUtils.computeE1RM(weight, bw, reps);
+}
+(global as any).E1RM = E1RM;

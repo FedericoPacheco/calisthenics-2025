@@ -45,4 +45,10 @@ export default class GeneralUtils {
 
     return result;
   }
+
+  public static transpose<T>(A: T[][]): T[][] {
+    if (!Array.isArray(A) || !Array.isArray(A[0]))
+      throw new Error('Input is not a valid matrix');
+    return A[0].map((_, j) => A.map((row) => row[j]));
+  }
 }
