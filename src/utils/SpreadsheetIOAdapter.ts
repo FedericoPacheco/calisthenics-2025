@@ -1,11 +1,13 @@
+import GeneralUtils from './GeneralUtils';
+
 export default class SpreadsheetIOAdapter {
   private sheet: GoogleAppsScript.Spreadsheet.Sheet | null;
   private sheetName: string;
-  private defaultReference: string = "";
+  private defaultReference: string = '';
 
   constructor(sheetName: string, defaultReference?: string) {
     if (!sheetName) {
-      throw new Error("Sheet name not provided");
+      throw new Error('Sheet name not provided');
     }
 
     this.sheet =
@@ -26,7 +28,7 @@ export default class SpreadsheetIOAdapter {
     minCols?: number
   ): any | any[][] {
     const ref = reference || this.defaultReference;
-    if (!ref) throw new Error("Reference not provided");
+    if (!ref) throw new Error('Reference not provided');
     if (!this.sheet) throw new Error(`Sheet "${this.sheetName}" not found`);
 
     let values: any[][];
@@ -47,7 +49,7 @@ export default class SpreadsheetIOAdapter {
         false
       );
     const isValidMinDim = (min: number | undefined) =>
-      typeof min === "number" && min >= 0;
+      typeof min === 'number' && min >= 0;
     if (values.length > 0 && values[0].length > 0) {
       let i: number, rows: any[][];
       const finalMinRows = isValidMinDim(minRows) ? (minRows as number) - 1 : 0;
@@ -72,10 +74,10 @@ export default class SpreadsheetIOAdapter {
   }
 
   public write(data: any | any[] | any[][], reference?: string): void {
-    if (typeof data === "undefined" || data === null)
-      throw new Error("Data not provided");
+    if (typeof data === 'undefined' || data === null)
+      throw new Error('Data not provided');
     const ref = reference || this.defaultReference;
-    if (!ref) throw new Error("Reference not provided");
+    if (!ref) throw new Error('Reference not provided');
     if (!this.sheet) throw new Error(`Sheet "${this.sheetName}" not found`);
 
     let range: GoogleAppsScript.Spreadsheet.Range;
@@ -94,24 +96,24 @@ export default class SpreadsheetIOAdapter {
   }
 
   private writeCell(data: any) {
-    if (this.isSingleValue(data)) {
+    if (GeneralUtils.isScalar(data)) {
       // Fill with the single value
       return data;
-    } else if (this.isMatrix(data)) {
+    } else if (GeneralUtils.isMatrix(data)) {
       // Fill with the upper-left value of the matrix
       return data[0][0];
     } else {
-      throw new Error("Unsupported data structure");
+      throw new Error('Unsupported data structure');
     }
   }
 
   private writeRange(data: any, range: GoogleAppsScript.Spreadsheet.Range) {
     let finalData: any[][];
-    if (this.isSingleValue(data)) {
+    if (GeneralUtils.isScalar(data)) {
       finalData = this.writeSingleValueToRange(data, range);
-    } else if (this.isMatrix(data)) {
+    } else if (GeneralUtils.isMatrix(data)) {
       finalData = this.writeMatrixToRange(data, range);
-    } else throw new Error("Unsupported data structure");
+    } else throw new Error('Unsupported data structure');
 
     return finalData;
   }
@@ -156,7 +158,7 @@ export default class SpreadsheetIOAdapter {
   private fillRows(
     data: any[],
     range: GoogleAppsScript.Spreadsheet.Range,
-    value: string | number = ""
+    value: string | number = ''
   ) {
     let finalData: any[][] = [...data];
     for (let i = data.length; i < range.getNumRows(); i++) {
@@ -168,7 +170,7 @@ export default class SpreadsheetIOAdapter {
   private fillCols(
     data: any[],
     range: GoogleAppsScript.Spreadsheet.Range,
-    value: string | number = ""
+    value: string | number = ''
   ) {
     const finalData: any[][] = [];
     data.forEach((row) => {
@@ -178,14 +180,6 @@ export default class SpreadsheetIOAdapter {
       finalData.push([...row, ...missingValues]);
     });
     return finalData;
-  }
-
-  private isMatrix(data: any) {
-    return Array.isArray(data) && Array.isArray(data[0]);
-  }
-
-  private isSingleValue(data: any) {
-    return !Array.isArray(data) && !Array.isArray(data[0]);
   }
 
   private isCell(reference: string): boolean {
@@ -223,7 +217,7 @@ export default class SpreadsheetIOAdapter {
       oldRange.getNumColumns()
     );
     this.defaultReference =
-      newRange?.getA1Notation() || this.defaultReference || "";
+      newRange?.getA1Notation() || this.defaultReference || '';
   }
 
   public resizeReference(newRowsCount: number, newColsCount: number): void {
@@ -240,6 +234,6 @@ export default class SpreadsheetIOAdapter {
       newColsCount
     );
     this.defaultReference =
-      newRange?.getA1Notation() || this.defaultReference || "";
+      newRange?.getA1Notation() || this.defaultReference || '';
   }
 }

@@ -51,4 +51,12 @@ export default class GeneralUtils {
       throw new Error('Input is not a valid matrix');
     return A[0].map((_, j) => A.map((row) => row[j]));
   }
+
+  public static isMatrix(data: any) {
+    return Array.isArray(data) && Array.isArray(data[0]);
+  }
+
+  public static isScalar(data: any) {
+    return !Array.isArray(data) && !Array.isArray(data[0]);
+  }
 }
