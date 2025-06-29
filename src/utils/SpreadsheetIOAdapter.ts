@@ -41,29 +41,25 @@ export default class SpreadsheetIOAdapter {
       throw new Error(`Error reading reference "${ref}`);
     }
 
+    if (GeneralUtils.isNonEmptyMatrix(values)) {
+      values = this.filterEmptyRows(values, minRows);
+      values = this.filterEmptyCols(values, minCols);
+    }
+
+    return values;
+  }
+
+  private filterEmptyCols(values: any[][], minCols: number | undefined) {
+    const isValidMinDim = (min: number | undefined) =>
+      typeof min === 'number' && min >= 0;
+
     const hasData = (matrix: any[][]) =>
       matrix.reduce(
         (hasData, row) =>
           hasData || row.some((value) => value.length > 0 || value > 0),
         false
       );
-    const isValidMinDim = (min: number | undefined) =>
-      typeof min === 'number' && min >= 0;
-    if (GeneralUtils.isNonEmptyMatrix(values)) {
-      values = this.filterEmptyRows(isValidMinDim, minRows, values, hasData);
 
-      values = this.filterEmptyCols(isValidMinDim, minCols, values, hasData);
-    }
-
-    return values;
-  }
-
-  private filterEmptyCols(
-    isValidMinDim: (min: number | undefined) => boolean,
-    minCols: number | undefined,
-    values: any[][],
-    hasData: (matrix: any[][]) => boolean
-  ) {
     let j: number, cols: any[][];
     const finalMinCols = isValidMinDim(minCols) ? (minCols as number) - 1 : 0;
     for (j = 0; j < values[0].length; j++) {
@@ -75,12 +71,17 @@ export default class SpreadsheetIOAdapter {
     return values;
   }
 
-  private filterEmptyRows(
-    isValidMinDim: (min: number | undefined) => boolean,
-    minRows: number | undefined,
-    values: any[][],
-    hasData: (matrix: any[][]) => boolean
-  ) {
+  private filterEmptyRows(values: any[][], minRows: number | undefined) {
+    const isValidMinDim = (min: number | undefined) =>
+      typeof min === 'number' && min >= 0;
+
+    const hasData = (matrix: any[][]) =>
+      matrix.reduce(
+        (hasData, row) =>
+          hasData || row.some((value) => value.length > 0 || value > 0),
+        false
+      );
+
     let i: number, rows: any[][];
     const finalMinRows = isValidMinDim(minRows) ? (minRows as number) - 1 : 0;
     for (i = 0; i < values.length; i++) {
