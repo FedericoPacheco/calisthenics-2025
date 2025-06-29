@@ -49,10 +49,7 @@ export default class SpreadsheetIOAdapter {
     return values;
   }
 
-  private filterEmptyCols(values: any[][], minCols: number | undefined) {
-    const isValidMinDim = (min: number | undefined) =>
-      typeof min === 'number' && min >= 0;
-
+  private filterEmptyCols(values: any[][], minCols: number = 0) {
     const hasData = (matrix: any[][]) =>
       matrix.reduce(
         (hasData, row) =>
@@ -61,20 +58,16 @@ export default class SpreadsheetIOAdapter {
       );
 
     let j: number, cols: any[][];
-    const finalMinCols = isValidMinDim(minCols) ? (minCols as number) - 1 : 0;
     for (j = 0; j < values[0].length; j++) {
       cols = values.map((row) => row.slice(j));
-      if (j > finalMinCols && !hasData(cols)) {
+      if (j > Math.max(minCols - 1, 0) && !hasData(cols)) {
         values = values.map((row) => row.slice(0, j));
       }
     }
     return values;
   }
 
-  private filterEmptyRows(values: any[][], minRows: number | undefined) {
-    const isValidMinDim = (min: number | undefined) =>
-      typeof min === 'number' && min >= 0;
-
+  private filterEmptyRows(values: any[][], minRows: number = 0) {
     const hasData = (matrix: any[][]) =>
       matrix.reduce(
         (hasData, row) =>
@@ -83,10 +76,9 @@ export default class SpreadsheetIOAdapter {
       );
 
     let i: number, rows: any[][];
-    const finalMinRows = isValidMinDim(minRows) ? (minRows as number) - 1 : 0;
     for (i = 0; i < values.length; i++) {
       rows = values.slice(i);
-      if (i > finalMinRows && !hasData(rows)) {
+      if (i > Math.max(minRows - 1, 0) && !hasData(rows)) {
         values = values.slice(0, i);
       }
     }
