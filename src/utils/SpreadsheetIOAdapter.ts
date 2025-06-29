@@ -41,7 +41,6 @@ export default class SpreadsheetIOAdapter {
       throw new Error(`Error reading reference "${ref}`);
     }
 
-    // Remove empty rows and columns
     const hasData = (matrix: any[][]) =>
       matrix.reduce(
         (hasData, row) =>
@@ -50,26 +49,46 @@ export default class SpreadsheetIOAdapter {
       );
     const isValidMinDim = (min: number | undefined) =>
       typeof min === 'number' && min >= 0;
-    if (values.length > 0 && values[0].length > 0) {
-      let i: number, rows: any[][];
-      const finalMinRows = isValidMinDim(minRows) ? (minRows as number) - 1 : 0;
-      for (i = 0; i < values.length; i++) {
-        rows = values.slice(i);
-        if (i > finalMinRows && !hasData(rows)) {
-          values = values.slice(0, i);
-        }
-      }
+    if (GeneralUtils.isNonEmptyMatrix(values)) {
+      values = this.filterEmptyRows(isValidMinDim, minRows, values, hasData);
 
-      let j: number, cols: any[][];
-      const finalMinCols = isValidMinDim(minCols) ? (minCols as number) - 1 : 0;
-      for (j = 0; j < values[0].length; j++) {
-        cols = values.map((row) => row.slice(j));
-        if (j > finalMinCols && !hasData(cols)) {
-          values = values.map((row) => row.slice(0, j));
-        }
-      }
+      values = this.filterEmptyCols(isValidMinDim, minCols, values, hasData);
     }
 
+    return values;
+  }
+
+  private filterEmptyCols(
+    isValidMinDim: (min: number | undefined) => boolean,
+    minCols: number | undefined,
+    values: any[][],
+    hasData: (matrix: any[][]) => boolean
+  ) {
+    let j: number, cols: any[][];
+    const finalMinCols = isValidMinDim(minCols) ? (minCols as number) - 1 : 0;
+    for (j = 0; j < values[0].length; j++) {
+      cols = values.map((row) => row.slice(j));
+      if (j > finalMinCols && !hasData(cols)) {
+        values = values.map((row) => row.slice(0, j));
+      }
+    }
+    return values;
+  }
+
+  private filterEmptyRows(
+    isValidMinDim: (min: number | undefined) => boolean,
+    minRows: number | undefined,
+    values: any[][],
+    hasData: (matrix: any[][]) => boolean
+  ) {
+    let i: number, rows: any[][];
+    const finalMinRows = isValidMinDim(minRows) ? (minRows as number) - 1 : 0;
+    for (i = 0; i < values.length; i++) {
+      rows = values.slice(i);
+      if (i > finalMinRows && !hasData(rows)) {
+        values = values.slice(0, i);
+      }
+    }
     return values;
   }
 

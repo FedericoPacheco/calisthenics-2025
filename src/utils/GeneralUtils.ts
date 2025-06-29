@@ -59,4 +59,8 @@ export default class GeneralUtils {
   public static isScalar(data: any) {
     return !Array.isArray(data) && !Array.isArray(data[0]);
   }
+
+  public static isNonEmptyMatrix(data: any) {
+    return GeneralUtils.isMatrix(data) && data[0].length > 0;
+  }
 }
