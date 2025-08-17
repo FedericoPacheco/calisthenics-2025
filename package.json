@@ -13,7 +13,7 @@
   },
   "author": "Federico I. Pacheco Pilan",
   "license": "ISC",
-  "description": "A simple test project for Google Apps Script using TypeScript and Webpack",
+  "description": "My gym routine with some automations on top of it.",
   "devDependencies": {
     "@google/clasp": "^3.0.3-alpha",
     "@types/chai": "^5.2.1",

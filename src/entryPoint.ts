@@ -1,5 +1,5 @@
 import SpreadsheetIOAdapter from './utils/SpreadsheetIOAdapter';
-import { STControlPanel } from './routine/controlPanel/ControlPanelTemplateMethod';
+import { STControlPanel } from './routine/controlPanel/STControlPanel';
 import { onPeriodizationEdit } from './routine/periodization/IntensityVolumeDecisionMatrix';
 import STUtils from './STUtils';
 
@@ -36,7 +36,7 @@ const dipsParams = [
       new SpreadsheetIOAdapter('13-ST', 'H14:J14'),
       new SpreadsheetIOAdapter('13-ST', 'H22:J22'),
     ],
-    output: new SpreadsheetIOAdapter('03-ControlPanel', 'B8:K27'),
+    output: new SpreadsheetIOAdapter('03-ControlPanel', 'B8:K43'),
     microcycleCount: 4,
     args: {
       previous1RM: dipsPrevious1RM,
@@ -71,7 +71,7 @@ const pullUpParams = [
       new SpreadsheetIOAdapter('13-ST', 'H10:J10'),
       new SpreadsheetIOAdapter('13-ST', 'H18:J18'),
     ],
-    output: new SpreadsheetIOAdapter('03-ControlPanel', 'M8:V27'),
+    output: new SpreadsheetIOAdapter('03-ControlPanel', 'M8:V43'),
     microcycleCount: 4,
     args: {
       previous1RM: pullUpPrevious1RM,

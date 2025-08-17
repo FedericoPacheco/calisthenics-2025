@@ -1,7 +1,7 @@
 import { suite, test, setup, teardown } from 'mocha';
 import { assert } from 'chai';
 import { createStubInstance, restore } from 'sinon';
-import { STControlPanel } from '../../../src/routine/controlPanel/ControlPanelTemplateMethod';
+import { STControlPanel } from '../../../src/routine/controlPanel/STControlPanel';
 import SpreadsheetIOAdapter from '../../../src/utils/SpreadsheetIOAdapter';
 
 suite('STControlPanel', function () {
