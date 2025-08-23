@@ -1,7 +1,8 @@
-import SpreadsheetIOAdapter from './utils/SpreadsheetIOAdapter';
-import { STControlPanel } from './routine/controlPanel/STControlPanel';
-import { onPeriodizationEdit } from './routine/periodization/IntensityVolumeDecisionMatrix';
-import STUtils from './STUtils';
+import SpreadsheetIOAdapter from "./utils/SpreadsheetIOAdapter";
+import { STControlPanel } from "./routine/controlPanel/STControlPanel";
+import { onPeriodizationEdit } from "./routine/periodization/IntensityVolumeDecisionMatrix";
+import STUtils from "./STUtils";
+import { SWControlPanel } from "./routine/controlPanel/SWControlPanel";
 
 // Don't forget to add this line. Otherwise, the function won't be exported to the global scope.
 // https://www.npmjs.com/package/gas-webpack-plugin
@@ -23,20 +24,47 @@ import STUtils from './STUtils';
 // https://developers.google.com/apps-script/guides/typescript
 
 ////////////////////////////////////////////////////////////////////////////////////////
-// Control panel
+// Control panels
 
+// -------------------------------------------------------------------------------------
+// OAHS
+const OAHSParams = [
+  {
+    inputs: [
+      new SpreadsheetIOAdapter("22-SW", "H9:J9"),
+      new SpreadsheetIOAdapter("22-SW", "H18:J18"),
+    ],
+    output: new SpreadsheetIOAdapter("03-SWControlPanel", "B8:L11"),
+    microcycleCount: 4,
+    args: {},
+  },
+];
+export function runOAHSControlPanel() {
+  OAHSParams.forEach((mesoParams) => {
+    new SWControlPanel(
+      mesoParams.inputs,
+      mesoParams.output,
+      mesoParams.microcycleCount,
+      mesoParams.args
+    ).run();
+  });
+};
+(global as any).runOAHSControlPanel = runOAHSControlPanel;
+
+// -------------------------------------------------------------------------------------
+// Dips
 const dipsPrevious1RM = new SpreadsheetIOAdapter(
-  '03-ControlPanel',
-  'K3'
+  "03-ControlPanel",
+  "K3"
 ).read();
-const dipsBw = new SpreadsheetIOAdapter('03-ControlPanel', 'K4').read();
+const dipsBw = new SpreadsheetIOAdapter("03-ControlPanel", "K4").read();
 const dipsParams = [
   {
     inputs: [
-      new SpreadsheetIOAdapter('13-ST', 'H14:J14'),
-      new SpreadsheetIOAdapter('13-ST', 'H22:J22'),
+      new SpreadsheetIOAdapter("13-ST", "H14:J14"),
+      new SpreadsheetIOAdapter("13-ST", "H22:J22"),
     ],
-    output: new SpreadsheetIOAdapter('03-ControlPanel', 'B8:K43'),
+    output: new SpreadsheetIOAdapter("03-ControlPanel", "B8:K43"),
     microcycleCount: 4,
     args: {
       previous1RM: dipsPrevious1RM,
@@ -58,20 +86,20 @@ export function runDipsControlPanel() {
 (global as any).runDipsControlPanel = runDipsControlPanel;
 
 // -------------------------------------------------------------------------------------
-
+// Pull-ups
 const pullUpPrevious1RM = new SpreadsheetIOAdapter(
-  '03-ControlPanel',
-  'V3'
+  "03-ControlPanel",
+  "V3"
 ).read();
-const pullUpBw = new SpreadsheetIOAdapter('03-ControlPanel', 'V4').read();
+const pullUpBw = new SpreadsheetIOAdapter("03-ControlPanel", "V4").read();
 
 const pullUpParams = [
   {
     inputs: [
-      new SpreadsheetIOAdapter('13-ST', 'H10:J10'),
-      new SpreadsheetIOAdapter('13-ST', 'H18:J18'),
+      new SpreadsheetIOAdapter("13-ST", "H10:J10"),
+      new SpreadsheetIOAdapter("13-ST", "H18:J18"),
     ],
-    output: new SpreadsheetIOAdapter('03-ControlPanel', 'M8:V43'),
+    output: new SpreadsheetIOAdapter("03-ControlPanel", "M8:V43"),
     microcycleCount: 4,
     args: {
       previous1RM: pullUpPrevious1RM,
