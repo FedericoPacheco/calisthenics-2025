@@ -118,6 +118,19 @@ suite("SpreadsheetIOAdapter", function () {
         ["", "", "", ""],
       ]);
     });
+
+    test("return empty matrix when there's no data", function() {
+      (rangeStub.getValues as sinon.SinonStub).returns([
+        ["", "", ""],
+        ["", "", ""],
+        ["", "", ""],
+      ]);
+
+      debugger;
+      const result = IOAdapter.read("A1:C3");
+
+      assert.deepEqual(result, [[]]);
+    });
   });
 
   suite("write", function () {
