@@ -54,9 +54,9 @@ export default class SpreadsheetIOAdapter {
 
     const numCols = matrix[0].length;
     for (let j = Math.max(minCols, 1); j < numCols; j++) {
-      const nextCols = this.sliceCols(matrix, j, numCols);
+      const nextCols = GeneralUtils.sliceCols(matrix, j, numCols);
       if (!this.hasData(nextCols)) {
-        const pastCols = this.sliceCols(matrix, 0, j);
+        const pastCols = GeneralUtils.sliceCols(matrix, 0, j);
         return pastCols;
       }
     }
@@ -68,9 +68,9 @@ export default class SpreadsheetIOAdapter {
   
     const numRows = matrix.length;
     for (let i = Math.max(minRows, 1); i < numRows; i++) {
-      const nextRows = this.sliceRows(matrix, i, numRows);
+      const nextRows = GeneralUtils.sliceRows(matrix, i, numRows);
       if (!this.hasData(nextRows)) {
-        const pastRows = this.sliceRows(matrix, 0, i);
+        const pastRows = GeneralUtils.sliceRows(matrix, 0, i);
         return pastRows;
       }
     }
@@ -146,23 +146,15 @@ export default class SpreadsheetIOAdapter {
     const areRowsBigger = data.length > range.getNumRows();
     if (areRowsSmaller) finalData = this.fillRows(finalData, range);
     else if (areRowsBigger)
-      finalData = this.sliceRows(finalData, 0, range.getNumRows());
+      finalData = GeneralUtils.sliceRows(finalData, 0, range.getNumRows());
 
     const areColsSmaller = data[0].length < range.getNumColumns();
     const areColsBigger = data[0].length > range.getNumColumns();
     if (areColsSmaller) finalData = this.fillCols(finalData, range);
     else if (areColsBigger)
-      finalData = this.sliceCols(finalData, 0, range.getNumColumns());
+      finalData = GeneralUtils.sliceCols(finalData, 0, range.getNumColumns());
 
     return finalData;
-  }
-
-  private sliceCols(data: any[], start: number, end: number) {
-    return data.map((row) => row.slice(start, end));
-  }
-
-  private sliceRows(data: any[], start: number, end: number) {
-    return data.slice(start, end);
   }
 
   private fillRows(

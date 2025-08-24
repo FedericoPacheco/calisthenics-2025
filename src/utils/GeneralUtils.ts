@@ -57,11 +57,19 @@ export default class GeneralUtils {
   }
 
   public static isScalar(data: any) {
-    return !Array.isArray(data) && !Array.isArray(data[0]);
+    return !Array.isArray(data);
   }
 
   public static isNonEmptyMatrix(data: any) {
     return GeneralUtils.isMatrix(data) && data[0].length > 0;
+  }
+
+  public static sliceCols(matrix: any[][], start: number, end: number) {
+    return matrix.map((row) => row.slice(start, end));
+  }
+
+  public static sliceRows(matrix: any[][], start: number, end: number) {
+    return matrix.slice(start, end);
   }
 
   public static median(arr: number[]): number {
