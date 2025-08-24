@@ -1,13 +1,13 @@
-import GeneralUtils from './GeneralUtils';
+import GeneralUtils from "./GeneralUtils";
 
 export default class SpreadsheetIOAdapter {
   private sheet: GoogleAppsScript.Spreadsheet.Sheet | null;
   private sheetName: string;
-  private defaultReference: string = '';
+  private defaultReference: string = "";
 
   constructor(sheetName: string, defaultReference?: string) {
     if (!sheetName) {
-      throw new Error('Sheet name not provided');
+      throw new Error("Sheet name not provided");
     }
 
     this.sheet =
@@ -28,7 +28,7 @@ export default class SpreadsheetIOAdapter {
     minCols?: number
   ): any | any[][] {
     const ref = reference || this.defaultReference;
-    if (!ref) throw new Error('Reference not provided');
+    if (!ref) throw new Error("Reference not provided");
     if (!this.sheet) throw new Error(`Sheet "${this.sheetName}" not found`);
 
     let values: any[][];
@@ -49,47 +49,43 @@ export default class SpreadsheetIOAdapter {
     return values;
   }
 
-  private filterEmptyCols(values: any[][], minCols: number = 0) {
-    const hasData = (matrix: any[][]) =>
-      matrix.reduce(
-        (hasData, row) =>
-          hasData || row.some((value) => value.length > 0 || value > 0),
-        false
-      );
+  private filterEmptyCols(matrix: any[][], minCols: number = 1) {
+    if (!this.hasData(matrix)) return [[]];
 
-    let j: number, cols: any[][];
-    for (j = 0; j < values[0].length; j++) {
-      cols = values.map((row) => row.slice(j));
-      if (j > Math.max(minCols - 1, 0) && !hasData(cols)) {
-        values = values.map((row) => row.slice(0, j));
+    const numCols = matrix[0].length;
+    for (let j = Math.max(minCols, 1); j < numCols; j++) {
+      const nextCols = this.sliceCols(matrix, j, numCols);
+      if (!this.hasData(nextCols)) {
+        const pastCols = this.sliceCols(matrix, 0, j);
+        return pastCols;
       }
     }
-    return values;
+    return matrix;
   }
 
-  private filterEmptyRows(values: any[][], minRows: number = 0) {
-    const hasData = (matrix: any[][]) =>
-      matrix.reduce(
-        (hasData, row) =>
-          hasData || row.some((value) => value.length > 0 || value > 0),
-        false
-      );
-
-    let i: number, rows: any[][];
-    for (i = 0; i < values.length; i++) {
-      rows = values.slice(i);
-      if (i > Math.max(minRows - 1, 0) && !hasData(rows)) {
-        values = values.slice(0, i);
+  private filterEmptyRows(matrix: any[][], minRows: number = 1) {
+    if (!this.hasData(matrix)) return [[]];
+  
+    const numRows = matrix.length;
+    for (let i = Math.max(minRows, 1); i < numRows; i++) {
+      const nextRows = this.sliceRows(matrix, i, numRows);
+      if (!this.hasData(nextRows)) {
+        const pastRows = this.sliceRows(matrix, 0, i);
+        return pastRows;
       }
     }
-    return values;
+    return matrix;
+  }
+
+  private hasData (data: any[][]) {
+      return data.flat().some((value) => value.length > 0 || value > 0);
   }
 
   public write(data: any | any[] | any[][], reference?: string): void {
-    if (typeof data === 'undefined' || data === null)
-      throw new Error('Data not provided');
+    if (typeof data === "undefined" || data === null)
+      throw new Error("Data not provided");
     const ref = reference || this.defaultReference;
-    if (!ref) throw new Error('Reference not provided');
+    if (!ref) throw new Error("Reference not provided");
     if (!this.sheet) throw new Error(`Sheet "${this.sheetName}" not found`);
 
     let range: GoogleAppsScript.Spreadsheet.Range;
@@ -115,7 +111,7 @@ export default class SpreadsheetIOAdapter {
       // Fill with the upper-left value of the matrix
       return data[0][0];
     } else {
-      throw new Error('Unsupported data structure');
+      throw new Error("Unsupported data structure");
     }
   }
 
@@ -125,7 +121,7 @@ export default class SpreadsheetIOAdapter {
       finalData = this.writeSingleValueToRange(data, range);
     } else if (GeneralUtils.isMatrix(data)) {
       finalData = this.writeMatrixToRange(data, range);
-    } else throw new Error('Unsupported data structure');
+    } else throw new Error("Unsupported data structure");
 
     return finalData;
   }
@@ -149,16 +145,17 @@ export default class SpreadsheetIOAdapter {
     const areRowsSmaller = data.length < range.getNumRows();
     const areRowsBigger = data.length > range.getNumRows();
     if (areRowsSmaller) finalData = this.fillRows(finalData, range);
-    else if (areRowsBigger) finalData = this.sliceRows(finalData, 0, range.getNumRows());
+    else if (areRowsBigger)
+      finalData = this.sliceRows(finalData, 0, range.getNumRows());
 
     const areColsSmaller = data[0].length < range.getNumColumns();
     const areColsBigger = data[0].length > range.getNumColumns();
     if (areColsSmaller) finalData = this.fillCols(finalData, range);
-    else if (areColsBigger) finalData = this.sliceCols(finalData, 0, range.getNumColumns());
+    else if (areColsBigger)
+      finalData = this.sliceCols(finalData, 0, range.getNumColumns());
 
     return finalData;
   }
-
 
   private sliceCols(data: any[], start: number, end: number) {
     return data.map((row) => row.slice(start, end));
@@ -171,7 +168,7 @@ export default class SpreadsheetIOAdapter {
   private fillRows(
     data: any[],
     range: GoogleAppsScript.Spreadsheet.Range,
-    value: string | number = ''
+    value: string | number = ""
   ) {
     let finalData: any[][] = [...data];
     for (let i = data.length; i < range.getNumRows(); i++) {
@@ -183,7 +180,7 @@ export default class SpreadsheetIOAdapter {
   private fillCols(
     data: any[],
     range: GoogleAppsScript.Spreadsheet.Range,
-    value: string | number = ''
+    value: string | number = ""
   ) {
     const finalData: any[][] = [];
     data.forEach((row) => {
@@ -230,7 +227,7 @@ export default class SpreadsheetIOAdapter {
       oldRange.getNumColumns()
     );
     this.defaultReference =
-      newRange?.getA1Notation() || this.defaultReference || '';
+      newRange?.getA1Notation() || this.defaultReference || "";
   }
 
   public resizeReference(newRowsCount: number, newColsCount: number): void {
@@ -247,6 +244,6 @@ export default class SpreadsheetIOAdapter {
       newColsCount
     );
     this.defaultReference =
-      newRange?.getA1Notation() || this.defaultReference || '';
+      newRange?.getA1Notation() || this.defaultReference || "";
   }
 }
