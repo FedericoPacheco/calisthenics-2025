@@ -149,22 +149,23 @@ export default class SpreadsheetIOAdapter {
     const areRowsSmaller = data.length < range.getNumRows();
     const areRowsBigger = data.length > range.getNumRows();
     if (areRowsSmaller) finalData = this.fillRows(finalData, range);
-    else if (areRowsBigger) finalData = this.sliceRows(finalData, range);
+    else if (areRowsBigger) finalData = this.sliceRows(finalData, 0, range.getNumRows());
 
     const areColsSmaller = data[0].length < range.getNumColumns();
     const areColsBigger = data[0].length > range.getNumColumns();
     if (areColsSmaller) finalData = this.fillCols(finalData, range);
-    else if (areColsBigger) finalData = this.sliceCols(finalData, range);
+    else if (areColsBigger) finalData = this.sliceCols(finalData, 0, range.getNumColumns());
 
     return finalData;
   }
 
-  private sliceCols(data: any[], range: GoogleAppsScript.Spreadsheet.Range) {
-    return data.map((row) => row.slice(0, range.getNumColumns()));
+
+  private sliceCols(data: any[], start: number, end: number) {
+    return data.map((row) => row.slice(start, end));
   }
 
-  private sliceRows(data: any[], range: GoogleAppsScript.Spreadsheet.Range) {
-    return data.slice(0, range.getNumRows());
+  private sliceRows(data: any[], start: number, end: number) {
+    return data.slice(start, end);
   }
 
   private fillRows(
