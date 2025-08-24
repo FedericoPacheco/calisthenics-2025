@@ -13,7 +13,7 @@ export default class GeneralUtils {
   }
 
   public static round(num: number, decimalPlaces: number = 2): number {
-    if (isNaN(num)) throw new Error("Input is not a valid number");
+    if (isNaN(num)) return num;
     const factor = Math.pow(10, decimalPlaces);
     return Math.round(num * factor) / factor;
   }
