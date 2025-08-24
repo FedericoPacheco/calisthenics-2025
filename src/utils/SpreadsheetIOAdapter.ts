@@ -50,12 +50,12 @@ export default class SpreadsheetIOAdapter {
   }
 
   private filterEmptyCols(matrix: any[][], minCols: number = 1) {
-    if (!this.hasData(matrix)) return [[]];
+    if (!GeneralUtils.isMatrixWithValues(matrix)) return [[]];
 
     const numCols = matrix[0].length;
     for (let j = Math.max(minCols, 1); j < numCols; j++) {
       const nextCols = GeneralUtils.sliceCols(matrix, j, numCols);
-      if (!this.hasData(nextCols)) {
+      if (!GeneralUtils.isMatrixWithValues(nextCols)) {
         const pastCols = GeneralUtils.sliceCols(matrix, 0, j);
         return pastCols;
       }
@@ -64,21 +64,17 @@ export default class SpreadsheetIOAdapter {
   }
 
   private filterEmptyRows(matrix: any[][], minRows: number = 1) {
-    if (!this.hasData(matrix)) return [[]];
+    if (!GeneralUtils.isMatrixWithValues(matrix)) return [[]];
 
     const numRows = matrix.length;
     for (let i = Math.max(minRows, 1); i < numRows; i++) {
       const nextRows = GeneralUtils.sliceRows(matrix, i, numRows);
-      if (!this.hasData(nextRows)) {
+      if (!GeneralUtils.isMatrixWithValues(nextRows)) {
         const pastRows = GeneralUtils.sliceRows(matrix, 0, i);
         return pastRows;
       }
     }
     return matrix;
-  }
-
-  private hasData(data: any[][]) {
-    return data.flat().some((value) => value.length > 0 || value > 0);
   }
 
   public write(data: any | any[] | any[][], reference?: string): void {
@@ -131,8 +127,8 @@ export default class SpreadsheetIOAdapter {
     range: GoogleAppsScript.Spreadsheet.Range
   ) {
     let finalData: any[][] = [[data]];
-    finalData = this.fillRows(finalData, range.getNumRows(), range.getNumColumns(), data);
-    finalData = this.fillCols(finalData, range.getNumColumns(), data);
+    finalData = GeneralUtils.fillRows(finalData, range.getNumRows(), range.getNumColumns(), data);
+    finalData = GeneralUtils.fillCols(finalData, range.getNumColumns(), data);
     return finalData;
   }
 
@@ -145,7 +141,7 @@ export default class SpreadsheetIOAdapter {
     const areRowsSmaller = data.length < range.getNumRows();
     const areRowsBigger = data.length > range.getNumRows();
     if (areRowsSmaller)
-      finalData = this.fillRows(
+      finalData = GeneralUtils.fillRows(
         finalData,
         range.getNumRows(),
         range.getNumColumns()
@@ -155,36 +151,10 @@ export default class SpreadsheetIOAdapter {
 
     const areColsSmaller = data[0].length < range.getNumColumns();
     const areColsBigger = data[0].length > range.getNumColumns();
-    if (areColsSmaller) finalData = this.fillCols(finalData, range.getNumColumns());
+    if (areColsSmaller) finalData = GeneralUtils.fillCols(finalData, range.getNumColumns());
     else if (areColsBigger)
       finalData = GeneralUtils.sliceCols(finalData, 0, range.getNumColumns());
 
-    return finalData;
-  }
-
-  private fillRows(
-    matrix: any[][],
-    numRows: number,
-    numCols: number,
-    value: string | number = ""
-  ) {
-    let finalData: any[][] = [...matrix];
-    for (let i = matrix.length; i < numRows; i++) {
-      finalData.push(Array(numCols).fill(value));
-    }
-    return finalData;
-  }
-
-  private fillCols(
-    matrix: any[][],
-    numCols: number,
-    value: string | number = ""
-  ) {
-    const finalData: any[][] = [];
-    matrix.forEach((row) => {
-      const missingValues = Array(numCols - row.length).fill(value);
-      finalData.push([...row, ...missingValues]);
-    });
     return finalData;
   }
 

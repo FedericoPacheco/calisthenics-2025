@@ -60,8 +60,12 @@ export default class GeneralUtils {
     return !Array.isArray(data);
   }
 
-  public static isNonEmptyMatrix(data: any) {
-    return GeneralUtils.isMatrix(data) && data[0].length > 0;
+  public static isNonEmptyMatrix(matrix: any) {
+    return GeneralUtils.isMatrix(matrix) && matrix[0].length > 0;
+  }
+
+  public static isMatrixWithValues(matrix: any[][]) {
+    return GeneralUtils.isMatrix(matrix) && matrix.flat().some((value) => value.length > 0 || value > 0);
   }
 
   public static sliceCols(matrix: any[][], start: number, end: number) {
@@ -70,6 +74,32 @@ export default class GeneralUtils {
 
   public static sliceRows(matrix: any[][], start: number, end: number) {
     return matrix.slice(start, end);
+  }
+
+  public static fillRows(
+    matrix: any[][],
+    numRows: number,
+    numCols: number,
+    value: string | number = ""
+  ) {
+    let finalData: any[][] = [...matrix];
+    for (let i = matrix.length; i < numRows; i++) {
+      finalData.push(Array(numCols).fill(value));
+    }
+    return finalData;
+  }
+
+  public static fillCols(
+    matrix: any[][],
+    numCols: number,
+    value: string | number = ""
+  ) {
+    const finalData: any[][] = [];
+    matrix.forEach((row) => {
+      const missingValues = Array(numCols - row.length).fill(value);
+      finalData.push([...row, ...missingValues]);
+    });
+    return finalData;
   }
 
   public static median(arr: number[]): number {
