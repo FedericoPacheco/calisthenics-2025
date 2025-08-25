@@ -48,21 +48,21 @@ suite("SWControlPanel", function () {
 
       controlPanel.run();
 
-      // Output format: seq (microcycle), left and right median fingers, median TEC, left and right usage per finger (10 i.e. whole palm, 5, 4, 3, 2, 1, 0)
+      // Output format: seq (microcycle), left and right median fingers, median TEC, mesoccyle left and right usage per finger (10 i.e. whole palm, 5, 4, 3, 2, 1, 0)
       assert.deepEqual((outputStub.write as any).getCall(0).args[0], [
         [
           1,
           ...[1, 1.5],
           8,
-          ...[0.0, 0.0, 0.0, 0.0, 0.17, 0.83, 0.0],
-          ...[0.0, 0.0, 0.0, 0.17, 0.33, 0.5, 0.0],
+          ...[0.0, 0.08, 0.08, 0.08, 0.17, 0.5, 0.08],
+          ...[0.0, 0.08, 0.08, 0.17, 0.25, 0.33, 0.08],
         ],
         [
           2,
           ...[2.5, 2.5],
           8,
-          ...[0.0, 0.17, 0.17, 0.17, 0.17, 0.17, 0.17],
-          ...[0.0, 0.17, 0.17, 0.17, 0.17, 0.17, 0.17],
+          ...[0.0, 0.08, 0.08, 0.08, 0.17, 0.5, 0.08],
+          ...[0.0, 0.08, 0.08, 0.17, 0.25, 0.33, 0.08],
         ],
       ]);
     });
@@ -125,24 +125,27 @@ suite("SWControlPanel", function () {
         },
       ];
 
+      debugger;
       const metrics = controlPanel.computeMetrics(entryData);
 
-      assert.deepEqual(metrics.microcycle, [
-        {
-          medianLeftIntensity: 1,
-          medianRightIntensity: 1.5,
-          medianTEC: 8,
-          leftFingerUsage: [0.0, 0.0, 0.0, 0.0, 0.17, 0.83, 0.0],
-          rightFingerUsage: [0.0, 0.0, 0.0, 0.17, 0.33, 0.5, 0.0],
+      assert.deepEqual(metrics, {
+        microcycle: [
+          {
+            medianLeftIntensity: 1,
+            medianRightIntensity: 1.5,
+            medianTEC: 8,
+          },
+          {
+            medianLeftIntensity: 2.5,
+            medianRightIntensity: 2.5,
+            medianTEC: 8,
+          },
+        ],
+        mesocycle: {
+          leftFingerUsage: [0.0, 0.08, 0.08, 0.08, 0.17, 0.5, 0.08],
+          rightFingerUsage: [0.0, 0.08, 0.08, 0.17, 0.25, 0.33, 0.08],
         },
-        {
-          medianLeftIntensity: 2.5,
-          medianRightIntensity: 2.5,
-          medianTEC: 8,
-          leftFingerUsage: [0.0, 0.17, 0.17, 0.17, 0.17, 0.17, 0.17],
-          rightFingerUsage: [0.0, 0.17, 0.17, 0.17, 0.17, 0.17, 0.17],
-        },
-      ]);
+      });
     });
   });
 });

@@ -48,7 +48,7 @@ export function runOAHSControlPanel() {
       mesoParams.args
     ).run();
   });
-};
+}
 (global as any).runOAHSControlPanel = runOAHSControlPanel;
 
 // -------------------------------------------------------------------------------------

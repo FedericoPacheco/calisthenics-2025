@@ -16,11 +16,14 @@ type SWMicrocycleMetrics = {
   medianLeftIntensity: number;
   medianRightIntensity: number;
   medianTEC: number;
+};
+type SWMesocycleMetrics = {
   leftFingerUsage: number[];
   rightFingerUsage: number[];
 };
 type SWMetrics = {
   microcycle: SWMicrocycleMetrics[];
+  mesocycle: SWMesocycleMetrics;
 };
 export class SWControlPanel extends ControlPanelTemplateMethod {
   constructor(
@@ -55,11 +58,12 @@ export class SWControlPanel extends ControlPanelTemplateMethod {
   public computeMetrics(entryData: SWEntry[]): SWMetrics {
     const sessionsPerMicrocycle = entryData.length / this.microcycleCount;
     const fingers = [10, 5, 4, 3, 2, 1, 0];
-
-    const microcycleMetrics = GeneralUtils.split(
+    const entriesPerMicrocycle = GeneralUtils.split(
       entryData,
       sessionsPerMicrocycle
-    ).map((microcycleEntries) => {
+    );
+
+    const microcycleMetrics = entriesPerMicrocycle.map((microcycleEntries) => {
       const medianLeftIntensity = GeneralUtils.round(
         GeneralUtils.median(
           microcycleEntries.map((entry) => entry.leftIntensity).flat()
@@ -70,46 +74,48 @@ export class SWControlPanel extends ControlPanelTemplateMethod {
           microcycleEntries.map((entry) => entry.rightIntensity).flat()
         )
       );
-
       const medianTEC = GeneralUtils.round(
         GeneralUtils.median(microcycleEntries.map((entry) => entry.TEC).flat())
-      );
-
-      const leftFrequencies = GeneralUtils.relativeFrequencies(
-        microcycleEntries.map((entry) => entry.leftIntensity).flat()
-      );
-      const rightFrequencies = GeneralUtils.relativeFrequencies(
-        microcycleEntries.map((entry) => entry.rightIntensity).flat()
-      );
-      const leftFingerUsage = fingers.map((f) =>
-        GeneralUtils.round(leftFrequencies[f] || 0)
-      );
-      const rightFingerUsage = fingers.map((f) =>
-        GeneralUtils.round(rightFrequencies[f] || 0)
       );
 
       return {
         medianLeftIntensity,
         medianRightIntensity,
         medianTEC,
-        leftFingerUsage,
-        rightFingerUsage,
       };
     });
 
+    const leftFrequencies = GeneralUtils.relativeFrequencies(
+      entryData.map((entry) => entry.leftIntensity).flat()
+    );
+    const rightFrequencies = GeneralUtils.relativeFrequencies(
+      entryData.map((entry) => entry.rightIntensity).flat()
+    );
+    const leftFingerUsage = fingers.map((f) =>
+      GeneralUtils.round(leftFrequencies[f] || 0)
+    );
+    const rightFingerUsage = fingers.map((f) =>
+      GeneralUtils.round(rightFrequencies[f] || 0)
+    );
+    const mesocycleMetrics = {
+      leftFingerUsage,
+      rightFingerUsage,
+    };
+
     return {
       microcycle: microcycleMetrics,
+      mesocycle: mesocycleMetrics,
     };
   }
 
   public transform(entryData: SWEntry[], metrics: SWMetrics): any[][] {
-    return metrics.microcycle.map((metrics, microcycle) => [
-      microcycle + 1,
-      metrics.medianLeftIntensity,
-      metrics.medianRightIntensity,
-      metrics.medianTEC,
-      ...metrics.leftFingerUsage,
-      ...metrics.rightFingerUsage,
+    return metrics.microcycle.map((microcycleMetrics, idx) => [
+      idx + 1,
+      microcycleMetrics.medianLeftIntensity,
+      microcycleMetrics.medianRightIntensity,
+      microcycleMetrics.medianTEC,
+      ...metrics.mesocycle.leftFingerUsage,
+      ...metrics.mesocycle.rightFingerUsage,
     ]);
   }
 }
