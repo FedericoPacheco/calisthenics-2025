@@ -34,7 +34,7 @@ const OAHSParams = [
       new SpreadsheetIOAdapter("22-SW", "H9:J9"),
       new SpreadsheetIOAdapter("22-SW", "H18:J18"),
     ],
-    output: new SpreadsheetIOAdapter("03-SWControlPanel", "B8:S11"),
+    output: new SpreadsheetIOAdapter("03-SWControlPanel", "C14:T17"),
     microcycleCount: 4,
     args: {},
   },
@@ -54,17 +54,17 @@ export function runOAHSControlPanel() {
 // -------------------------------------------------------------------------------------
 // Dips
 const dipsPrevious1RM = new SpreadsheetIOAdapter(
-  "03-ControlPanel",
+  "03-STControlPanel",
   "K3"
 ).read();
-const dipsBw = new SpreadsheetIOAdapter("03-ControlPanel", "K4").read();
+const dipsBw = new SpreadsheetIOAdapter("03-STControlPanel", "K4").read();
 const dipsParams = [
   {
     inputs: [
       new SpreadsheetIOAdapter("13-ST", "H14:J14"),
       new SpreadsheetIOAdapter("13-ST", "H22:J22"),
     ],
-    output: new SpreadsheetIOAdapter("03-ControlPanel", "B8:K43"),
+    output: new SpreadsheetIOAdapter("03-STControlPanel", "B8:K43"),
     microcycleCount: 4,
     args: {
       previous1RM: dipsPrevious1RM,
@@ -88,10 +88,10 @@ export function runDipsControlPanel() {
 // -------------------------------------------------------------------------------------
 // Pull-ups
 const pullUpPrevious1RM = new SpreadsheetIOAdapter(
-  "03-ControlPanel",
+  "03-STControlPanel",
   "V3"
 ).read();
-const pullUpBw = new SpreadsheetIOAdapter("03-ControlPanel", "V4").read();
+const pullUpBw = new SpreadsheetIOAdapter("03-STControlPanel", "V4").read();
 
 const pullUpParams = [
   {
@@ -99,7 +99,7 @@ const pullUpParams = [
       new SpreadsheetIOAdapter("13-ST", "H10:J10"),
       new SpreadsheetIOAdapter("13-ST", "H18:J18"),
     ],
-    output: new SpreadsheetIOAdapter("03-ControlPanel", "M8:V43"),
+    output: new SpreadsheetIOAdapter("03-STControlPanel", "M8:V43"),
     microcycleCount: 4,
     args: {
       previous1RM: pullUpPrevious1RM,
