@@ -27,14 +27,14 @@ import { SWControlPanel } from "./routine/controlPanel/SWControlPanel";
 // Control panels
 
 // -------------------------------------------------------------------------------------
-// OAHS
+// One arm handstands
 const OAHSParams = [
   {
     inputs: [
       new SpreadsheetIOAdapter("22-SW", "H9:J9"),
       new SpreadsheetIOAdapter("22-SW", "H18:J18"),
     ],
-    output: new SpreadsheetIOAdapter("03-SWControlPanel", "C14:T17"),
+    output: new SpreadsheetIOAdapter("03-SWControlPanel", "C14:V17"),
     microcycleCount: 4,
     args: {},
   },

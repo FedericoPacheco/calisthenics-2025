@@ -48,18 +48,24 @@ suite("SWControlPanel", function () {
 
       controlPanel.run();
 
-      // Output format: seq (microcycle), left and right median fingers, median TEC, mesoccyle left and right usage per finger (10 i.e. whole palm, 5, 4, 3, 2, 1, 0)
+      /* Output format: 
+          seq (microcycle), 
+          left median fingers per microcycle and mesocycle, 
+          right median fingers per microcycle and mesocycle, 
+          median TEC, 
+          mesoccyle left and right usage per finger (10 i.e. whole palm, 5, 4, 3, 2, 1, 0)
+      */
       assert.deepEqual((outputStub.write as any).getCall(0).args[0], [
         [
           1,
-          ...[1, 1.5],
+          ...[1, 1, 1.5, 2],
           8,
           ...[0.0, 0.08, 0.08, 0.08, 0.17, 0.5, 0.08],
           ...[0.0, 0.08, 0.08, 0.17, 0.25, 0.33, 0.08],
         ],
         [
           2,
-          ...[2.5, 2.5],
+          ...[2.5, 1, 2.5, 2],
           8,
           ...[0.0, 0.08, 0.08, 0.08, 0.17, 0.5, 0.08],
           ...[0.0, 0.08, 0.08, 0.17, 0.25, 0.33, 0.08],
@@ -142,6 +148,8 @@ suite("SWControlPanel", function () {
           },
         ],
         mesocycle: {
+          medianLeftIntensity: 1,
+          medianRightIntensity: 2,
           leftFingerUsage: [0.0, 0.08, 0.08, 0.08, 0.17, 0.5, 0.08],
           rightFingerUsage: [0.0, 0.08, 0.08, 0.17, 0.25, 0.33, 0.08],
         },

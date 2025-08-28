@@ -18,6 +18,8 @@ type SWMicrocycleMetrics = {
   medianTEC: number;
 };
 type SWMesocycleMetrics = {
+  medianLeftIntensity: number;
+  medianRightIntensity: number;
   leftFingerUsage: number[];
   rightFingerUsage: number[];
 };
@@ -26,6 +28,8 @@ type SWMetrics = {
   mesocycle: SWMesocycleMetrics;
 };
 export class SWControlPanel extends ControlPanelTemplateMethod {
+  private static FINGERS = [10, 5, 4, 3, 2, 1, 0];
+
   constructor(
     inputs: SpreadsheetIOAdapter[],
     output: SpreadsheetIOAdapter,
@@ -56,13 +60,20 @@ export class SWControlPanel extends ControlPanelTemplateMethod {
   }
 
   public computeMetrics(entryData: SWEntry[]): SWMetrics {
+    return {
+      microcycle: this.computeMicrocycleMetrics(entryData),
+      mesocycle: this.computeMesocycleMetrics(entryData),
+    };
+  }
+
+  private computeMicrocycleMetrics(
+    entryData: SWEntry[]
+  ): SWMicrocycleMetrics[] {
     const sessionsPerMicrocycle = entryData.length / this.microcycleCount;
-    const fingers = [10, 5, 4, 3, 2, 1, 0];
     const entriesPerMicrocycle = GeneralUtils.split(
       entryData,
       sessionsPerMicrocycle
     );
-
     const microcycleMetrics = entriesPerMicrocycle.map((microcycleEntries) => {
       const medianLeftIntensity = GeneralUtils.round(
         GeneralUtils.median(
@@ -85,26 +96,31 @@ export class SWControlPanel extends ControlPanelTemplateMethod {
       };
     });
 
-    const leftFrequencies = GeneralUtils.relativeFrequencies(
-      entryData.map((entry) => entry.leftIntensity).flat()
-    );
-    const rightFrequencies = GeneralUtils.relativeFrequencies(
-      entryData.map((entry) => entry.rightIntensity).flat()
-    );
-    const leftFingerUsage = fingers.map((f) =>
+    return microcycleMetrics;
+  }
+
+  private computeMesocycleMetrics(entryData: SWEntry[]): SWMesocycleMetrics {
+    const leftFingers = entryData.map((entry) => entry.leftIntensity).flat();
+    const rightFingers = entryData.map((entry) => entry.rightIntensity).flat();
+
+    const leftFrequencies = GeneralUtils.relativeFrequencies(leftFingers);
+    const rightFrequencies = GeneralUtils.relativeFrequencies(rightFingers);
+
+    const leftFingerUsage = SWControlPanel.FINGERS.map((f) =>
       GeneralUtils.round(leftFrequencies[f] || 0)
     );
-    const rightFingerUsage = fingers.map((f) =>
+    const rightFingerUsage = SWControlPanel.FINGERS.map((f) =>
       GeneralUtils.round(rightFrequencies[f] || 0)
     );
-    const mesocycleMetrics = {
-      leftFingerUsage,
-      rightFingerUsage,
-    };
+
+    const medianLeftIntensity = GeneralUtils.median(leftFingers);
+    const medianRightIntensity = GeneralUtils.median(rightFingers);
 
     return {
-      microcycle: microcycleMetrics,
-      mesocycle: mesocycleMetrics,
+      leftFingerUsage,
+      rightFingerUsage,
+      medianLeftIntensity,
+      medianRightIntensity,
     };
   }
 
@@ -112,7 +128,9 @@ export class SWControlPanel extends ControlPanelTemplateMethod {
     return metrics.microcycle.map((microcycleMetrics, idx) => [
       idx + 1,
       microcycleMetrics.medianLeftIntensity,
+      metrics.mesocycle.medianLeftIntensity,
       microcycleMetrics.medianRightIntensity,
+      metrics.mesocycle.medianRightIntensity,
       microcycleMetrics.medianTEC,
       ...metrics.mesocycle.leftFingerUsage,
       ...metrics.mesocycle.rightFingerUsage,
