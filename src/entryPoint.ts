@@ -55,16 +55,29 @@ export function runOAHSControlPanel() {
 // Dips
 const dipsPrevious1RM = new SpreadsheetIOAdapter(
   "03-STControlPanel",
-  "K3"
+  "K6"
 ).read();
-const dipsBw = new SpreadsheetIOAdapter("03-STControlPanel", "K4").read();
+const dipsBw = new SpreadsheetIOAdapter("03-STControlPanel", "K7").read();
 const dipsParams = [
   {
     inputs: [
       new SpreadsheetIOAdapter("13-ST", "H14:J14"),
       new SpreadsheetIOAdapter("13-ST", "H22:J22"),
     ],
-    output: new SpreadsheetIOAdapter("03-STControlPanel", "B8:K43"),
+    output: new SpreadsheetIOAdapter("03-STControlPanel", "B11:K46"),
+    microcycleCount: 4,
+    args: {
+      previous1RM: dipsPrevious1RM,
+      bw: dipsBw,
+      minSetsJumpPerMicrocycle: [4, 8, 7, 6],
+    },
+  },
+  {
+    inputs: [
+      new SpreadsheetIOAdapter("23-ST", "H14:J14"),
+      new SpreadsheetIOAdapter("23-ST", "H22:J22"),
+    ],
+    output: new SpreadsheetIOAdapter("03-STControlPanel", "B47:K82"),
     microcycleCount: 4,
     args: {
       previous1RM: dipsPrevious1RM,
@@ -89,9 +102,9 @@ export function runDipsControlPanel() {
 // Pull-ups
 const pullUpPrevious1RM = new SpreadsheetIOAdapter(
   "03-STControlPanel",
-  "V3"
+  "V6"
 ).read();
-const pullUpBw = new SpreadsheetIOAdapter("03-STControlPanel", "V4").read();
+const pullUpBw = new SpreadsheetIOAdapter("03-STControlPanel", "V7").read();
 
 const pullUpParams = [
   {
@@ -99,7 +112,20 @@ const pullUpParams = [
       new SpreadsheetIOAdapter("13-ST", "H10:J10"),
       new SpreadsheetIOAdapter("13-ST", "H18:J18"),
     ],
-    output: new SpreadsheetIOAdapter("03-STControlPanel", "M8:V43"),
+    output: new SpreadsheetIOAdapter("03-STControlPanel", "M11:V46"),
+    microcycleCount: 4,
+    args: {
+      previous1RM: pullUpPrevious1RM,
+      bw: pullUpBw,
+      minSetsJumpPerMicrocycle: [4, 8, 7, 6],
+    },
+  },
+  {
+    inputs: [
+      new SpreadsheetIOAdapter("23-ST", "H10:J10"),
+      new SpreadsheetIOAdapter("23-ST", "H18:J18"),
+    ],
+    output: new SpreadsheetIOAdapter("03-STControlPanel", "M47:V82"),
     microcycleCount: 4,
     args: {
       previous1RM: pullUpPrevious1RM,
