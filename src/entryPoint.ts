@@ -38,6 +38,14 @@ const OAHSParams = [
     microcycleCount: 4,
     args: {},
   },
+  {
+    inputs: [
+      new SpreadsheetIOAdapter("32-SW", "H9:J9"),
+    ],
+    output: new SpreadsheetIOAdapter("03-SWControlPanel", "C18:V21"),
+    microcycleCount: 4,
+    args: {},
+  },
 ];
 export function runOAHSControlPanel() {
   OAHSParams.forEach((mesoParams) => {
