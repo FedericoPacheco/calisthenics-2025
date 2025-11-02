@@ -39,10 +39,14 @@ const OAHSParams = [
     args: {},
   },
   {
-    inputs: [
-      new SpreadsheetIOAdapter("32-SW", "H9:J9"),
-    ],
+    inputs: [new SpreadsheetIOAdapter("32-SW", "H9:J9")],
     output: new SpreadsheetIOAdapter("03-SWControlPanel", "C18:V21"),
+    microcycleCount: 4,
+    args: {},
+  },
+  {
+    inputs: [new SpreadsheetIOAdapter("42-SW", "H14:J14")],
+    output: new SpreadsheetIOAdapter("03-SWControlPanel", "C22:V25"),
     microcycleCount: 4,
     args: {},
   },
