@@ -13,12 +13,9 @@ suite("SWControlPanel", function () {
     inputStub1 = createStubInstance(SpreadsheetIOAdapter);
     inputStub2 = createStubInstance(SpreadsheetIOAdapter);
     outputStub = createStubInstance(SpreadsheetIOAdapter);
-    controlPanel = new SWControlPanel(
-      [inputStub1, inputStub2],
-      outputStub,
-      2,
-      {}
-    );
+    controlPanel = new SWControlPanel([inputStub1, inputStub2], outputStub, 2, {
+      startMicrocycle: 1,
+    });
   });
 
   teardown(function () {

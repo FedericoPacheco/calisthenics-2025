@@ -11,7 +11,9 @@ type SWEntry = {
   rightIntensity: number[];
   TEC: number[];
 };
-type SWArgs = {};
+type SWArgs = {
+  startMicrocycle: number;
+};
 type SWMicrocycleMetrics = {
   medianLeftIntensity: number;
   medianRightIntensity: number;
@@ -126,7 +128,7 @@ export class SWControlPanel extends ControlPanelTemplateMethod {
 
   public transform(entryData: SWEntry[], metrics: SWMetrics): any[][] {
     return metrics.microcycle.map((microcycleMetrics, idx) => [
-      idx + 1,
+      (this.args as SWArgs).startMicrocycle + idx,
       microcycleMetrics.medianLeftIntensity,
       metrics.mesocycle.medianLeftIntensity,
       microcycleMetrics.medianRightIntensity,
