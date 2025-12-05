@@ -8,7 +8,7 @@
   "scripts": {
     "build": "webpack --config webpack.config.mjs",
     "push": "npm run build && clasp push",
-    "test": "mocha --require ts-node/register --ui tdd --reporter spec \"test/**/*.test.{ts,js}\"",
+    "test": "mocha --require ts-node/register --ui tdd --reporter min \"test/**/*.test.{ts,js}\"",
     "test:debug": "npm test -- --inspect-brk"
   },
   "author": "Federico I. Pacheco Pilan",
@@ -23,7 +23,7 @@
     "@types/sinon": "^17.0.4",
     "@typescript-eslint/eslint-plugin": "^8.31.0",
     "@typescript-eslint/parser": "^8.31.0",
-    "chai": "^5.2.0",
+    "chai": "^4.5.0",
     "eslint": "^8.57.1",
     "gas-webpack-plugin": "^2.6.0",
     "mocha": "^11.1.0",
