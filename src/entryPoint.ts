@@ -1,7 +1,7 @@
 import SpreadsheetIOAdapter from "./adapters/SpreadsheetIOAdapter";
 import { STControlPanel } from "./controlPanel/STControlPanel";
 import { onPeriodizationEdit } from "./periodization/IntensityVolumeDecisionMatrix";
-import STUtils from "./utils/STUtils";
+import STUtils, { StrengthTest } from "./utils/STUtils";
 import { SWControlPanel } from "./controlPanel/SWControlPanel";
 import GeneralUtils from "./utils/GeneralUtils";
 
@@ -175,6 +175,18 @@ function E1RM(weight: number, bw: number, reps: number): number {
   return STUtils.computeE1RM(weight, bw, reps);
 }
 (global as any).E1RM = E1RM;
+
+/** @customfunction */
+function E1RM_MULTIPOINT(input: number[][]): number {
+  const observations: StrengthTest[] = [];
+  input.forEach((arr) => {
+    const [weight, bw, reps, rpe] = arr;
+    observations.push({ weight, bw, reps, rpe });
+  });
+  return STUtils.estimate1RmMultipoint(observations);
+}
+(global as any).E1RM_MULTIPOINT = E1RM_MULTIPOINT;
+
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // Time utils
