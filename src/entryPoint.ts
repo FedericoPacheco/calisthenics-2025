@@ -1,8 +1,8 @@
-import SpreadsheetIOAdapter from "./utils/SpreadsheetIOAdapter";
-import { STControlPanel } from "./routine/controlPanel/STControlPanel";
-import { onPeriodizationEdit } from "./routine/periodization/IntensityVolumeDecisionMatrix";
-import STUtils from "./STUtils";
-import { SWControlPanel } from "./routine/controlPanel/SWControlPanel";
+import SpreadsheetIOAdapter from "./adapters/SpreadsheetIOAdapter";
+import { STControlPanel } from "./controlPanel/STControlPanel";
+import { onPeriodizationEdit } from "./periodization/IntensityVolumeDecisionMatrix";
+import STUtils from "./utils/STUtils";
+import { SWControlPanel } from "./controlPanel/SWControlPanel";
 import GeneralUtils from "./utils/GeneralUtils";
 
 // Don't forget to add this line. Otherwise, the function won't be exported to the global scope.

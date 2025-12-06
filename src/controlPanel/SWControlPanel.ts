@@ -1,6 +1,6 @@
-import STUtils from "../../STUtils";
-import GeneralUtils from "../../utils/GeneralUtils";
-import SpreadsheetIOAdapter from "../../utils/SpreadsheetIOAdapter";
+import STUtils from "../utils/STUtils";
+import GeneralUtils from "../utils/GeneralUtils";
+import SpreadsheetIOAdapter from "../adapters/SpreadsheetIOAdapter";
 import { ControlPanelTemplateMethod } from "./ControlPanelTemplateMethod";
 
 type SWEntry = {

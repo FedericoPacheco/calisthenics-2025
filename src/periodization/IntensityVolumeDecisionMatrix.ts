@@ -1,6 +1,6 @@
-import SpreadsheetIOAdapter from '../../utils/SpreadsheetIOAdapter';
-import STUtils from '../../STUtils';
-import GeneralUtils from '../../utils/GeneralUtils';
+import SpreadsheetIOAdapter from '../adapters/SpreadsheetIOAdapter';
+import STUtils from '../utils/STUtils';
+import GeneralUtils from '../utils/GeneralUtils';
 
 // https://developers.google.com/apps-script/guides/triggers
 // https://developers.google.com/apps-script/guides/properties

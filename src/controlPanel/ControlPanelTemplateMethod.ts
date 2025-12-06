@@ -1,4 +1,4 @@
-import SpreadsheetIOAdapter from '../../utils/SpreadsheetIOAdapter';
+import SpreadsheetIOAdapter from '../adapters/SpreadsheetIOAdapter';
 
 // https://refactoring.guru/design-patterns/template-method
 

@@ -1,4 +1,4 @@
-import GeneralUtils from "./GeneralUtils";
+import GeneralUtils from "../utils/GeneralUtils";
 
 export default class SpreadsheetIOAdapter {
   private sheet: GoogleAppsScript.Spreadsheet.Sheet | null;
