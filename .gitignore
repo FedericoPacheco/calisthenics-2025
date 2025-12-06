@@ -7,3 +7,4 @@ dist/bundle.js
 dist/bundle.js.map
 dist/src
 dist/test
+build
