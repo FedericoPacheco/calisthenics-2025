@@ -65,7 +65,10 @@ export default class GeneralUtils {
   }
 
   public static isMatrixWithValues(matrix: any[][]) {
-    return GeneralUtils.isMatrix(matrix) && matrix.flat().some((value) => value.length > 0 || value > 0);
+    return (
+      GeneralUtils.isMatrix(matrix) &&
+      matrix.flat().some((value) => value.length > 0 || value > 0)
+    );
   }
 
   public static sliceCols(matrix: any[][], start: number, end: number) {
@@ -122,16 +125,37 @@ export default class GeneralUtils {
     return chunks;
   }
 
-  public static relativeFrequencies<T extends string | number | symbol>(arr: T[]): Record<T, number> {
+  public static relativeFrequencies<T extends string | number | symbol>(
+    arr: T[]
+  ): Record<T, number> {
     const frequencies = {} as Record<T, number>;
     arr.forEach((item) => {
-      if (!frequencies[item]) 
-        frequencies[item] = 0;
+      if (!frequencies[item]) frequencies[item] = 0;
       frequencies[item]++;
     });
     Object.keys(frequencies).forEach((item) => {
       frequencies[item as T] /= arr.length;
     });
     return frequencies;
+  }
+
+  public static div(dividend: number, divisor: number): number {
+    return Math.floor(dividend / divisor);
+  }
+
+  public static getHours(input: number[]): number {
+    const minutes = input[0];
+    const seconds = input[1];
+    return GeneralUtils.div(minutes * 60 + seconds, 60 * 60);
+  }
+  public static getMinutes(input: number[]): number {
+    const minutes = input[0];
+    const seconds = input[1];
+    return GeneralUtils.div((minutes * 60 + seconds) % (60 * 60), 60);
+  }
+  public static getSeconds(input: number[]): number {
+    const minutes = input[0];
+    const seconds = input[1];
+    return ((minutes * 60 + seconds) % (60 * 60)) % 60;
   }
 }

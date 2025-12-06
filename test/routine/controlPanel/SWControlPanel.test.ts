@@ -128,7 +128,6 @@ suite("SWControlPanel", function () {
         },
       ];
 
-      debugger;
       const metrics = controlPanel.computeMetrics(entryData);
 
       assert.deepEqual(metrics, {

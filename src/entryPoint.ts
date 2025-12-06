@@ -3,6 +3,7 @@ import { STControlPanel } from "./routine/controlPanel/STControlPanel";
 import { onPeriodizationEdit } from "./routine/periodization/IntensityVolumeDecisionMatrix";
 import STUtils from "./STUtils";
 import { SWControlPanel } from "./routine/controlPanel/SWControlPanel";
+import GeneralUtils from "./utils/GeneralUtils";
 
 // Don't forget to add this line. Otherwise, the function won't be exported to the global scope.
 // https://www.npmjs.com/package/gas-webpack-plugin
@@ -174,3 +175,24 @@ function E1RM(weight: number, bw: number, reps: number): number {
   return STUtils.computeE1RM(weight, bw, reps);
 }
 (global as any).E1RM = E1RM;
+
+////////////////////////////////////////////////////////////////////////////////////////
+// Time utils
+
+/** @customfunction */
+function GET_HOURS(input: number[][]): number {
+  return GeneralUtils.getHours(input[0]);
+}
+(global as any).GET_HOURS = GET_HOURS;
+
+/** @customfunction */
+function GET_MINUTES(input: number[][]): number {
+  return GeneralUtils.getMinutes(input[0]);
+}
+(global as any).GET_MINUTES = GET_MINUTES;
+
+/** @customfunction */
+function GET_SECONDS(input: number[][]): number {
+  return GeneralUtils.getSeconds(input[0]);
+}
+(global as any).GET_SECONDS = GET_SECONDS;
