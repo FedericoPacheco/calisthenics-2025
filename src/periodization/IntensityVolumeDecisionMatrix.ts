@@ -79,12 +79,12 @@ export function computeIntensityVolumeMatrix(
   return axes.fractions.map((fraction: number) =>
     axes.reps.map((reps: number) => {
       return computePlateWeight(
-        STUtils.computeE1RM(
-          input.previousE1RM * fraction,
-          input.bw,
+        STUtils.estimate1RM({
+          weight: input.previousE1RM * fraction,
+          bw: input.bw,
           reps,
-          input.requiredRPE
-        ) - input.previousE1RM
+          rpe: input.requiredRPE
+        }) - input.previousE1RM
       );
     })
   );

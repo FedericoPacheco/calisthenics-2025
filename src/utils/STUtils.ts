@@ -8,13 +8,8 @@ export type StrengthTest = {
 };
 
 export default class STUtils {
-  public static computeE1RM(
-    weight: number,
-    bw: number,
-    reps: number,
-    rpe: number = 10
-  ): number {
-    return STUtils.estimate1RmMultipoint([{ weight, bw, reps, rpe }]);
+  public static estimate1RM(observation: StrengthTest): number {
+    return STUtils.estimate1RmMultipoint([observation]);
   }
 
   public static estimate1RmMultipoint(observations: StrengthTest[]): number {
@@ -28,7 +23,7 @@ export default class STUtils {
         if (!GeneralUtils.isWithin(0, rpe, 10))
           throw new Error("RPE value out of range");
         else adjustedReps = reps + 10 - rpe;
-      } else adjustedReps = reps;
+      } else adjustedReps = reps; // i.e. RPE = 10
 
       estimations.push(STUtils.estimate1RMEpley(weight, bw, adjustedReps));
       estimations.push(STUtils.estimate1RMBrzycki(weight, bw, adjustedReps));

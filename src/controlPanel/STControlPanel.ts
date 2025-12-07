@@ -81,12 +81,12 @@ export class STControlPanel extends ControlPanelTemplateMethod {
       const avgTEC = GeneralUtils.average(entry.TEC);
 
       const e1RMChange = entry.intensity.map((intensity: number, idx: number) => GeneralUtils.round(
-        STUtils.computeE1RM(
-          intensity,
-          (this.args as STArgs).bw,
-          entry.reps,
-          entry.RPE[idx]
-        ) - (this.args as STArgs).previous1RM
+        STUtils.estimate1RM({
+          weight: intensity,
+          bw: (this.args as STArgs).bw,
+          reps: entry.reps,
+          rpe: entry.RPE[idx]
+        }) - (this.args as STArgs).previous1RM
       )
       );
 

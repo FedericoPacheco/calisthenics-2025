@@ -171,8 +171,8 @@ export function runPullUpsControlPanel() {
 (global as any).onPeriodizationEdit = onPeriodizationEdit;
 
 /** @customfunction */
-function E1RM(weight: number, bw: number, reps: number): number {
-  return STUtils.computeE1RM(weight, bw, reps);
+function E1RM(weight: number, bw: number, reps: number, rpe: number): number {
+  return STUtils.estimate1RM({ weight, bw, reps, rpe });
 }
 (global as any).E1RM = E1RM;
 
