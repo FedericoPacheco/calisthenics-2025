@@ -139,6 +139,10 @@ export default class GeneralUtils {
     return frequencies;
   }
 
+  public static isWithin(inclusiveMin: number, value: number, inclusiveMax: number) {
+    return inclusiveMin <= value && value <= inclusiveMax;
+  }
+
   public static div(dividend: number, divisor: number): number {
     return Math.floor(dividend / divisor);
   }
