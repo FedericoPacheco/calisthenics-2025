@@ -177,16 +177,24 @@ function E1RM(weight: number, bw: number, reps: number, rpe: number): number {
 (global as any).E1RM = E1RM;
 
 /** @customfunction */
-function E1RM_MULTIPOINT(input: number[][]): number {
+function E1RM_MULTIPOINT(
+  weights: number[][],
+  bws: number[][],
+  reps: number[][],
+  rpes: number[][]
+): number {
   const observations: StrengthTest[] = [];
-  input.forEach((arr) => {
-    const [weight, bw, reps, rpe] = arr;
-    observations.push({ weight, bw, reps, rpe });
-  });
+  for (let i = 0; i < weights.length; i++) {
+    observations.push({
+      weight: weights[i][0],
+      bw: bws[i][0],
+      reps: reps[i][0],
+      rpe: rpes[i][0],
+    });
+  }
   return STUtils.estimate1RmMultipoint(observations);
 }
 (global as any).E1RM_MULTIPOINT = E1RM_MULTIPOINT;
-
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // Time utils
