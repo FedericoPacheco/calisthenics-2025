@@ -5,19 +5,21 @@ export type StrengthTest = {
   bw: number;
   reps: number;
   rpe: number;
-}
+};
 
 export default class STUtils {
-  public static computeE1RM(weight: number, bw: number, reps: number, rpe: number = 10): number {
-    const epley = STUtils.estimate1RMEpley(weight, bw, reps + 10 - rpe);
-    const brzycki = STUtils.estimate1RMBrzycki(weight, bw, reps + 10 - rpe);
-    const berger = STUtils.estimate1RMBerger(weight, bw, reps + 10 - rpe);
-    return (epley + brzycki + berger) / 3;
+  public static computeE1RM(
+    weight: number,
+    bw: number,
+    reps: number,
+    rpe: number = 10
+  ): number {
+    return STUtils.estimate1RmMultipoint([{ weight, bw, reps, rpe }]);
   }
 
   public static estimate1RmMultipoint(observations: StrengthTest[]): number {
     const estimations: number[] = [];
-    observations.forEach(({weight, bw, reps, rpe}) => {
+    observations.forEach(({ weight, bw, reps, rpe }) => {
       estimations.push(STUtils.estimate1RMEpley(weight, bw, reps + 10 - rpe));
       estimations.push(STUtils.estimate1RMBrzycki(weight, bw, reps + 10 - rpe));
       estimations.push(STUtils.estimate1RMBerger(weight, bw, reps + 10 - rpe));
@@ -26,7 +28,9 @@ export default class STUtils {
   }
 
   private static estimate1RMBerger(weight: number, bw: number, reps: number) {
-    return (weight + bw) * (1 / (1.0261 * Math.pow(Math.E, -0.0262 * reps))) - bw;
+    return (
+      (weight + bw) * (1 / (1.0261 * Math.pow(Math.E, -0.0262 * reps))) - bw
+    );
   }
   private static estimate1RMBrzycki(weight: number, bw: number, reps: number) {
     return ((weight + bw) * 36) / (37 - reps) - bw;
