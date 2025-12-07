@@ -8,10 +8,10 @@ export type StrengthTest = {
 }
 
 export default class STUtils {
-  public static computeE1RM(weight: number, bw: number, reps: number): number {
-    const epley = STUtils.estimate1RMEpley(weight, bw, reps);
-    const brzycki = STUtils.estimate1RMBrzycki(weight, bw, reps);
-    const berger = STUtils.estimate1RMBerger(weight, bw, reps);
+  public static computeE1RM(weight: number, bw: number, reps: number, rpe: number = 10): number {
+    const epley = STUtils.estimate1RMEpley(weight, bw, reps + 10 - rpe);
+    const brzycki = STUtils.estimate1RMBrzycki(weight, bw, reps + 10 - rpe);
+    const berger = STUtils.estimate1RMBerger(weight, bw, reps + 10 - rpe);
     return (epley + brzycki + berger) / 3;
   }
 

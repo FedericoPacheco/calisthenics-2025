@@ -84,7 +84,8 @@ export class STControlPanel extends ControlPanelTemplateMethod {
         STUtils.computeE1RM(
           intensity,
           (this.args as STArgs).bw,
-          entry.reps + (10 - entry.RPE[idx])
+          entry.reps,
+          entry.RPE[idx]
         ) - (this.args as STArgs).previous1RM
       )
       );

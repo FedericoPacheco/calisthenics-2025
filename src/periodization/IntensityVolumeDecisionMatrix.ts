@@ -82,7 +82,8 @@ export function computeIntensityVolumeMatrix(
         STUtils.computeE1RM(
           input.previousE1RM * fraction,
           input.bw,
-          reps + 10 - input.requiredRPE
+          reps,
+          input.requiredRPE
         ) - input.previousE1RM
       );
     })
