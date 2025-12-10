@@ -1,35 +1,39 @@
-import SpreadsheetIOAdapter from '../adapters/SpreadsheetIOAdapter';
-import STUtils from '../utils/STUtils';
-import GeneralUtils from '../utils/GeneralUtils';
+import SpreadsheetIOAdapter from "../adapters/SpreadsheetIOAdapter";
+import STUtils from "../utils/STUtils";
+import GeneralUtils from "../utils/GeneralUtils";
 
 // https://developers.google.com/apps-script/guides/triggers
 // https://developers.google.com/apps-script/guides/properties
 export function onPeriodizationEdit(
-  e: GoogleAppsScript.Events.SheetsOnEdit
+  e: GoogleAppsScript.Events.SheetsOnEdit,
+  e1RMInput: SpreadsheetIOAdapter,
+  requiredRpeInput: SpreadsheetIOAdapter,
+  intensitiesInput: SpreadsheetIOAdapter,
+  repsInput: SpreadsheetIOAdapter,
+  bwInput: SpreadsheetIOAdapter,
+  output: SpreadsheetIOAdapter
 ): void {
-  const SHEET_NAME = '04-e1RM';
+  const SHEET_NAME = "04-e1RM";
   if (e.range.getSheet().getName() !== SHEET_NAME) return;
 
   // Use PropertiesService to persist values accross script executions
   const props = PropertiesService.getScriptProperties();
-  const previousE1RM = props.getProperty('previousE1RM')
-    ? Number(props.getProperty('previousE1RM'))
+  const previousE1RM = props.getProperty("previousE1RM")
+    ? Number(props.getProperty("previousE1RM"))
     : 0;
-  const previousRPE = props.getProperty('previousRPE')
-    ? Number(props.getProperty('previousRPE'))
+  const previousRPE = props.getProperty("previousRPE")
+    ? Number(props.getProperty("previousRPE"))
     : 0;
-  const newE1RM = new SpreadsheetIOAdapter(SHEET_NAME, 'O3').read();
-  const newRPE = new SpreadsheetIOAdapter(SHEET_NAME, 'O5').read();
+  const newE1RM = e1RMInput.read();
+  const newRPE = requiredRpeInput.read();
   if (newE1RM === previousE1RM && newRPE === previousRPE) return;
 
-  props.setProperty('previousE1RM', String(newE1RM));
-  props.setProperty('previousRPE', String(newRPE));
+  props.setProperty("previousE1RM", String(newE1RM));
+  props.setProperty("previousRPE", String(newRPE));
 
-  const fractions = new SpreadsheetIOAdapter(SHEET_NAME, 'R5:R44')
-    .read()
-    .flat();
-  const reps = new SpreadsheetIOAdapter(SHEET_NAME, 'S4:AA4').read().flat();
-  const bw = new SpreadsheetIOAdapter(SHEET_NAME, 'O4').read();
+  const fractions = intensitiesInput.read().flat();
+  const reps = repsInput.read().flat();
+  const bw = bwInput.read();
 
   const intensityVolumeMatrix = computeIntensityVolumeMatrix(
     { fractions, reps },
@@ -39,7 +43,7 @@ export function onPeriodizationEdit(
     computePlateWeights(fractions, newE1RM)
   );
 
-  new SpreadsheetIOAdapter(SHEET_NAME, 'S5:AB44').write(
+  output.write(
     GeneralUtils.concatMatricesHorizontally(intensityVolumeMatrix, plateWeights)
   );
 }
@@ -83,7 +87,7 @@ export function computeIntensityVolumeMatrix(
           weight: input.previousE1RM * fraction,
           bw: input.bw,
           reps,
-          rpe: input.requiredRPE
+          rpe: input.requiredRPE,
         }) - input.previousE1RM
       );
     })

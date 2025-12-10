@@ -168,7 +168,17 @@ export function runPullUpsControlPanel() {
 ////////////////////////////////////////////////////////////////////////////////////////
 // Periodization
 
-(global as any).onPeriodizationEdit = onPeriodizationEdit;
+(global as any).onPeriodizationEdit = (
+  e: GoogleAppsScript.Events.SheetsOnEdit,
+) => onPeriodizationEdit(
+  e,
+  new SpreadsheetIOAdapter('04-e1RM', 'O3'),
+  new SpreadsheetIOAdapter('04-e1RM', 'O5'),
+  new SpreadsheetIOAdapter('04-e1RM', 'R5:R44'),
+  new SpreadsheetIOAdapter("04-e1RM", "S4:AA4"),
+  new SpreadsheetIOAdapter("04-e1RM", "O4"),
+  new SpreadsheetIOAdapter("04-e1RM", "S5:AB44")
+);
 
 /** @customfunction */
 function E1RM(weight: number, bw: number, reps: number, rpe: number): number {
