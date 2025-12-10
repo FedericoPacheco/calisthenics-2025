@@ -1,7 +1,7 @@
 import { suite, test, setup, teardown } from "mocha";
 import { assert } from "chai";
 import { stub, restore } from "sinon";
-import SpreadsheetIOAdapter from "../../src/adapters/SpreadsheetIOAdapter";
+import SpreadsheetIOAdapter from "../../../src/infra/adapters/SpreadsheetIOAdapter";
 
 // Docs:
 // https://developers.google.com/apps-script/reference/spreadsheet/sheet

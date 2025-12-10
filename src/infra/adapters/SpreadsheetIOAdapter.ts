@@ -1,4 +1,4 @@
-import { IOPort } from "../ports/IO";
+import { IOPort } from "../../domain/ports/IO";
 import GeneralUtils from "../utils/GeneralUtils";
 
 export default class SpreadsheetIOAdapter implements IOPort {

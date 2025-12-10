@@ -1,7 +1,7 @@
 import { suite, test } from "mocha";
 import { assert } from "chai";
 import { stub, restore, spy } from "sinon";
-import SpreadsheetKeyValueStore from "../../src/adapters/SpreadsheetKeyValueStore";
+import SpreadsheetKeyValueStore from "../../../src/infra/adapters/SpreadsheetKeyValueStore";
 
 suite("SpreadsheetKeyValueStore", () => {
   let props: any;

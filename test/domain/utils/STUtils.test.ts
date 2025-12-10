@@ -1,6 +1,6 @@
 import { suite, test } from "mocha";
 import { assert } from "chai";
-import STUtils from "../../src/utils/STUtils";
+import STUtils from "../../../src/domain/utils/STUtils";
 
 suite("STUtils", function () {
   suite("estimate1RmMultipoint()", function () {

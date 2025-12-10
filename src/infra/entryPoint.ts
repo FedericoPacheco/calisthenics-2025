@@ -1,9 +1,9 @@
 import SpreadsheetIOAdapter from "./adapters/SpreadsheetIOAdapter";
-import { STControlPanel } from "./controlPanel/STControlPanel";
-import { onPeriodizationEdit } from "./periodization/IntensityVolumeDecisionMatrix";
-import STUtils, { StrengthTest } from "./utils/STUtils";
-import { SWControlPanel } from "./controlPanel/SWControlPanel";
-import GeneralUtils from "./utils/GeneralUtils";
+import { STControlPanel } from "../domain/controlPanel/STControlPanel";
+import { onPeriodizationEdit } from "../domain/periodization/IntensityVolumeDecisionMatrix";
+import STUtils, { StrengthTest } from "../domain/utils/STUtils";
+import { SWControlPanel } from "../domain/controlPanel/SWControlPanel";
+import GeneralUtils from "../infra/utils/GeneralUtils";
 import SpreadsheetKeyValueStore from "./adapters/SpreadsheetKeyValueStore";
 
 // Don't forget to add this line. Otherwise, the function won't be exported to the global scope.

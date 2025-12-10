@@ -1,8 +1,4 @@
 node_modules
-dist/example
-dist/routine
-dist/utils
-dist/entryPoint.js
 dist/bundle.js
 dist/bundle.js.map
 dist/src

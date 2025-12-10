@@ -1,4 +1,4 @@
-import { KeyValueStorePort } from "../ports/KeyValueStore";
+import { KeyValueStorePort } from "../../domain/ports/KeyValueStore";
 
 export default class SpreadsheetKeyValueStore implements KeyValueStorePort {
   private props: GoogleAppsScript.Properties.Properties;

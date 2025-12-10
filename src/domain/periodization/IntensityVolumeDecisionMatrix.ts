@@ -1,5 +1,5 @@
 import STUtils from "../utils/STUtils";
-import GeneralUtils from "../utils/GeneralUtils";
+import GeneralUtils from "../../infra/utils/GeneralUtils";
 import { KeyValueStorePort } from "../ports/KeyValueStore";
 import { IOPort } from "../ports/IO";
 
