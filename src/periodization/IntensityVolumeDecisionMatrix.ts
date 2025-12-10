@@ -1,18 +1,18 @@
-import SpreadsheetIOAdapter from "../adapters/SpreadsheetIOAdapter";
 import STUtils from "../utils/STUtils";
 import GeneralUtils from "../utils/GeneralUtils";
 import { KeyValueStorePort } from "../ports/KeyValueStore";
+import { IOPort } from "../ports/IO";
 
 type e1RMMatrixInput = {
-  e1RM: SpreadsheetIOAdapter,
-  requiredRPE: SpreadsheetIOAdapter,
-  intensities: SpreadsheetIOAdapter,
-  reps: SpreadsheetIOAdapter,
-  bw: SpreadsheetIOAdapter,
+  e1RM: IOPort,
+  requiredRPE: IOPort,
+  intensities: IOPort,
+  reps: IOPort,
+  bw: IOPort,
 }
 
 type e1RMMatrixOutput = {
-  differences: SpreadsheetIOAdapter,
+  differences: IOPort,
 }
 
 // https://developers.google.com/apps-script/guides/triggers

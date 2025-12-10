@@ -1,18 +1,26 @@
-import { suite, test, setup, teardown } from 'mocha';
-import { assert } from 'chai';
-import { createStubInstance, restore } from 'sinon';
-import { STControlPanel } from '../../src/controlPanel/STControlPanel';
-import SpreadsheetIOAdapter from '../../src/adapters/SpreadsheetIOAdapter';
+import { suite, test, setup, teardown } from "mocha";
+import { assert } from "chai";
+import { stub, restore } from "sinon";
+import { STControlPanel } from "../../src/controlPanel/STControlPanel";
+import { IOPort } from "../../src/ports/IO";
 
-suite('STControlPanel', function () {
+suite("STControlPanel", function () {
   let controlPanel: STControlPanel;
-  let inputStub1: SpreadsheetIOAdapter, inputStub2: SpreadsheetIOAdapter;
-  let outputStub: SpreadsheetIOAdapter;
+  let inputStub1: IOPort, inputStub2: IOPort;
+  let outputStub: IOPort;
 
   setup(function () {
-    inputStub1 = createStubInstance(SpreadsheetIOAdapter);
-    inputStub2 = createStubInstance(SpreadsheetIOAdapter);
-    outputStub = createStubInstance(SpreadsheetIOAdapter);
+    inputStub1 = {
+      read: stub(),
+      moveReference: stub(),
+      resizeReference: stub(),
+    } as any;
+    inputStub2 = {
+      read: stub(),
+      moveReference: stub(),
+      resizeReference: stub(),
+    } as any;
+    outputStub = { write: stub() } as any;
     const minSetsJumpPerMicrocycle = [2, 2];
     controlPanel = new STControlPanel(
       [inputStub1, inputStub2],
@@ -30,8 +38,8 @@ suite('STControlPanel', function () {
     restore();
   });
 
-  suite('parseEntry()', function () {
-    test('should parse entry correctly', function () {
+  suite("parseEntry()", function () {
+    test("should parse entry correctly", function () {
       // sets, reps, targetRPE, intensity1, RPE1, TEC1, ..., intensity_N, RPE_N, TEC_N, avg RPE, avg TEC
       (inputStub1.read as any).onCall(0).returns([[3, 5, 6]]);
       (inputStub1.read as any)
@@ -51,8 +59,8 @@ suite('STControlPanel', function () {
     });
   });
 
-  suite('computeMetrics()', function () {
-    test('should compute metrics correctly', function () {
+  suite("computeMetrics()", function () {
+    test("should compute metrics correctly", function () {
       const entryData = [
         {
           sets: 3,
@@ -97,8 +105,8 @@ suite('STControlPanel', function () {
     });
   });
 
-  suite('transform()', function () {
-    test('should transform data correctly', function () {
+  suite("transform()", function () {
+    test("should transform data correctly", function () {
       const entryData = [
         {
           sets: 3,
@@ -152,18 +160,18 @@ suite('STControlPanel', function () {
     });
   });
 
-  suite('run()', function () {
-    test('should run the control panel process correctly', function () {
+  suite("run()", function () {
+    test("should run the control panel process correctly", function () {
       // sets, reps, targetRPE, intensity1, RPE1, TEC1, ..., intensity_N, RPE_N, TEC_N, avg RPE, avg TEC
       (inputStub1.read as any).onCall(0).returns([[2, 12, 4]]);
       (inputStub1.read as any)
         .onCall(1)
-        .returns([[11.24, 3, 9, 11.25, 5, 10, '', '', '', 4.0, 9.5]]);
+        .returns([[11.24, 3, 9, 11.25, 5, 10, "", "", "", 4.0, 9.5]]);
 
       (inputStub1.read as any).onCall(2).returns([[2, 10, 5]]);
       (inputStub1.read as any)
         .onCall(3)
-        .returns([[25, 3, 9, 30, 5, 9, '', '', '', 4.0, 9.0]]);
+        .returns([[25, 3, 9, 30, 5, 9, "", "", "", 4.0, 9.0]]);
 
       (inputStub2.read as any).onCall(0).returns([[3, 12, 6]]);
       (inputStub2.read as any)

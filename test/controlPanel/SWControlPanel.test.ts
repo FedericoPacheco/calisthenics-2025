@@ -1,18 +1,26 @@
 import { suite, test, setup, teardown } from "mocha";
 import { assert } from "chai";
-import { createStubInstance, restore } from "sinon";
+import { stub, restore } from "sinon";
 import { SWControlPanel } from "../../src/controlPanel/SWControlPanel";
-import SpreadsheetIOAdapter from "../../src/adapters/SpreadsheetIOAdapter";
+import { IOPort } from "../../src/ports/IO";
 
 suite("SWControlPanel", function () {
   let controlPanel: SWControlPanel;
-  let inputStub1: SpreadsheetIOAdapter, inputStub2: SpreadsheetIOAdapter;
-  let outputStub: SpreadsheetIOAdapter;
+  let inputStub1: IOPort, inputStub2: IOPort;
+  let outputStub: IOPort;
 
   setup(function () {
-    inputStub1 = createStubInstance(SpreadsheetIOAdapter);
-    inputStub2 = createStubInstance(SpreadsheetIOAdapter);
-    outputStub = createStubInstance(SpreadsheetIOAdapter);
+    inputStub1 = {
+      read: stub(),
+      moveReference: stub(),
+      resizeReference: stub(),
+    } as any;
+    inputStub2 = {
+      read: stub(),
+      moveReference: stub(),
+      resizeReference: stub(),
+    } as any;
+    outputStub = { write: stub() } as any;
     controlPanel = new SWControlPanel([inputStub1, inputStub2], outputStub, 2, {
       startMicrocycle: 1,
     });

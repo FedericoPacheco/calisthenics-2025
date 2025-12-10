@@ -1,16 +1,16 @@
-import SpreadsheetIOAdapter from '../adapters/SpreadsheetIOAdapter';
+import { IOPort } from "../ports/IO";
 
 // https://refactoring.guru/design-patterns/template-method
 
 export abstract class ControlPanelTemplateMethod {
-  protected inputs: SpreadsheetIOAdapter[];
-  protected output: SpreadsheetIOAdapter;
+  protected inputs: IOPort[];
+  protected output: IOPort;
   protected microcycleCount: number;
   protected args: object;
 
   public constructor(
-    inputs: SpreadsheetIOAdapter[],
-    output: SpreadsheetIOAdapter,
+    inputs: IOPort[],
+    output: IOPort,
     microcycleCount: number,
     args: object
   ) {
@@ -35,7 +35,7 @@ export abstract class ControlPanelTemplateMethod {
   }
 
   public abstract parseEntry(
-    input: SpreadsheetIOAdapter,
+    input: IOPort,
     microcycle: number
   ): object;
   public abstract computeMetrics(entryData: object[]): any;

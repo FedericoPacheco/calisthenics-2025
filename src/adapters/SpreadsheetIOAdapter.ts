@@ -1,6 +1,7 @@
+import { IOPort } from "../ports/IO";
 import GeneralUtils from "../utils/GeneralUtils";
 
-export default class SpreadsheetIOAdapter {
+export default class SpreadsheetIOAdapter implements IOPort {
   private sheet: GoogleAppsScript.Spreadsheet.Sheet | null;
   private sheetName: string;
   private defaultReference: string = "";
@@ -127,7 +128,12 @@ export default class SpreadsheetIOAdapter {
     range: GoogleAppsScript.Spreadsheet.Range
   ) {
     let finalData: any[][] = [[data]];
-    finalData = GeneralUtils.fillRows(finalData, range.getNumRows(), range.getNumColumns(), data);
+    finalData = GeneralUtils.fillRows(
+      finalData,
+      range.getNumRows(),
+      range.getNumColumns(),
+      data
+    );
     finalData = GeneralUtils.fillCols(finalData, range.getNumColumns(), data);
     return finalData;
   }
@@ -151,7 +157,8 @@ export default class SpreadsheetIOAdapter {
 
     const areColsSmaller = data[0].length < range.getNumColumns();
     const areColsBigger = data[0].length > range.getNumColumns();
-    if (areColsSmaller) finalData = GeneralUtils.fillCols(finalData, range.getNumColumns());
+    if (areColsSmaller)
+      finalData = GeneralUtils.fillCols(finalData, range.getNumColumns());
     else if (areColsBigger)
       finalData = GeneralUtils.sliceCols(finalData, 0, range.getNumColumns());
 
@@ -177,15 +184,15 @@ export default class SpreadsheetIOAdapter {
     this.defaultReference = reference;
   }
 
-  public moveReference(i: number, j: number): void {
+  public moveReference(rowDisplacement: number, colDisplacement: number): void {
     if (!this.sheet) throw new Error(`Sheet "${this.sheetName}" not found`);
     if (!this.defaultReference) throw new Error(`Reference not set`);
 
     const oldRange: GoogleAppsScript.Spreadsheet.Range = this.sheet.getRange(
       this.defaultReference
     );
-    const row = oldRange.getRow() + i;
-    const col = oldRange.getColumn() + j;
+    const row = oldRange.getRow() + rowDisplacement;
+    const col = oldRange.getColumn() + colDisplacement;
     const newRange = this.sheet.getRange(
       row,
       col,

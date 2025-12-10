@@ -1,7 +1,7 @@
 import STUtils from '../utils/STUtils';
 import GeneralUtils from '../utils/GeneralUtils';
-import SpreadsheetIOAdapter from '../adapters/SpreadsheetIOAdapter';
 import { ControlPanelTemplateMethod } from './ControlPanelTemplateMethod';
+import { IOPort } from '../ports/IO';
 
 type STEntry = {
   sets: number;
@@ -32,8 +32,8 @@ type STMetrics = {
 
 export class STControlPanel extends ControlPanelTemplateMethod {
   public constructor(
-    inputs: SpreadsheetIOAdapter[],
-    output: SpreadsheetIOAdapter,
+    inputs: IOPort[],
+    output: IOPort,
     microcycleCount: number,
     args: STArgs
   ) {
@@ -41,7 +41,7 @@ export class STControlPanel extends ControlPanelTemplateMethod {
   }
 
   // Format: Sets, Reps, RPE(target), Intensity1, RPE1, TEC1, ..., Intensity_N, RPE_N, TEC_N, avg RPE, avg TEC
-  public parseEntry(input: SpreadsheetIOAdapter, microcycle: number): STEntry {
+  public parseEntry(input: IOPort, microcycle: number): STEntry {
     const rawTarget = input.read()[0];
     const [sets, reps, targetRPE] = rawTarget;
 

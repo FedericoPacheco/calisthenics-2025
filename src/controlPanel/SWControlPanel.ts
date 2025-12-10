@@ -1,7 +1,7 @@
 import STUtils from "../utils/STUtils";
 import GeneralUtils from "../utils/GeneralUtils";
-import SpreadsheetIOAdapter from "../adapters/SpreadsheetIOAdapter";
 import { ControlPanelTemplateMethod } from "./ControlPanelTemplateMethod";
+import { IOPort } from "../ports/IO";
 
 type SWEntry = {
   sets: number;
@@ -33,15 +33,15 @@ export class SWControlPanel extends ControlPanelTemplateMethod {
   private static FINGERS = [10, 5, 4, 3, 2, 1, 0];
 
   constructor(
-    inputs: SpreadsheetIOAdapter[],
-    output: SpreadsheetIOAdapter,
+    inputs: IOPort[],
+    output: IOPort,
     microcycleCount: number,
     args: SWArgs
   ) {
     super(inputs, output, microcycleCount, args);
   }
 
-  public parseEntry(input: SpreadsheetIOAdapter, microcycle: number): SWEntry {
+  public parseEntry(input: IOPort, microcycle: number): SWEntry {
     const [sets, reps, suggestedIntensity] = input.read()[0];
 
     input.resizeReference(1, sets * 3);
