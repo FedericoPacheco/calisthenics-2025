@@ -1,39 +1,43 @@
 import SpreadsheetIOAdapter from "../adapters/SpreadsheetIOAdapter";
 import STUtils from "../utils/STUtils";
 import GeneralUtils from "../utils/GeneralUtils";
+import { KeyValueStorePort } from "../ports/KeyValueStore";
+
+type e1RMMatrixInput = {
+  e1RM: SpreadsheetIOAdapter,
+  requiredRPE: SpreadsheetIOAdapter,
+  intensities: SpreadsheetIOAdapter,
+  reps: SpreadsheetIOAdapter,
+  bw: SpreadsheetIOAdapter,
+}
+
+type e1RMMatrixOutput = {
+  differences: SpreadsheetIOAdapter,
+}
 
 // https://developers.google.com/apps-script/guides/triggers
 // https://developers.google.com/apps-script/guides/properties
 export function onPeriodizationEdit(
   e: GoogleAppsScript.Events.SheetsOnEdit,
-  e1RMInput: SpreadsheetIOAdapter,
-  requiredRpeInput: SpreadsheetIOAdapter,
-  intensitiesInput: SpreadsheetIOAdapter,
-  repsInput: SpreadsheetIOAdapter,
-  bwInput: SpreadsheetIOAdapter,
-  output: SpreadsheetIOAdapter
+  input: e1RMMatrixInput,
+  store: KeyValueStorePort,
+  output: e1RMMatrixOutput
 ): void {
   const SHEET_NAME = "04-e1RM";
   if (e.range.getSheet().getName() !== SHEET_NAME) return;
 
-  // Use PropertiesService to persist values accross script executions
-  const props = PropertiesService.getScriptProperties();
-  const previousE1RM = props.getProperty("previousE1RM")
-    ? Number(props.getProperty("previousE1RM"))
-    : 0;
-  const previousRPE = props.getProperty("previousRPE")
-    ? Number(props.getProperty("previousRPE"))
-    : 0;
-  const newE1RM = e1RMInput.read();
-  const newRPE = requiredRpeInput.read();
+  const previousE1RM = store.get("previousE1RM") || 0;
+  const previousRPE = store.get("previousRPE") || 0;
+  const newE1RM = input.e1RM.read();
+  const newRPE = input.requiredRPE.read();
   if (newE1RM === previousE1RM && newRPE === previousRPE) return;
 
-  props.setProperty("previousE1RM", String(newE1RM));
-  props.setProperty("previousRPE", String(newRPE));
+  store.set("previousE1RM", newE1RM);
+  store.set("previousRPE", newRPE);
 
-  const fractions = intensitiesInput.read().flat();
-  const reps = repsInput.read().flat();
-  const bw = bwInput.read();
+  const fractions = input.intensities.read().flat();
+  const reps = input.reps.read().flat();
+  const bw = input.bw.read();
 
   const intensityVolumeMatrix = computeIntensityVolumeMatrix(
     { fractions, reps },
@@ -43,7 +47,7 @@ export function onPeriodizationEdit(
     computePlateWeights(fractions, newE1RM)
   );
 
-  output.write(
+  output.differences.write(
     GeneralUtils.concatMatricesHorizontally(intensityVolumeMatrix, plateWeights)
   );
 }

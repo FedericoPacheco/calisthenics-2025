@@ -4,6 +4,7 @@ import { onPeriodizationEdit } from "./periodization/IntensityVolumeDecisionMatr
 import STUtils, { StrengthTest } from "./utils/STUtils";
 import { SWControlPanel } from "./controlPanel/SWControlPanel";
 import GeneralUtils from "./utils/GeneralUtils";
+import SpreadsheetKeyValueStore from "./adapters/SpreadsheetKeyValueStore";
 
 // Don't forget to add this line. Otherwise, the function won't be exported to the global scope.
 // https://www.npmjs.com/package/gas-webpack-plugin
@@ -168,17 +169,20 @@ export function runPullUpsControlPanel() {
 ////////////////////////////////////////////////////////////////////////////////////////
 // Periodization
 
+const e1RMMatrixInput = {
+  e1RM: new SpreadsheetIOAdapter("04-e1RM", "O3"),
+  requiredRPE: new SpreadsheetIOAdapter("04-e1RM", "O5"),
+  intensities: new SpreadsheetIOAdapter("04-e1RM", "R5:R44"),
+  reps: new SpreadsheetIOAdapter("04-e1RM", "S4:AA4"),
+  bw: new SpreadsheetIOAdapter("04-e1RM", "O4"),
+};
+const store = new SpreadsheetKeyValueStore();
+const e1RMMatrixOutput = {
+  differences: new SpreadsheetIOAdapter("04-e1RM", "S5:AB44"),
+};
 (global as any).onPeriodizationEdit = (
-  e: GoogleAppsScript.Events.SheetsOnEdit,
-) => onPeriodizationEdit(
-  e,
-  new SpreadsheetIOAdapter('04-e1RM', 'O3'),
-  new SpreadsheetIOAdapter('04-e1RM', 'O5'),
-  new SpreadsheetIOAdapter('04-e1RM', 'R5:R44'),
-  new SpreadsheetIOAdapter("04-e1RM", "S4:AA4"),
-  new SpreadsheetIOAdapter("04-e1RM", "O4"),
-  new SpreadsheetIOAdapter("04-e1RM", "S5:AB44")
-);
+  e: GoogleAppsScript.Events.SheetsOnEdit
+) => onPeriodizationEdit(e, e1RMMatrixInput, store, e1RMMatrixOutput);
 
 /** @customfunction */
 function E1RM(weight: number, bw: number, reps: number, rpe: number): number {

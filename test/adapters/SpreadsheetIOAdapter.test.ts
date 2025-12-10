@@ -126,7 +126,6 @@ suite("SpreadsheetIOAdapter", function () {
         ["", "", ""],
       ]);
 
-      debugger;
       const result = IOAdapter.read("A1:C3");
 
       assert.deepEqual(result, [[]]);
