@@ -22,6 +22,7 @@ type SWMicrocycleMetrics = {
 type SWMesocycleMetrics = {
   medianLeftIntensity: number;
   medianRightIntensity: number;
+  medianTEC: number;
   leftFingerUsage: number[];
   rightFingerUsage: number[];
 };
@@ -118,11 +119,16 @@ export class SWControlPanel extends ControlPanelTemplateMethod {
     const medianLeftIntensity = GeneralUtils.median(leftFingers);
     const medianRightIntensity = GeneralUtils.median(rightFingers);
 
+    const medianTEC = GeneralUtils.median(
+      entryData.map((entry) => entry.TEC).flat()
+    );
+
     return {
       leftFingerUsage,
       rightFingerUsage,
       medianLeftIntensity,
       medianRightIntensity,
+      medianTEC,
     };
   }
 
@@ -134,6 +140,7 @@ export class SWControlPanel extends ControlPanelTemplateMethod {
       microcycleMetrics.medianRightIntensity,
       metrics.mesocycle.medianRightIntensity,
       microcycleMetrics.medianTEC,
+      metrics.mesocycle.medianTEC,
       ...metrics.mesocycle.leftFingerUsage,
       ...metrics.mesocycle.rightFingerUsage,
     ]);

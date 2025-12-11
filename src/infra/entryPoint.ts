@@ -37,7 +37,7 @@ const OAHSParams = [
       new GSheetsIOAdapter("22-SW", "H9:J9"),
       new GSheetsIOAdapter("22-SW", "H18:J18"),
     ],
-    output: new GSheetsIOAdapter("03-SWControlPanel", "C14:V17"),
+    output: new GSheetsIOAdapter("03-SWControlPanel", "C14:W17"),
     microcycleCount: 4,
     args: {
       startMicrocycle: 1,
@@ -45,7 +45,7 @@ const OAHSParams = [
   },
   {
     inputs: [new GSheetsIOAdapter("32-SW", "H9:J9")],
-    output: new GSheetsIOAdapter("03-SWControlPanel", "C18:V21"),
+    output: new GSheetsIOAdapter("03-SWControlPanel", "C18:W21"),
     microcycleCount: 4,
     args: {
       startMicrocycle: 5,
@@ -53,7 +53,7 @@ const OAHSParams = [
   },
   {
     inputs: [new GSheetsIOAdapter("42-SW", "H14:J14")],
-    output: new GSheetsIOAdapter("03-SWControlPanel", "C22:V25"),
+    output: new GSheetsIOAdapter("03-SWControlPanel", "C22:W25"),
     microcycleCount: 4,
     args: {
       startMicrocycle: 9,
@@ -63,7 +63,7 @@ const OAHSParams = [
     inputs: [new GSheetsIOAdapter("52-SW", "H14:J14"),
       new GSheetsIOAdapter("52-SW", "H18:J18"),
     ],
-    output: new GSheetsIOAdapter("03-SWControlPanel", "C26:V29"),
+    output: new GSheetsIOAdapter("03-SWControlPanel", "C26:W29"),
     microcycleCount: 4,
     args: {
       startMicrocycle: 13,
