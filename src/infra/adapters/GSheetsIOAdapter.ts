@@ -1,7 +1,7 @@
-import { IOPort } from "../../domain/ports/IO";
+import { IOPort } from "../../domain/ports/IOPort";
 import GeneralUtils from "../../domain/utils/GeneralUtils";
 
-export default class SpreadsheetIOAdapter implements IOPort {
+export default class GSheetsIOAdapter implements IOPort {
   private sheet: GoogleAppsScript.Spreadsheet.Sheet | null;
   private sheetName: string;
   private defaultReference: string = "";

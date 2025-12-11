@@ -1,4 +1,4 @@
-import { IOPort } from "./IO";
+import { IOPort } from "./IOPort";
 
 export interface EditEventPort {
     shouldHandle(): boolean;

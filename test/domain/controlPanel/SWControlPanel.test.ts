@@ -2,7 +2,7 @@ import { suite, test, setup, teardown } from "mocha";
 import { assert } from "chai";
 import { stub, restore } from "sinon";
 import { SWControlPanel } from "../../../src/domain/controlPanel/SWControlPanel";
-import { IOPort } from "../../../src/domain/ports/IO";
+import { IOPort } from "../../../src/domain/ports/IOPort";
 
 suite("SWControlPanel", function () {
   let controlPanel: SWControlPanel;

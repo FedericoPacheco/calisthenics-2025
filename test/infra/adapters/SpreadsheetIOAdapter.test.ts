@@ -1,7 +1,7 @@
 import { suite, test, setup, teardown } from "mocha";
 import { assert } from "chai";
 import { stub, restore } from "sinon";
-import SpreadsheetIOAdapter from "../../../src/infra/adapters/SpreadsheetIOAdapter";
+import GSheetsIOAdapter from "../../../src/infra/adapters/GSheetsIOAdapter";
 
 // Docs:
 // https://developers.google.com/apps-script/reference/spreadsheet/sheet
@@ -45,7 +45,7 @@ suite("SpreadsheetIOAdapter", function () {
     test("throws if sheet not found", function () {
       (spreadsheetStub.getSheetByName as sinon.SinonStub).returns(null);
       assert.throws(
-        () => new SpreadsheetIOAdapter("UnknownSheet", "A1"),
+        () => new GSheetsIOAdapter("UnknownSheet", "A1"),
         'Sheet "UnknownSheet" not found'
       );
     });
@@ -53,23 +53,23 @@ suite("SpreadsheetIOAdapter", function () {
     test("throws if invalid default reference", function () {
       (spreadsheetStub.getSheetByName as sinon.SinonStub).returns(sheetStub);
       assert.throws(
-        () => new SpreadsheetIOAdapter("Sheet1", "InvalidRef"),
+        () => new GSheetsIOAdapter("Sheet1", "InvalidRef"),
         /Invalid reference/
       );
     });
 
     test("constructs with valid params", function () {
       (spreadsheetStub.getSheetByName as sinon.SinonStub).returns(sheetStub);
-      assert.doesNotThrow(() => new SpreadsheetIOAdapter("Sheet1", "A1"));
+      assert.doesNotThrow(() => new GSheetsIOAdapter("Sheet1", "A1"));
     });
   });
 
   suite("read", function () {
-    let IOAdapter: SpreadsheetIOAdapter;
+    let IOAdapter: GSheetsIOAdapter;
 
     setup(function () {
       (spreadsheetStub.getSheetByName as sinon.SinonStub).returns(sheetStub);
-      IOAdapter = new SpreadsheetIOAdapter("Sheet1");
+      IOAdapter = new GSheetsIOAdapter("Sheet1");
     });
 
     teardown(function () {
@@ -133,11 +133,11 @@ suite("SpreadsheetIOAdapter", function () {
   });
 
   suite("write", function () {
-    let IOAdapter: SpreadsheetIOAdapter;
+    let IOAdapter: GSheetsIOAdapter;
 
     setup(function () {
       (spreadsheetStub.getSheetByName as sinon.SinonStub).returns(sheetStub);
-      IOAdapter = new SpreadsheetIOAdapter("Sheet1");
+      IOAdapter = new GSheetsIOAdapter("Sheet1");
     });
 
     teardown(function () {
@@ -297,11 +297,11 @@ suite("SpreadsheetIOAdapter", function () {
   });
 
   suite("moveReference()", function () {
-    let IOAdapter: SpreadsheetIOAdapter;
+    let IOAdapter: GSheetsIOAdapter;
 
     setup(function () {
       (spreadsheetStub.getSheetByName as sinon.SinonStub).returns(sheetStub);
-      IOAdapter = new SpreadsheetIOAdapter("Sheet1", "B2:D4");
+      IOAdapter = new GSheetsIOAdapter("Sheet1", "B2:D4");
     });
 
     teardown(function () {
@@ -324,11 +324,11 @@ suite("SpreadsheetIOAdapter", function () {
   });
 
   suite("resizeReference()", function () {
-    let IOAdapter: SpreadsheetIOAdapter;
+    let IOAdapter: GSheetsIOAdapter;
 
     setup(function () {
       (spreadsheetStub.getSheetByName as sinon.SinonStub).returns(sheetStub);
-      IOAdapter = new SpreadsheetIOAdapter("Sheet1", "B2:D4");
+      IOAdapter = new GSheetsIOAdapter("Sheet1", "B2:D4");
     });
 
     teardown(function () {

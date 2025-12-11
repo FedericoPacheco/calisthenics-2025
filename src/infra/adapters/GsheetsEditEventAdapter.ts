@@ -1,8 +1,8 @@
 import { EditEventPort } from "../../domain/ports/EditEventPort";
-import { IOPort } from "../../domain/ports/IO";
-import SpreadsheetIOAdapter from "./SpreadsheetIOAdapter";
+import { IOPort } from "../../domain/ports/IOPort";
+import GSheetsIOAdapter from "./GSheetsIOAdapter";
 
-export default class GsheetEditEventAdapter implements EditEventPort {
+export default class GSheetsEditEventAdapter implements EditEventPort {
   private sheet: GoogleAppsScript.Spreadsheet.Sheet;
   private range: GoogleAppsScript.Spreadsheet.Range;
   private eventRange: GoogleAppsScript.Spreadsheet.Range;
@@ -54,7 +54,7 @@ export default class GsheetEditEventAdapter implements EditEventPort {
   }
 
   getIOAdapter(): IOPort {
-    return new SpreadsheetIOAdapter(
+    return new GSheetsIOAdapter(
       this.sheet.getName(),
       this.range.getA1Notation()
     );

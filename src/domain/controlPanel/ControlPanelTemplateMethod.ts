@@ -1,4 +1,4 @@
-import { IOPort } from "../ports/IO";
+import { IOPort } from "../ports/IOPort";
 
 // https://refactoring.guru/design-patterns/template-method
 

@@ -1,7 +1,7 @@
 import STUtils from "../utils/STUtils";
 import GeneralUtils from "../utils/GeneralUtils";
 import { ControlPanelTemplateMethod } from "./ControlPanelTemplateMethod";
-import { IOPort } from "../ports/IO";
+import { IOPort } from "../ports/IOPort";
 
 type SWEntry = {
   sets: number;

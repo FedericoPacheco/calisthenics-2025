@@ -1,11 +1,11 @@
 import { suite, test } from "mocha";
 import { assert } from "chai";
 import { stub, restore, spy } from "sinon";
-import SpreadsheetKeyValueStore from "../../../src/infra/adapters/SpreadsheetKeyValueStore";
+import GSheetsKeyValueStore from "../../../src/infra/adapters/GSheetsKeyValueStore";
 
 suite("SpreadsheetKeyValueStore", () => {
   let props: any;
-  let store: SpreadsheetKeyValueStore;
+  let store: GSheetsKeyValueStore;
 
   setup(function () {
     props = {
@@ -17,7 +17,7 @@ suite("SpreadsheetKeyValueStore", () => {
       getScriptProperties: () => props,
     } as unknown as GoogleAppsScript.Properties.PropertiesService;
 
-    store = new SpreadsheetKeyValueStore();
+    store = new GSheetsKeyValueStore();
   });
 
   teardown(function () {

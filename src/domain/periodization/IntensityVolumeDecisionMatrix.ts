@@ -1,7 +1,7 @@
 import STUtils from "../utils/STUtils";
 import GeneralUtils from "../utils/GeneralUtils";
-import { KeyValueStorePort } from "../ports/KeyValueStore";
-import { IOPort } from "../ports/IO";
+import { KeyValueStorePort } from "../ports/KeyValueStorePort";
+import { IOPort } from "../ports/IOPort";
 import { EditEventPort } from "../ports/EditEventPort";
 
 type e1RMMatrixInput = {

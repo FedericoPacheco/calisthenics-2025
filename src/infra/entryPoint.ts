@@ -1,11 +1,11 @@
-import SpreadsheetIOAdapter from "./adapters/SpreadsheetIOAdapter";
+import GSheetsIOAdapter from "./adapters/GSheetsIOAdapter";
 import { STControlPanel } from "../domain/controlPanel/STControlPanel";
 import { onPeriodizationEdit } from "../domain/periodization/IntensityVolumeDecisionMatrix";
 import STUtils, { StrengthTest } from "../domain/utils/STUtils";
 import { SWControlPanel } from "../domain/controlPanel/SWControlPanel";
 import GeneralUtils from "../domain/utils/GeneralUtils";
-import SpreadsheetKeyValueStore from "./adapters/SpreadsheetKeyValueStore";
-import GsheetEditEventAdapter from "./adapters/GsheetEditEventAdapter";
+import GSheetsKeyValueStore from "./adapters/GSheetsKeyValueStore";
+import GSheetsEditEventAdapter from "./adapters/GsheetsEditEventAdapter";
 
 // Don't forget to add this line. Otherwise, the function won't be exported to the global scope.
 // https://www.npmjs.com/package/gas-webpack-plugin
@@ -34,26 +34,26 @@ import GsheetEditEventAdapter from "./adapters/GsheetEditEventAdapter";
 const OAHSParams = [
   {
     inputs: [
-      new SpreadsheetIOAdapter("22-SW", "H9:J9"),
-      new SpreadsheetIOAdapter("22-SW", "H18:J18"),
+      new GSheetsIOAdapter("22-SW", "H9:J9"),
+      new GSheetsIOAdapter("22-SW", "H18:J18"),
     ],
-    output: new SpreadsheetIOAdapter("03-SWControlPanel", "C14:V17"),
+    output: new GSheetsIOAdapter("03-SWControlPanel", "C14:V17"),
     microcycleCount: 4,
     args: {
       startMicrocycle: 1,
     },
   },
   {
-    inputs: [new SpreadsheetIOAdapter("32-SW", "H9:J9")],
-    output: new SpreadsheetIOAdapter("03-SWControlPanel", "C18:V21"),
+    inputs: [new GSheetsIOAdapter("32-SW", "H9:J9")],
+    output: new GSheetsIOAdapter("03-SWControlPanel", "C18:V21"),
     microcycleCount: 4,
     args: {
       startMicrocycle: 5,
     },
   },
   {
-    inputs: [new SpreadsheetIOAdapter("42-SW", "H14:J14")],
-    output: new SpreadsheetIOAdapter("03-SWControlPanel", "C22:V25"),
+    inputs: [new GSheetsIOAdapter("42-SW", "H14:J14")],
+    output: new GSheetsIOAdapter("03-SWControlPanel", "C22:V25"),
     microcycleCount: 4,
     args: {
       startMicrocycle: 9,
@@ -74,18 +74,18 @@ export function runOAHSControlPanel() {
 
 // -------------------------------------------------------------------------------------
 // Dips
-const dipsPrevious1RM = new SpreadsheetIOAdapter(
+const dipsPrevious1RM = new GSheetsIOAdapter(
   "03-STControlPanel",
   "K6"
 ).read();
-const dipsBw = new SpreadsheetIOAdapter("03-STControlPanel", "K7").read();
+const dipsBw = new GSheetsIOAdapter("03-STControlPanel", "K7").read();
 const dipsParams = [
   {
     inputs: [
-      new SpreadsheetIOAdapter("13-ST", "H14:J14"),
-      new SpreadsheetIOAdapter("13-ST", "H22:J22"),
+      new GSheetsIOAdapter("13-ST", "H14:J14"),
+      new GSheetsIOAdapter("13-ST", "H22:J22"),
     ],
-    output: new SpreadsheetIOAdapter("03-STControlPanel", "B11:K46"),
+    output: new GSheetsIOAdapter("03-STControlPanel", "B11:K46"),
     microcycleCount: 4,
     args: {
       previous1RM: dipsPrevious1RM,
@@ -95,10 +95,10 @@ const dipsParams = [
   },
   {
     inputs: [
-      new SpreadsheetIOAdapter("23-ST", "H14:J14"),
-      new SpreadsheetIOAdapter("23-ST", "H22:J22"),
+      new GSheetsIOAdapter("23-ST", "H14:J14"),
+      new GSheetsIOAdapter("23-ST", "H22:J22"),
     ],
-    output: new SpreadsheetIOAdapter("03-STControlPanel", "B47:K82"),
+    output: new GSheetsIOAdapter("03-STControlPanel", "B47:K82"),
     microcycleCount: 4,
     args: {
       previous1RM: dipsPrevious1RM,
@@ -121,19 +121,19 @@ export function runDipsControlPanel() {
 
 // -------------------------------------------------------------------------------------
 // Pull-ups
-const pullUpPrevious1RM = new SpreadsheetIOAdapter(
+const pullUpPrevious1RM = new GSheetsIOAdapter(
   "03-STControlPanel",
   "V6"
 ).read();
-const pullUpBw = new SpreadsheetIOAdapter("03-STControlPanel", "V7").read();
+const pullUpBw = new GSheetsIOAdapter("03-STControlPanel", "V7").read();
 
 const pullUpParams = [
   {
     inputs: [
-      new SpreadsheetIOAdapter("13-ST", "H10:J10"),
-      new SpreadsheetIOAdapter("13-ST", "H18:J18"),
+      new GSheetsIOAdapter("13-ST", "H10:J10"),
+      new GSheetsIOAdapter("13-ST", "H18:J18"),
     ],
-    output: new SpreadsheetIOAdapter("03-STControlPanel", "M11:V46"),
+    output: new GSheetsIOAdapter("03-STControlPanel", "M11:V46"),
     microcycleCount: 4,
     args: {
       previous1RM: pullUpPrevious1RM,
@@ -143,10 +143,10 @@ const pullUpParams = [
   },
   {
     inputs: [
-      new SpreadsheetIOAdapter("23-ST", "H10:J10"),
-      new SpreadsheetIOAdapter("23-ST", "H18:J18"),
+      new GSheetsIOAdapter("23-ST", "H10:J10"),
+      new GSheetsIOAdapter("23-ST", "H18:J18"),
     ],
-    output: new SpreadsheetIOAdapter("03-STControlPanel", "M47:V82"),
+    output: new GSheetsIOAdapter("03-STControlPanel", "M47:V82"),
     microcycleCount: 4,
     args: {
       previous1RM: pullUpPrevious1RM,
@@ -171,21 +171,21 @@ export function runPullUpsControlPanel() {
 // Periodization
 
 const e1RMMatrixInput = {
-  e1RM: new SpreadsheetIOAdapter("04-e1RM", "O3"),
-  bw: new SpreadsheetIOAdapter("04-e1RM", "O4"),
-  requiredRPE: new SpreadsheetIOAdapter("04-e1RM", "O5"),
-  intensities: new SpreadsheetIOAdapter("04-e1RM", "R5:R44"),
-  reps: new SpreadsheetIOAdapter("04-e1RM", "S4:AA4"),
+  e1RM: new GSheetsIOAdapter("04-e1RM", "O3"),
+  bw: new GSheetsIOAdapter("04-e1RM", "O4"),
+  requiredRPE: new GSheetsIOAdapter("04-e1RM", "O5"),
+  intensities: new GSheetsIOAdapter("04-e1RM", "R5:R44"),
+  reps: new GSheetsIOAdapter("04-e1RM", "S4:AA4"),
 };
-const store = new SpreadsheetKeyValueStore();
+const store = new GSheetsKeyValueStore();
 const e1RMMatrixOutput = {
-  differences: new SpreadsheetIOAdapter("04-e1RM", "S5:AB44"),
+  differences: new GSheetsIOAdapter("04-e1RM", "S5:AB44"),
 };
 (global as any).onPeriodizationEdit = (
   e: GoogleAppsScript.Events.SheetsOnEdit
 ) =>
   onPeriodizationEdit(
-    new GsheetEditEventAdapter(e, "04-e1RM", "O3:O5"),
+    new GSheetsEditEventAdapter(e, "04-e1RM", "O3:O5"),
     e1RMMatrixInput,
     store,
     e1RMMatrixOutput

@@ -1,7 +1,7 @@
 import { suite, test, setup, teardown } from "mocha";
 import { assert } from "chai";
 import { stub, restore } from "sinon";
-import GsheetEditEventAdapter from "../../../src/infra/adapters/GsheetEditEventAdapter";
+import GSheetsEditEventAdapter from "../../../src/infra/adapters/GsheetsEditEventAdapter";
 
 // https://developers.google.com/apps-script/guides/triggers/events
 
@@ -15,7 +15,7 @@ suite("GsheetEditEventAdapter", function () {
     eventSpreadsheetStub: GoogleAppsScript.Spreadsheet.Spreadsheet,
     event: GoogleAppsScript.Events.SheetsOnEdit;
 
-  let adapter: GsheetEditEventAdapter;
+  let adapter: GSheetsEditEventAdapter;
 
   setup(function () {
     // Base spreadsheet stubs
@@ -76,7 +76,7 @@ suite("GsheetEditEventAdapter", function () {
       (eventRangeStub.getNumRows as sinon.SinonStub).returns(2);
       (eventRangeStub.getNumColumns as sinon.SinonStub).returns(2);
 
-      adapter = new GsheetEditEventAdapter(event, "Sheet1", "A1:B2");
+      adapter = new GSheetsEditEventAdapter(event, "Sheet1", "A1:B2");
       const result = adapter.shouldHandle();
 
       assert.isTrue(result);
@@ -94,7 +94,7 @@ suite("GsheetEditEventAdapter", function () {
       (eventRangeStub.getNumRows as sinon.SinonStub).returns(2);
       (eventRangeStub.getNumColumns as sinon.SinonStub).returns(2);
 
-      adapter = new GsheetEditEventAdapter(event, "Sheet1", "C1:D2");
+      adapter = new GSheetsEditEventAdapter(event, "Sheet1", "C1:D2");
       const result = adapter.shouldHandle();
 
       assert.isTrue(result);
@@ -112,7 +112,7 @@ suite("GsheetEditEventAdapter", function () {
       (eventRangeStub.getNumRows as sinon.SinonStub).returns(2);
       (eventRangeStub.getNumColumns as sinon.SinonStub).returns(2);
 
-      adapter = new GsheetEditEventAdapter(event, "Sheet1", "B1:C2");
+      adapter = new GSheetsEditEventAdapter(event, "Sheet1", "B1:C2");
       const result = adapter.shouldHandle();
 
       assert.isTrue(result);
@@ -130,7 +130,7 @@ suite("GsheetEditEventAdapter", function () {
       (eventRangeStub.getNumRows as sinon.SinonStub).returns(2);
       (eventRangeStub.getNumColumns as sinon.SinonStub).returns(2);
 
-      adapter = new GsheetEditEventAdapter(event, "Sheet1", "A2:B3");
+      adapter = new GSheetsEditEventAdapter(event, "Sheet1", "A2:B3");
       const result = adapter.shouldHandle();
 
       assert.isTrue(result);
@@ -148,7 +148,7 @@ suite("GsheetEditEventAdapter", function () {
       (eventRangeStub.getNumRows as sinon.SinonStub).returns(2);
       (eventRangeStub.getNumColumns as sinon.SinonStub).returns(2);
 
-      adapter = new GsheetEditEventAdapter(event, "Sheet1", "A1:B2");
+      adapter = new GSheetsEditEventAdapter(event, "Sheet1", "A1:B2");
       const result = adapter.shouldHandle();
 
       assert.isTrue(result);
@@ -166,7 +166,7 @@ suite("GsheetEditEventAdapter", function () {
       (eventRangeStub.getNumRows as sinon.SinonStub).returns(1);
       (eventRangeStub.getNumColumns as sinon.SinonStub).returns(1);
 
-      adapter = new GsheetEditEventAdapter(event, "Sheet1", "A1:B2");
+      adapter = new GSheetsEditEventAdapter(event, "Sheet1", "A1:B2");
       const result = adapter.shouldHandle();
 
       assert.isTrue(result);
@@ -184,7 +184,7 @@ suite("GsheetEditEventAdapter", function () {
       (eventRangeStub.getNumRows as sinon.SinonStub).returns(4);
       (eventRangeStub.getNumColumns as sinon.SinonStub).returns(4);
 
-      adapter = new GsheetEditEventAdapter(event, "Sheet1", "B2:C3");
+      adapter = new GSheetsEditEventAdapter(event, "Sheet1", "B2:C3");
       const result = adapter.shouldHandle();
 
       assert.isTrue(result);
@@ -202,7 +202,7 @@ suite("GsheetEditEventAdapter", function () {
       (eventRangeStub.getNumRows as sinon.SinonStub).returns(2);
       (eventRangeStub.getNumColumns as sinon.SinonStub).returns(2);
 
-      adapter = new GsheetEditEventAdapter(event, "Sheet1", "A1:B2");
+      adapter = new GSheetsEditEventAdapter(event, "Sheet1", "A1:B2");
       const result = adapter.shouldHandle();
 
       assert.isFalse(result);
@@ -222,7 +222,7 @@ suite("GsheetEditEventAdapter", function () {
       (eventRangeStub.getNumColumns as sinon.SinonStub).returns(2);
       (eventSheetStub.getName as sinon.SinonStub).returns("Sheet2");
 
-      adapter = new GsheetEditEventAdapter(event, "Sheet1", "A1:B2");
+      adapter = new GSheetsEditEventAdapter(event, "Sheet1", "A1:B2");
       debugger;
       const result = adapter.shouldHandle();
 
