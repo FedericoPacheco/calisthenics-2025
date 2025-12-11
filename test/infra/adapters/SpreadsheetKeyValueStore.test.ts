@@ -3,7 +3,7 @@ import { assert } from "chai";
 import { stub, restore, spy } from "sinon";
 import GSheetsKeyValueStore from "../../../src/infra/adapters/GSheetsKeyValueStore";
 
-suite("SpreadsheetKeyValueStore", () => {
+suite("GSheetsKeyValueStore", () => {
   let props: any;
   let store: GSheetsKeyValueStore;
 

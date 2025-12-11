@@ -2,7 +2,7 @@ import { IOPort } from "../ports/IOPort";
 
 // https://refactoring.guru/design-patterns/template-method
 
-export abstract class ControlPanelTemplateMethod {
+export abstract class DashboardTemplateMethod {
   protected inputs: IOPort[];
   protected output: IOPort;
   protected microcycleCount: number;

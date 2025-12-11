@@ -1,11 +1,11 @@
 import { suite, test, setup, teardown } from "mocha";
 import { assert } from "chai";
 import { stub, restore } from "sinon";
-import { STControlPanel } from "../../../src/domain/controlPanel/STControlPanel";
+import { STDashboard } from "../../../src/domain/dashboards/STDashboard";
 import { IOPort } from "../../../src/domain/ports/IOPort";
 
-suite("STControlPanel", function () {
-  let controlPanel: STControlPanel;
+suite("STDashboard", function () {
+  let controlPanel: STDashboard;
   let inputStub1: IOPort, inputStub2: IOPort;
   let outputStub: IOPort;
 
@@ -22,7 +22,7 @@ suite("STControlPanel", function () {
     } as any;
     outputStub = { write: stub() } as any;
     const minSetsJumpPerMicrocycle = [2, 2];
-    controlPanel = new STControlPanel(
+    controlPanel = new STDashboard(
       [inputStub1, inputStub2],
       outputStub,
       minSetsJumpPerMicrocycle.length,

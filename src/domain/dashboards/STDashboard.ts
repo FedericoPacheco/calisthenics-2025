@@ -1,6 +1,6 @@
 import STUtils from '../utils/STUtils';
 import GeneralUtils from '../utils/GeneralUtils';
-import { ControlPanelTemplateMethod } from './ControlPanelTemplateMethod';
+import { DashboardTemplateMethod } from './DashboardTemplateMethod';
 import { IOPort } from '../ports/IOPort';
 
 type STEntry = {
@@ -30,7 +30,7 @@ type STMetrics = {
   global: STGlobalMetrics;
 };
 
-export class STControlPanel extends ControlPanelTemplateMethod {
+export class STDashboard extends DashboardTemplateMethod {
   public constructor(
     inputs: IOPort[],
     output: IOPort,

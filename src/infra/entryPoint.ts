@@ -1,8 +1,8 @@
 import GSheetsIOAdapter from "./adapters/GSheetsIOAdapter";
-import { STControlPanel } from "../domain/controlPanel/STControlPanel";
+import { STDashboard } from "../domain/dashboards/STDashboard";
 import { onPeriodizationEdit } from "../domain/periodization/IntensityVolumeDecisionMatrix";
 import STUtils, { StrengthTest } from "../domain/utils/STUtils";
-import { SWControlPanel } from "../domain/controlPanel/SWControlPanel";
+import { SWDashboard } from "../domain/dashboards/SWDashboard";
 import GeneralUtils from "../domain/utils/GeneralUtils";
 import GSheetsKeyValueStore from "./adapters/GSheetsKeyValueStore";
 import GSheetsEditEventAdapter from "./adapters/GsheetsEditEventAdapter";
@@ -72,7 +72,7 @@ const OAHSParams = [
 ];
 export function runOAHSControlPanel() {
   OAHSParams.forEach((mesoParams) => {
-    new SWControlPanel(
+    new SWDashboard(
       mesoParams.inputs,
       mesoParams.output,
       mesoParams.microcycleCount,
@@ -119,7 +119,7 @@ const dipsParams = [
 ];
 export function runDipsControlPanel() {
   dipsParams.forEach((mesoParams) => {
-    new STControlPanel(
+    new STDashboard(
       mesoParams.inputs,
       mesoParams.output,
       mesoParams.microcycleCount,
@@ -167,7 +167,7 @@ const pullUpParams = [
 ];
 export function runPullUpsControlPanel() {
   pullUpParams.forEach((mesoParams) => {
-    new STControlPanel(
+    new STDashboard(
       mesoParams.inputs,
       mesoParams.output,
       mesoParams.microcycleCount,

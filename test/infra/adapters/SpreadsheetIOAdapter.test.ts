@@ -11,7 +11,7 @@ global.SpreadsheetApp = {
   getActiveSpreadsheet: () => ({}) as GoogleAppsScript.Spreadsheet.Spreadsheet,
 } as GoogleAppsScript.Spreadsheet.SpreadsheetApp;
 
-suite("SpreadsheetIOAdapter", function () {
+suite("GSheetsIOAdapter", function () {
   let spreadsheetStub: GoogleAppsScript.Spreadsheet.Spreadsheet,
     rangeStub: GoogleAppsScript.Spreadsheet.Range,
     sheetStub: GoogleAppsScript.Spreadsheet.Sheet;

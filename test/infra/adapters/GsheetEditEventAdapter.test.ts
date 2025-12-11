@@ -5,7 +5,7 @@ import GSheetsEditEventAdapter from "../../../src/infra/adapters/GsheetsEditEven
 
 // https://developers.google.com/apps-script/guides/triggers/events
 
-suite("GsheetEditEventAdapter", function () {
+suite("GSheetsEditEventAdapter", function () {
   let rangeStub: GoogleAppsScript.Spreadsheet.Range,
     sheetStub: GoogleAppsScript.Spreadsheet.Sheet,
     spreadsheetStub: GoogleAppsScript.Spreadsheet.Spreadsheet;

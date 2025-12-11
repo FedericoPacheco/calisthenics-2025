@@ -1,11 +1,11 @@
 import { suite, test, setup, teardown } from "mocha";
 import { assert } from "chai";
 import { stub, restore } from "sinon";
-import { SWControlPanel } from "../../../src/domain/controlPanel/SWControlPanel";
+import { SWDashboard } from "../../../src/domain/dashboards/SWDashboard";
 import { IOPort } from "../../../src/domain/ports/IOPort";
 
-suite("SWControlPanel", function () {
-  let controlPanel: SWControlPanel;
+suite("SWDashboard", function () {
+  let controlPanel: SWDashboard;
   let inputStub1: IOPort, inputStub2: IOPort;
   let outputStub: IOPort;
 
@@ -21,7 +21,7 @@ suite("SWControlPanel", function () {
       resizeReference: stub(),
     } as any;
     outputStub = { write: stub() } as any;
-    controlPanel = new SWControlPanel([inputStub1, inputStub2], outputStub, 2, {
+    controlPanel = new SWDashboard([inputStub1, inputStub2], outputStub, 2, {
       startMicrocycle: 1,
     });
   });

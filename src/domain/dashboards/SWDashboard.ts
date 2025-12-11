@@ -1,6 +1,6 @@
 import STUtils from "../utils/STUtils";
 import GeneralUtils from "../utils/GeneralUtils";
-import { ControlPanelTemplateMethod } from "./ControlPanelTemplateMethod";
+import { DashboardTemplateMethod } from "./DashboardTemplateMethod";
 import { IOPort } from "../ports/IOPort";
 
 type SWEntry = {
@@ -30,7 +30,7 @@ type SWMetrics = {
   microcycle: SWMicrocycleMetrics[];
   mesocycle: SWMesocycleMetrics;
 };
-export class SWControlPanel extends ControlPanelTemplateMethod {
+export class SWDashboard extends DashboardTemplateMethod {
   private static FINGERS = [10, 5, 4, 3, 2, 1, 0];
 
   constructor(
@@ -109,10 +109,10 @@ export class SWControlPanel extends ControlPanelTemplateMethod {
     const leftFrequencies = GeneralUtils.relativeFrequencies(leftFingers);
     const rightFrequencies = GeneralUtils.relativeFrequencies(rightFingers);
 
-    const leftFingerUsage = SWControlPanel.FINGERS.map((f) =>
+    const leftFingerUsage = SWDashboard.FINGERS.map((f) =>
       GeneralUtils.round(leftFrequencies[f] || 0)
     );
-    const rightFingerUsage = SWControlPanel.FINGERS.map((f) =>
+    const rightFingerUsage = SWDashboard.FINGERS.map((f) =>
       GeneralUtils.round(rightFrequencies[f] || 0)
     );
 
