@@ -59,6 +59,16 @@ const OAHSParams = [
       startMicrocycle: 9,
     },
   },
+  {
+    inputs: [new GSheetsIOAdapter("52-SW", "H14:J14"),
+      new GSheetsIOAdapter("52-SW", "H18:J18"),
+    ],
+    output: new GSheetsIOAdapter("03-SWControlPanel", "C26:V29"),
+    microcycleCount: 4,
+    args: {
+      startMicrocycle: 13,
+    },
+  },
 ];
 export function runOAHSControlPanel() {
   OAHSParams.forEach((mesoParams) => {
