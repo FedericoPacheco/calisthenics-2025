@@ -2,6 +2,7 @@ import STUtils from "../utils/STUtils";
 import GeneralUtils from "../utils/GeneralUtils";
 import { KeyValueStorePort } from "../ports/KeyValueStore";
 import { IOPort } from "../ports/IO";
+import { EditEventPort } from "../ports/EditEventPort";
 
 type e1RMMatrixInput = {
   e1RM: IOPort,
@@ -15,18 +16,13 @@ type e1RMMatrixOutput = {
   differences: IOPort,
 }
 
-// TODO: write adapter and port for edit events
-
-// https://developers.google.com/apps-script/guides/triggers
-// https://developers.google.com/apps-script/guides/properties
 export function onPeriodizationEdit(
-  e: GoogleAppsScript.Events.SheetsOnEdit,
+  e: EditEventPort,
   input: e1RMMatrixInput,
   store: KeyValueStorePort,
   output: e1RMMatrixOutput
 ): void {
-  const SHEET_NAME = "04-e1RM";
-  if (e.range.getSheet().getName() !== SHEET_NAME) return;
+  if (!e.shouldHandle()) return;
 
   const previousE1RM = store.get("previousE1RM") || 0;
   const previousRPE = store.get("previousRPE") || 0;

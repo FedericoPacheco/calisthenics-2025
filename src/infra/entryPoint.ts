@@ -5,6 +5,7 @@ import STUtils, { StrengthTest } from "../domain/utils/STUtils";
 import { SWControlPanel } from "../domain/controlPanel/SWControlPanel";
 import GeneralUtils from "../domain/utils/GeneralUtils";
 import SpreadsheetKeyValueStore from "./adapters/SpreadsheetKeyValueStore";
+import GsheetEditEventAdapter from "./adapters/GsheetEditEventAdapter";
 
 // Don't forget to add this line. Otherwise, the function won't be exported to the global scope.
 // https://www.npmjs.com/package/gas-webpack-plugin
@@ -182,7 +183,13 @@ const e1RMMatrixOutput = {
 };
 (global as any).onPeriodizationEdit = (
   e: GoogleAppsScript.Events.SheetsOnEdit
-) => onPeriodizationEdit(e, e1RMMatrixInput, store, e1RMMatrixOutput);
+) =>
+  onPeriodizationEdit(
+    new GsheetEditEventAdapter(e, "04-e1RM", "O3:O5"),
+    e1RMMatrixInput,
+    store,
+    e1RMMatrixOutput
+  );
 
 /** @customfunction */
 function E1RM(weight: number, bw: number, reps: number, rpe: number): number {
