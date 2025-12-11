@@ -1,7 +1,7 @@
-import STUtils from '../utils/STUtils';
-import GeneralUtils from '../utils/GeneralUtils';
-import { DashboardTemplateMethod } from './DashboardTemplateMethod';
-import { IOPort } from '../ports/IOPort';
+import STUtils from "../utils/STUtils";
+import GeneralUtils from "../utils/GeneralUtils";
+import { DashboardTemplateMethod } from "./DashboardTemplateMethod";
+import { IOPort } from "../ports/IOPort";
 
 type STEntry = {
   sets: number;
@@ -13,13 +13,11 @@ type STEntry = {
 };
 type STArgs = {
   previous1RM: number;
-  bw: number;
   minSetsJumpPerMicrocycle: number[];
 };
 type STEntryMetrics = {
   RPEStability: number[];
   avgTEC: number;
-  e1RMChange: number[];
   totalVolume: number;
 };
 type STGlobalMetrics = {
@@ -45,16 +43,19 @@ export class STDashboard extends DashboardTemplateMethod {
     const rawTarget = input.read()[0];
     const [sets, reps, targetRPE] = rawTarget;
 
-    const setsAndAvgsLength = Math.max(
-      sets,
-      (this.args as STArgs).minSetsJumpPerMicrocycle[microcycle]
-    ) *
-      3 +
+    const setsAndAvgsLength =
+      Math.max(
+        sets,
+        (this.args as STArgs).minSetsJumpPerMicrocycle[microcycle]
+      ) *
+        3 +
       2;
     input.resizeReference(1, setsAndAvgsLength);
     input.moveReference(0, rawTarget.length);
     const rawIntensity = input.read()[0];
-    const intensity = [], RPE = [], TEC = [];
+    const intensity = [],
+      RPE = [],
+      TEC = [];
     for (let i = 0; i < 3 * sets; i += 3) {
       intensity.push(rawIntensity[i]);
       RPE.push(rawIntensity[i + 1]);
@@ -77,25 +78,12 @@ export class STDashboard extends DashboardTemplateMethod {
   public computeMetrics(entryData: STEntry[]): STMetrics {
     const entryMetrics: STEntryMetrics[] = entryData.map((entry: STEntry) => {
       const RPEStability = entry.RPE.map((rpe) => rpe - entry.targetRPE);
-
       const avgTEC = GeneralUtils.average(entry.TEC);
-
-      const e1RMChange = entry.intensity.map((intensity: number, idx: number) => GeneralUtils.round(
-        STUtils.estimate1RM({
-          weight: intensity,
-          bw: (this.args as STArgs).bw,
-          reps: entry.reps,
-          rpe: entry.RPE[idx]
-        }) - (this.args as STArgs).previous1RM
-      )
-      );
-
       const totalVolume = entry.sets * entry.reps;
 
       return {
         RPEStability,
         avgTEC,
-        e1RMChange,
         totalVolume,
       };
     });
@@ -115,7 +103,8 @@ export class STDashboard extends DashboardTemplateMethod {
 
   public transform(entryData: STEntry[], metrics: STMetrics): any[][] {
     const result: any[][] = [];
-    let seq = 1, entryMetrics;
+    let seq = 1,
+      entryMetrics;
     entryData.forEach((entry, entryIdx) => {
       entryMetrics = metrics.entry[entryIdx];
       for (let setIdx = 0; setIdx < entry.sets; setIdx++) {
@@ -129,7 +118,6 @@ export class STDashboard extends DashboardTemplateMethod {
           entryMetrics.RPEStability[setIdx],
           entry.intensity[setIdx],
           metrics.global.movingAverageIntensity[seq - 1],
-          entryMetrics.e1RMChange[setIdx],
         ]);
         seq++;
       }

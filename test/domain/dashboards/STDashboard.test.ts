@@ -28,7 +28,6 @@ suite("STDashboard", function () {
       minSetsJumpPerMicrocycle.length,
       {
         previous1RM: 80,
-        bw: 72,
         minSetsJumpPerMicrocycle,
       }
     );
@@ -87,13 +86,11 @@ suite("STDashboard", function () {
           {
             RPEStability: [1, 0, -1],
             avgTEC: 7.67,
-            e1RMChange: [25.42, 24.6, 23.6],
             totalVolume: 15,
           },
           {
             RPEStability: [1, 0],
             avgTEC: 7.5,
-            e1RMChange: [26.55, 26.07],
             totalVolume: 8,
           },
         ],
@@ -131,14 +128,12 @@ suite("STDashboard", function () {
             RPEStability: [1, 0, -1],
             avgIntensity: 75,
             avgTEC: 7.67,
-            e1RMChange: [25.42, 24.6, 23.6],
             totalVolume: 15,
           },
           {
             RPEStability: [1, 0],
             avgIntensity: 87.5,
             avgTEC: 7.5,
-            e1RMChange: [26.55, 26.07],
             totalVolume: 8,
           },
         ],
@@ -149,13 +144,13 @@ suite("STDashboard", function () {
 
       const transformed = controlPanel.transform(entryData, metricsData);
 
-      // seqNumber, sets, reps, totalVolume, targetRPE, TEC, RPEStability, intensity, movingAvgIntensity, e1RMChange
+      // seqNumber, sets, reps, totalVolume, targetRPE, TEC, RPEStability, intensity, movingAvgIntensity
       assert.deepEqual(transformed, [
-        [1, 3, 5, 15, 8, 7, 1, 80, 80, 25.42],
-        [2, 3, 5, 15, 8, 8, 0, 75, 77.5, 24.6],
-        [3, 3, 5, 15, 8, 8, -1, 70, 75, 23.6],
-        [4, 2, 4, 8, 9, 7, 1, 90, 78.33, 26.55],
-        [5, 2, 4, 8, 9, 8, 0, 85, 81.67, 26.07],
+        [1, 3, 5, 15, 8, 7, 1, 80, 80],
+        [2, 3, 5, 15, 8, 8, 0, 75, 77.5],
+        [3, 3, 5, 15, 8, 8, -1, 70, 75],
+        [4, 2, 4, 8, 9, 7, 1, 90, 78.33],
+        [5, 2, 4, 8, 9, 8, 0, 85, 81.67],
       ]);
     });
   });
@@ -185,18 +180,18 @@ suite("STDashboard", function () {
 
       controlPanel.run();
 
-      // seqNumber, sets, reps, totalVolume, targetRPE, TEC, RPEStability, intensity, movingAvgIntensity, e1RMChange
+      // seqNumber, sets, reps, totalVolume, targetRPE, TEC, RPEStability, intensity, movingAvgIntensity
       assert.deepEqual((outputStub.write as any).getCall(0).args[0], [
-        [1, 2, 12, 24, 4, 9, -1, 11.24, 11.24, -6.7],
-        [2, 2, 12, 24, 4, 10, 1, 11.25, 11.25, -16.36],
-        [3, 3, 12, 36, 6, 7, 1, 38.75, 20.41, 17.08],
-        [4, 3, 12, 36, 6, 7, 2, 33.75, 27.92, 4.45],
-        [5, 3, 12, 36, 6, 8, 0, 23.75, 32.08, -1.04],
-        [6, 2, 10, 20, 5, 9, -2, 25, 27.5, 6.05],
-        [7, 2, 10, 20, 5, 9, 0, 30, 26.25, 3.72],
-        [8, 3, 10, 30, 7, 7.5, 0.5, 52.5, 35.83, 23.89],
-        [9, 3, 10, 30, 7, 7.5, 0, 50, 44.17, 23],
-        [10, 3, 10, 30, 7, 7, 0, 45, 49.17, 15.83],
+        [1, 2, 12, 24, 4, 9, -1, 11.24, 11.24],
+        [2, 2, 12, 24, 4, 10, 1, 11.25, 11.25],
+        [3, 3, 12, 36, 6, 7, 1, 38.75, 20.41],
+        [4, 3, 12, 36, 6, 7, 2, 33.75, 27.92],
+        [5, 3, 12, 36, 6, 8, 0, 23.75, 32.08],
+        [6, 2, 10, 20, 5, 9, -2, 25, 27.5],
+        [7, 2, 10, 20, 5, 9, 0, 30, 26.25],
+        [8, 3, 10, 30, 7, 7.5, 0.5, 52.5, 35.83],
+        [9, 3, 10, 30, 7, 7.5, 0, 50, 44.17],
+        [10, 3, 10, 30, 7, 7, 0, 45, 49.17],
       ]);
     });
   });
