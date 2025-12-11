@@ -19,9 +19,10 @@ type STEntryMetrics = {
   RPEStability: number[];
   avgTEC: number;
   totalVolume: number;
+  relativeIntensity: number[];
 };
 type STGlobalMetrics = {
-  movingAverageIntensity: number[];
+  movingAverageRelativeIntensity: number[];
 };
 type STMetrics = {
   entry: STEntryMetrics[];
@@ -76,21 +77,28 @@ export class STDashboard extends DashboardTemplateMethod {
   }
 
   public computeMetrics(entryData: STEntry[]): STMetrics {
+    debugger;
+    
     const entryMetrics: STEntryMetrics[] = entryData.map((entry: STEntry) => {
       const RPEStability = entry.RPE.map((rpe) => rpe - entry.targetRPE);
       const avgTEC = GeneralUtils.average(entry.TEC);
       const totalVolume = entry.sets * entry.reps;
+      
+      const relativeIntensity = entry.intensity.map((intensity) =>
+        GeneralUtils.round(intensity / (this.args as STArgs).previous1RM, 2)
+      );
 
       return {
         RPEStability,
         avgTEC,
         totalVolume,
+        relativeIntensity,
       };
     });
 
     const globalMetrics: STGlobalMetrics = {
-      movingAverageIntensity: GeneralUtils.movingAverage(
-        entryData.map((entry) => entry.intensity).flat(),
+      movingAverageRelativeIntensity: GeneralUtils.movingAverage(
+        entryMetrics.map((em) => em.relativeIntensity).flat(),
         3
       ),
     };
@@ -116,8 +124,8 @@ export class STDashboard extends DashboardTemplateMethod {
           entry.targetRPE,
           entry.TEC[setIdx],
           entryMetrics.RPEStability[setIdx],
-          entry.intensity[setIdx],
-          metrics.global.movingAverageIntensity[seq - 1],
+          entryMetrics.relativeIntensity[setIdx],
+          metrics.global.movingAverageRelativeIntensity[seq - 1],
         ]);
         seq++;
       }

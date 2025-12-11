@@ -87,16 +87,18 @@ suite("STDashboard", function () {
             RPEStability: [1, 0, -1],
             avgTEC: 7.67,
             totalVolume: 15,
+            relativeIntensity: [1, 0.94, 0.88],
           },
           {
             RPEStability: [1, 0],
             avgTEC: 7.5,
             totalVolume: 8,
+            relativeIntensity: [1.13, 1.06],
           },
         ],
         global: {
           // Use 3 last data points
-          movingAverageIntensity: [80, 77.5, 75, 78.33, 81.67],
+          movingAverageRelativeIntensity: [1, 0.97, 0.94, 0.98, 1.02],
         },
       });
     });
@@ -126,19 +128,19 @@ suite("STDashboard", function () {
         entry: [
           {
             RPEStability: [1, 0, -1],
-            avgIntensity: 75,
             avgTEC: 7.67,
             totalVolume: 15,
+            relativeIntensity: [1, 0.94, 0.88],
           },
           {
             RPEStability: [1, 0],
-            avgIntensity: 87.5,
             avgTEC: 7.5,
             totalVolume: 8,
+            relativeIntensity: [1.13, 1.06],
           },
         ],
         global: {
-          movingAverageIntensity: [80, 77.5, 75, 78.33, 81.67],
+          movingAverageRelativeIntensity: [1, 0.97, 0.94, 0.98, 1.02],
         },
       };
 
@@ -146,11 +148,11 @@ suite("STDashboard", function () {
 
       // seqNumber, sets, reps, totalVolume, targetRPE, TEC, RPEStability, intensity, movingAvgIntensity
       assert.deepEqual(transformed, [
-        [1, 3, 5, 15, 8, 7, 1, 80, 80],
-        [2, 3, 5, 15, 8, 8, 0, 75, 77.5],
-        [3, 3, 5, 15, 8, 8, -1, 70, 75],
-        [4, 2, 4, 8, 9, 7, 1, 90, 78.33],
-        [5, 2, 4, 8, 9, 8, 0, 85, 81.67],
+        [1, 3, 5, 15, 8, 7, 1, 1, 1],
+        [2, 3, 5, 15, 8, 8, 0, 0.94, 0.97],
+        [3, 3, 5, 15, 8, 8, -1, 0.88, 0.94],
+        [4, 2, 4, 8, 9, 7, 1, 1.13, 0.98],
+        [5, 2, 4, 8, 9, 8, 0, 1.06, 1.02],
       ]);
     });
   });
@@ -161,7 +163,7 @@ suite("STDashboard", function () {
       (inputStub1.read as any).onCall(0).returns([[2, 12, 4]]);
       (inputStub1.read as any)
         .onCall(1)
-        .returns([[11.24, 3, 9, 11.25, 5, 10, "", "", "", 4.0, 9.5]]);
+        .returns([[11.25, 3, 9, 11.25, 5, 10, "", "", "", 4.0, 9.5]]);
 
       (inputStub1.read as any).onCall(2).returns([[2, 10, 5]]);
       (inputStub1.read as any)
@@ -180,18 +182,18 @@ suite("STDashboard", function () {
 
       controlPanel.run();
 
-      // seqNumber, sets, reps, totalVolume, targetRPE, TEC, RPEStability, intensity, movingAvgIntensity
+      // seqNumber, sets, reps, totalVolume, targetRPE, TEC, RPEStability, relativeIntensity, movingAvgRelativeIntensity
       assert.deepEqual((outputStub.write as any).getCall(0).args[0], [
-        [1, 2, 12, 24, 4, 9, -1, 11.24, 11.24],
-        [2, 2, 12, 24, 4, 10, 1, 11.25, 11.25],
-        [3, 3, 12, 36, 6, 7, 1, 38.75, 20.41],
-        [4, 3, 12, 36, 6, 7, 2, 33.75, 27.92],
-        [5, 3, 12, 36, 6, 8, 0, 23.75, 32.08],
-        [6, 2, 10, 20, 5, 9, -2, 25, 27.5],
-        [7, 2, 10, 20, 5, 9, 0, 30, 26.25],
-        [8, 3, 10, 30, 7, 7.5, 0.5, 52.5, 35.83],
-        [9, 3, 10, 30, 7, 7.5, 0, 50, 44.17],
-        [10, 3, 10, 30, 7, 7, 0, 45, 49.17],
+        [1, 2, 12, 24, 4, 9, -1, 0.14, 0.14],
+        [2, 2, 12, 24, 4, 10, 1, 0.14, 0.14],
+        [3, 3, 12, 36, 6, 7, 1, 0.48, 0.25],
+        [4, 3, 12, 36, 6, 7, 2, 0.42, 0.35],
+        [5, 3, 12, 36, 6, 8, 0, 0.30, 0.40],
+        [6, 2, 10, 20, 5, 9, -2, 0.31, 0.34],
+        [7, 2, 10, 20, 5, 9, 0, 0.38, 0.33],
+        [8, 3, 10, 30, 7, 7.5, 0.5, 0.66, 0.45],
+        [9, 3, 10, 30, 7, 7.5, 0, 0.63, 0.56],
+        [10, 3, 10, 30, 7, 7, 0, 0.56, 0.62],
       ]);
     });
   });

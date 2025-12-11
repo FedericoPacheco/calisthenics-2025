@@ -32,6 +32,7 @@ export default class GeneralUtils {
   }
 
   public static movingAverage(arr: number[], windowSize: number = 3): number[] {
+    debugger;
     if (!Array.isArray(arr)) throw new Error("Input is not a valid array");
     if (windowSize <= 0) throw new Error("Window size must be greater than 0");
 

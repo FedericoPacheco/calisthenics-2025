@@ -27,7 +27,7 @@ import GSheetsEditEventAdapter from "./adapters/GsheetsEditEventAdapter";
 // https://developers.google.com/apps-script/guides/typescript
 
 ////////////////////////////////////////////////////////////////////////////////////////
-// Control panels
+// Dashboards
 
 // -------------------------------------------------------------------------------------
 // One arm handstands
@@ -37,7 +37,7 @@ const OAHSParams = [
       new GSheetsIOAdapter("22-SW", "H9:J9"),
       new GSheetsIOAdapter("22-SW", "H18:J18"),
     ],
-    output: new GSheetsIOAdapter("03-SWControlPanel", "C14:W17"),
+    output: new GSheetsIOAdapter("04-SWDashboard", "C14:W17"),
     microcycleCount: 4,
     args: {
       startMicrocycle: 1,
@@ -45,7 +45,7 @@ const OAHSParams = [
   },
   {
     inputs: [new GSheetsIOAdapter("32-SW", "H9:J9")],
-    output: new GSheetsIOAdapter("03-SWControlPanel", "C18:W21"),
+    output: new GSheetsIOAdapter("04-SWDashboard", "C18:W21"),
     microcycleCount: 4,
     args: {
       startMicrocycle: 5,
@@ -53,7 +53,7 @@ const OAHSParams = [
   },
   {
     inputs: [new GSheetsIOAdapter("42-SW", "H14:J14")],
-    output: new GSheetsIOAdapter("03-SWControlPanel", "C22:W25"),
+    output: new GSheetsIOAdapter("04-SWDashboard", "C22:W25"),
     microcycleCount: 4,
     args: {
       startMicrocycle: 9,
@@ -63,14 +63,14 @@ const OAHSParams = [
     inputs: [new GSheetsIOAdapter("52-SW", "H14:J14"),
       new GSheetsIOAdapter("52-SW", "H18:J18"),
     ],
-    output: new GSheetsIOAdapter("03-SWControlPanel", "C26:W29"),
+    output: new GSheetsIOAdapter("04-SWDashboard", "C26:W29"),
     microcycleCount: 4,
     args: {
       startMicrocycle: 13,
     },
   },
 ];
-export function runOAHSControlPanel() {
+export function runOAHSDashboard() {
   OAHSParams.forEach((mesoParams) => {
     new SWDashboard(
       mesoParams.inputs,
@@ -80,26 +80,23 @@ export function runOAHSControlPanel() {
     ).run();
   });
 }
-(global as any).runOAHSControlPanel = runOAHSControlPanel;
+(global as any).runOAHSDashboard = runOAHSDashboard;
 
 // -------------------------------------------------------------------------------------
 // Dips
-const dipsPrevious1RM = new GSheetsIOAdapter(
-  "03-STControlPanel",
-  "K6"
-).read();
-const dipsBw = new GSheetsIOAdapter("03-STControlPanel", "K7").read();
 const dipsParams = [
   {
     inputs: [
       new GSheetsIOAdapter("13-ST", "H14:J14"),
       new GSheetsIOAdapter("13-ST", "H22:J22"),
     ],
-    output: new GSheetsIOAdapter("03-STControlPanel", "B11:K46"),
+    output: new GSheetsIOAdapter("04-STDashboard", "F7:N42"),
     microcycleCount: 4,
     args: {
-      previous1RM: dipsPrevious1RM,
-      bw: dipsBw,
+      previous1RM: new GSheetsIOAdapter(
+        "04-STDashboard",
+        "C10"
+      ).read(),
       minSetsJumpPerMicrocycle: [4, 8, 7, 6],
     },
   },
@@ -108,16 +105,18 @@ const dipsParams = [
       new GSheetsIOAdapter("23-ST", "H14:J14"),
       new GSheetsIOAdapter("23-ST", "H22:J22"),
     ],
-    output: new GSheetsIOAdapter("03-STControlPanel", "B47:K82"),
+    output: new GSheetsIOAdapter("04-STDashboard", "F43:N78"),
     microcycleCount: 4,
     args: {
-      previous1RM: dipsPrevious1RM,
-      bw: dipsBw,
+      previous1RM: new GSheetsIOAdapter(
+        "04-STDashboard",
+        "C11"
+      ).read(),
       minSetsJumpPerMicrocycle: [4, 8, 7, 6],
     },
   },
 ];
-export function runDipsControlPanel() {
+export function runDipsDashboard() {
   dipsParams.forEach((mesoParams) => {
     new STDashboard(
       mesoParams.inputs,
@@ -127,27 +126,23 @@ export function runDipsControlPanel() {
     ).run();
   });
 }
-(global as any).runDipsControlPanel = runDipsControlPanel;
+(global as any).runDipsDashboard = runDipsDashboard;
 
 // -------------------------------------------------------------------------------------
 // Pull-ups
-const pullUpPrevious1RM = new GSheetsIOAdapter(
-  "03-STControlPanel",
-  "V6"
-).read();
-const pullUpBw = new GSheetsIOAdapter("03-STControlPanel", "V7").read();
-
 const pullUpParams = [
   {
     inputs: [
       new GSheetsIOAdapter("13-ST", "H10:J10"),
       new GSheetsIOAdapter("13-ST", "H18:J18"),
     ],
-    output: new GSheetsIOAdapter("03-STControlPanel", "M11:V46"),
+    output: new GSheetsIOAdapter("04-STDashboard", "P7:X42"),
     microcycleCount: 4,
     args: {
-      previous1RM: pullUpPrevious1RM,
-      bw: pullUpBw,
+      previous1RM: new GSheetsIOAdapter(
+        "04-STDashboard",
+        "D10"
+      ).read(),
       minSetsJumpPerMicrocycle: [4, 8, 7, 6],
     },
   },
@@ -156,16 +151,18 @@ const pullUpParams = [
       new GSheetsIOAdapter("23-ST", "H10:J10"),
       new GSheetsIOAdapter("23-ST", "H18:J18"),
     ],
-    output: new GSheetsIOAdapter("03-STControlPanel", "M47:V82"),
+    output: new GSheetsIOAdapter("04-STDashboard", "P43:X78"),
     microcycleCount: 4,
     args: {
-      previous1RM: pullUpPrevious1RM,
-      bw: pullUpBw,
+      previous1RM: new GSheetsIOAdapter(
+        "04-STDashboard",
+        "D11"
+      ).read(),
       minSetsJumpPerMicrocycle: [4, 8, 7, 6],
     },
   },
 ];
-export function runPullUpsControlPanel() {
+export function runPullUpsDashboard() {
   pullUpParams.forEach((mesoParams) => {
     new STDashboard(
       mesoParams.inputs,
@@ -175,27 +172,27 @@ export function runPullUpsControlPanel() {
     ).run();
   });
 }
-(global as any).runPullUpsControlPanel = runPullUpsControlPanel;
+(global as any).runPullUpsDashboard = runPullUpsDashboard;
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // Periodization
 
 const e1RMMatrixInput = {
-  e1RM: new GSheetsIOAdapter("04-e1RM", "O3"),
-  bw: new GSheetsIOAdapter("04-e1RM", "O4"),
-  requiredRPE: new GSheetsIOAdapter("04-e1RM", "O5"),
-  intensities: new GSheetsIOAdapter("04-e1RM", "R5:R44"),
-  reps: new GSheetsIOAdapter("04-e1RM", "S4:AA4"),
+  e1RM: new GSheetsIOAdapter("03-e1RM", "O3"),
+  bw: new GSheetsIOAdapter("03-e1RM", "O4"),
+  requiredRPE: new GSheetsIOAdapter("03-e1RM", "O5"),
+  intensities: new GSheetsIOAdapter("03-e1RM", "R5:R44"),
+  reps: new GSheetsIOAdapter("03-e1RM", "S4:AA4"),
 };
 const store = new GSheetsKeyValueStore();
 const e1RMMatrixOutput = {
-  differences: new GSheetsIOAdapter("04-e1RM", "S5:AB44"),
+  differences: new GSheetsIOAdapter("03-e1RM", "S5:AB44"),
 };
 (global as any).onPeriodizationEdit = (
   e: GoogleAppsScript.Events.SheetsOnEdit
 ) =>
   onPeriodizationEdit(
-    new GSheetsEditEventAdapter(e, "04-e1RM", "O3:O5"),
+    new GSheetsEditEventAdapter(e, "03-e1RM", "O3:O5"),
     e1RMMatrixInput,
     store,
     e1RMMatrixOutput
