@@ -1,5 +1,5 @@
 import { IOPort } from "../../domain/ports/IO";
-import GeneralUtils from "../utils/GeneralUtils";
+import GeneralUtils from "../../domain/utils/GeneralUtils";
 
 export default class SpreadsheetIOAdapter implements IOPort {
   private sheet: GoogleAppsScript.Spreadsheet.Sheet | null;
@@ -177,7 +177,7 @@ export default class SpreadsheetIOAdapter implements IOPort {
     return rangeRegex.test(ref);
   }
 
-  public setReference(reference: string): void {
+  private setReference(reference: string): void {
     if (!this.isCell(reference) && !this.isRange(reference)) {
       throw new Error(`Invalid reference: "${reference}"`);
     }

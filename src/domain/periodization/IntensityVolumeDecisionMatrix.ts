@@ -1,5 +1,5 @@
 import STUtils from "../utils/STUtils";
-import GeneralUtils from "../../infra/utils/GeneralUtils";
+import GeneralUtils from "../utils/GeneralUtils";
 import { KeyValueStorePort } from "../ports/KeyValueStore";
 import { IOPort } from "../ports/IO";
 
@@ -14,6 +14,8 @@ type e1RMMatrixInput = {
 type e1RMMatrixOutput = {
   differences: IOPort,
 }
+
+// TODO: write adapter and port for edit events
 
 // https://developers.google.com/apps-script/guides/triggers
 // https://developers.google.com/apps-script/guides/properties

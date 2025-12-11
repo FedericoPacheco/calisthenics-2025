@@ -3,7 +3,7 @@ import { STControlPanel } from "../domain/controlPanel/STControlPanel";
 import { onPeriodizationEdit } from "../domain/periodization/IntensityVolumeDecisionMatrix";
 import STUtils, { StrengthTest } from "../domain/utils/STUtils";
 import { SWControlPanel } from "../domain/controlPanel/SWControlPanel";
-import GeneralUtils from "../infra/utils/GeneralUtils";
+import GeneralUtils from "../domain/utils/GeneralUtils";
 import SpreadsheetKeyValueStore from "./adapters/SpreadsheetKeyValueStore";
 
 // Don't forget to add this line. Otherwise, the function won't be exported to the global scope.
@@ -171,10 +171,10 @@ export function runPullUpsControlPanel() {
 
 const e1RMMatrixInput = {
   e1RM: new SpreadsheetIOAdapter("04-e1RM", "O3"),
+  bw: new SpreadsheetIOAdapter("04-e1RM", "O4"),
   requiredRPE: new SpreadsheetIOAdapter("04-e1RM", "O5"),
   intensities: new SpreadsheetIOAdapter("04-e1RM", "R5:R44"),
   reps: new SpreadsheetIOAdapter("04-e1RM", "S4:AA4"),
-  bw: new SpreadsheetIOAdapter("04-e1RM", "O4"),
 };
 const store = new SpreadsheetKeyValueStore();
 const e1RMMatrixOutput = {

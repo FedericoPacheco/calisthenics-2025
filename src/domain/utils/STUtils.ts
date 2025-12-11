@@ -1,4 +1,4 @@
-import GeneralUtils from "../../infra/utils/GeneralUtils";
+import GeneralUtils from "./GeneralUtils";
 
 export type StrengthTest = {
   weight: number;

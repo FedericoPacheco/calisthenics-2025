@@ -1,6 +1,6 @@
 import { suite, test } from "mocha";
 import { assert } from "chai";
-import GeneralUtils from "../../../src/infra/utils/GeneralUtils";
+import GeneralUtils from "../../../src/domain/utils/GeneralUtils";
 
 suite("GeneralUtils", function () {
   suite("tranpose()", function () {

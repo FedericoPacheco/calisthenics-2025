@@ -1,5 +1,5 @@
 import STUtils from '../utils/STUtils';
-import GeneralUtils from '../../infra/utils/GeneralUtils';
+import GeneralUtils from '../utils/GeneralUtils';
 import { ControlPanelTemplateMethod } from './ControlPanelTemplateMethod';
 import { IOPort } from '../ports/IO';
 
