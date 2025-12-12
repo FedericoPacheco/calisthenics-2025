@@ -98,6 +98,7 @@ const dipsParams = [
         "C10"
       ).read(),
       minSetsJumpPerMicrocycle: [4, 8, 7, 6],
+      startSequenceNumber: 1,
     },
   },
   {
@@ -113,6 +114,7 @@ const dipsParams = [
         "C11"
       ).read(),
       minSetsJumpPerMicrocycle: [4, 8, 7, 6],
+      startSequenceNumber: 37,
     },
   },
 ];
@@ -144,6 +146,7 @@ const pullUpParams = [
         "D10"
       ).read(),
       minSetsJumpPerMicrocycle: [4, 8, 7, 6],
+      startSequenceNumber: 1,
     },
   },
   {
@@ -159,6 +162,7 @@ const pullUpParams = [
         "D11"
       ).read(),
       minSetsJumpPerMicrocycle: [4, 8, 7, 6],
+      startSequenceNumber: 37,
     },
   },
 ];

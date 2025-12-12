@@ -14,6 +14,7 @@ type STEntry = {
 type STArgs = {
   previous1RM: number;
   minSetsJumpPerMicrocycle: number[];
+  startSequenceNumber: number;
 };
 type STEntryMetrics = {
   RPEStability: number[];
@@ -111,13 +112,13 @@ export class STDashboard extends DashboardTemplateMethod {
 
   public transform(entryData: STEntry[], metrics: STMetrics): any[][] {
     const result: any[][] = [];
-    let seq = 1,
+    let i = 0,
       entryMetrics;
     entryData.forEach((entry, entryIdx) => {
       entryMetrics = metrics.entry[entryIdx];
       for (let setIdx = 0; setIdx < entry.sets; setIdx++) {
         result.push([
-          seq,
+          i + (this.args as STArgs).startSequenceNumber,
           entry.sets,
           entry.reps,
           entryMetrics.totalVolume,
@@ -125,9 +126,9 @@ export class STDashboard extends DashboardTemplateMethod {
           entry.TEC[setIdx],
           entryMetrics.RPEStability[setIdx],
           entryMetrics.relativeIntensity[setIdx],
-          metrics.global.movingAverageRelativeIntensity[seq - 1],
+          metrics.global.movingAverageRelativeIntensity[i],
         ]);
-        seq++;
+        i++;
       }
     });
 

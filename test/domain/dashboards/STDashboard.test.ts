@@ -21,14 +21,14 @@ suite("STDashboard", function () {
       resizeReference: stub(),
     } as any;
     outputStub = { write: stub() } as any;
-    const minSetsJumpPerMicrocycle = [2, 2];
     controlPanel = new STDashboard(
       [inputStub1, inputStub2],
       outputStub,
-      minSetsJumpPerMicrocycle.length,
+      2,
       {
         previous1RM: 80,
-        minSetsJumpPerMicrocycle,
+        minSetsJumpPerMicrocycle: [2, 2],
+        startSequenceNumber: 1,
       }
     );
   });
