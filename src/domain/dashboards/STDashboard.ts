@@ -18,12 +18,12 @@ type STArgs = {
 };
 type STEntryMetrics = {
   RPEStability: number[];
-  avgTEC: number;
   totalVolume: number;
   relativeIntensity: number[];
 };
 type STGlobalMetrics = {
-  movingAverageRelativeIntensity: number[];
+  movingAvgRelativeIntensity: number[];
+  movingAvgTEC: number[];
 };
 type STMetrics = {
   entry: STEntryMetrics[];
@@ -79,27 +79,24 @@ export class STDashboard extends DashboardTemplateMethod {
 
   public computeMetrics(entryData: STEntry[]): STMetrics {
     debugger;
-    
-    const entryMetrics: STEntryMetrics[] = entryData.map((entry: STEntry) => {
-      const RPEStability = entry.RPE.map((rpe) => rpe - entry.targetRPE);
-      const avgTEC = GeneralUtils.average(entry.TEC);
-      const totalVolume = entry.sets * entry.reps;
-      
-      const relativeIntensity = entry.intensity.map((intensity) =>
-        GeneralUtils.round(intensity / (this.args as STArgs).previous1RM, 2)
-      );
 
+    const entryMetrics: STEntryMetrics[] = entryData.map((entry: STEntry) => {
       return {
-        RPEStability,
-        avgTEC,
-        totalVolume,
-        relativeIntensity,
+        RPEStability: entry.RPE.map((rpe) => rpe - entry.targetRPE),
+        totalVolume: entry.sets * entry.reps,
+        relativeIntensity: entry.intensity.map((intensity) =>
+          GeneralUtils.round(intensity / (this.args as STArgs).previous1RM, 2)
+        ),
       };
     });
 
     const globalMetrics: STGlobalMetrics = {
-      movingAverageRelativeIntensity: GeneralUtils.movingAverage(
+      movingAvgRelativeIntensity: GeneralUtils.movingAverage(
         entryMetrics.map((em) => em.relativeIntensity).flat(),
+        3
+      ),
+      movingAvgTEC: GeneralUtils.movingAverage(
+        entryData.map((entry) => entry.TEC).flat(),
         3
       ),
     };
@@ -124,9 +121,10 @@ export class STDashboard extends DashboardTemplateMethod {
           entryMetrics.totalVolume,
           entry.targetRPE,
           entry.TEC[setIdx],
+          metrics.global.movingAvgTEC[i],
           entryMetrics.RPEStability[setIdx],
           entryMetrics.relativeIntensity[setIdx],
-          metrics.global.movingAverageRelativeIntensity[i],
+          metrics.global.movingAvgRelativeIntensity[i],
         ]);
         i++;
       }

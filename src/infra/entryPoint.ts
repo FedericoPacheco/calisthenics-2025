@@ -90,7 +90,7 @@ const dipsParams = [
       new GSheetsIOAdapter("13-ST", "H14:J14"),
       new GSheetsIOAdapter("13-ST", "H22:J22"),
     ],
-    output: new GSheetsIOAdapter("04-STDashboard", "F7:N42"),
+    output: new GSheetsIOAdapter("04-STDashboard", "F7:O42"),
     microcycleCount: 4,
     args: {
       previous1RM: new GSheetsIOAdapter(
@@ -106,7 +106,7 @@ const dipsParams = [
       new GSheetsIOAdapter("23-ST", "H14:J14"),
       new GSheetsIOAdapter("23-ST", "H22:J22"),
     ],
-    output: new GSheetsIOAdapter("04-STDashboard", "F43:N78"),
+    output: new GSheetsIOAdapter("04-STDashboard", "F43:O78"),
     microcycleCount: 4,
     args: {
       previous1RM: new GSheetsIOAdapter(
@@ -138,7 +138,7 @@ const pullUpParams = [
       new GSheetsIOAdapter("13-ST", "H10:J10"),
       new GSheetsIOAdapter("13-ST", "H18:J18"),
     ],
-    output: new GSheetsIOAdapter("04-STDashboard", "P7:X42"),
+    output: new GSheetsIOAdapter("04-STDashboard", "Q7:Z42"),
     microcycleCount: 4,
     args: {
       previous1RM: new GSheetsIOAdapter(
@@ -154,7 +154,7 @@ const pullUpParams = [
       new GSheetsIOAdapter("23-ST", "H10:J10"),
       new GSheetsIOAdapter("23-ST", "H18:J18"),
     ],
-    output: new GSheetsIOAdapter("04-STDashboard", "P43:X78"),
+    output: new GSheetsIOAdapter("04-STDashboard", "Q43:Z78"),
     microcycleCount: 4,
     args: {
       previous1RM: new GSheetsIOAdapter(
