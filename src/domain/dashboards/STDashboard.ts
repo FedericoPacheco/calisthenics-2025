@@ -85,7 +85,10 @@ export class STDashboard extends DashboardTemplateMethod {
         RPEStability: entry.RPE.map((rpe) => rpe - entry.targetRPE),
         totalVolume: entry.sets * entry.reps,
         relativeIntensity: entry.intensity.map((intensity) =>
-          GeneralUtils.round(intensity / (this.args as STArgs).previous1RM, 2)
+          GeneralUtils.round(
+            (intensity / (this.args as STArgs).previous1RM) * 100,
+            2
+          )
         ),
       };
     });

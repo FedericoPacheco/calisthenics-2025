@@ -21,16 +21,11 @@ suite("STDashboard", function () {
       resizeReference: stub(),
     } as any;
     outputStub = { write: stub() } as any;
-    controlPanel = new STDashboard(
-      [inputStub1, inputStub2],
-      outputStub,
-      2,
-      {
-        previous1RM: 80,
-        minSetsJumpPerMicrocycle: [2, 2],
-        startSequenceNumber: 1,
-      }
-    );
+    controlPanel = new STDashboard([inputStub1, inputStub2], outputStub, 2, {
+      previous1RM: 80,
+      minSetsJumpPerMicrocycle: [2, 2],
+      startSequenceNumber: 1,
+    });
   });
 
   teardown(function () {
@@ -86,18 +81,18 @@ suite("STDashboard", function () {
           {
             RPEStability: [1, 0, -1],
             totalVolume: 15,
-            relativeIntensity: [1, 0.94, 0.88],
+            relativeIntensity: [100, 93.75, 87.5],
           },
           {
             RPEStability: [1, 0],
             totalVolume: 8,
-            relativeIntensity: [1.13, 1.06],
+            relativeIntensity: [112.5, 106.25],
           },
         ],
         global: {
           // Use 3 last data points
-          movingAvgRelativeIntensity: [1, 0.97, 0.94, 0.98, 1.02],
-          movingAvgTEC: [7, 7.5, 7.67, 7.67, 7.67]
+          movingAvgRelativeIntensity: [100, 96.88, 93.75, 97.92, 102.08],
+          movingAvgTEC: [7, 7.5, 7.67, 7.67, 7.67],
         },
       });
     });
@@ -128,17 +123,17 @@ suite("STDashboard", function () {
           {
             RPEStability: [1, 0, -1],
             totalVolume: 15,
-            relativeIntensity: [1, 0.94, 0.88],
+            relativeIntensity: [100, 93.75, 87.5],
           },
           {
             RPEStability: [1, 0],
             totalVolume: 8,
-            relativeIntensity: [1.13, 1.06],
+            relativeIntensity: [112.5, 106.25],
           },
         ],
         global: {
-          movingAvgRelativeIntensity: [1, 0.97, 0.94, 0.98, 1.02],
-          movingAvgTEC: [7, 7.5, 7.67, 7.67, 7.67]
+          movingAvgRelativeIntensity: [100, 96.88, 93.75, 97.92, 102.08],
+          movingAvgTEC: [7, 7.5, 7.67, 7.67, 7.67],
         },
       };
 
@@ -146,11 +141,11 @@ suite("STDashboard", function () {
 
       // seqNumber, sets, reps, totalVolume, targetRPE, TEC, avg TEC per session, RPEStability, intensity, movingAvgIntensity
       assert.deepEqual(transformed, [
-        [1, 3, 5, 15, 8, 7, 7, 1, 1, 1],
-        [2, 3, 5, 15, 8, 8, 7.5, 0, 0.94, 0.97],
-        [3, 3, 5, 15, 8, 8, 7.67, -1, 0.88, 0.94],
-        [4, 2, 4, 8, 9, 7, 7.67, 1, 1.13, 0.98],
-        [5, 2, 4, 8, 9, 8, 7.67, 0, 1.06, 1.02],
+        [1, 3, 5, 15, 8, 7, 7, 1, 100, 100],
+        [2, 3, 5, 15, 8, 8, 7.5, 0, 93.75, 96.88],
+        [3, 3, 5, 15, 8, 8, 7.67, -1, 87.5, 93.75],
+        [4, 2, 4, 8, 9, 7, 7.67, 1, 112.5, 97.92],
+        [5, 2, 4, 8, 9, 8, 7.67, 0, 106.25, 102.08],
       ]);
     });
   });
@@ -182,16 +177,16 @@ suite("STDashboard", function () {
 
       // seqNumber, sets, reps, totalVolume, targetRPE, TEC, avg TEC per session, RPEStability, relativeIntensity, movingAvgRelativeIntensity
       assert.deepEqual((outputStub.write as any).getCall(0).args[0], [
-        [1, 2, 12, 24, 4, 9, 9.00, -1, 0.14, 0.14],
-        [2, 2, 12, 24, 4, 10, 9.50, 1, 0.14, 0.14],
-        [3, 3, 12, 36, 6, 7, 8.67, 1, 0.48, 0.25],
-        [4, 3, 12, 36, 6, 7, 8.00, 2, 0.42, 0.35],
-        [5, 3, 12, 36, 6, 8, 7.33, 0, 0.30, 0.40],
-        [6, 2, 10, 20, 5, 9, 8.00, -2, 0.31, 0.34],
-        [7, 2, 10, 20, 5, 9, 8.67, 0, 0.38, 0.33],
-        [8, 3, 10, 30, 7, 7.5, 8.50, 0.5, 0.66, 0.45],
-        [9, 3, 10, 30, 7, 7.5, 8.00, 0, 0.63, 0.56],
-        [10, 3, 10, 30, 7, 7, 7.33, 0, 0.56, 0.62],
+        [1, 2, 12, 24, 4, 9, 9.0, -1, 14.06, 14.06],
+        [2, 2, 12, 24, 4, 10, 9.5, 1, 14.06, 14.06],
+        [3, 3, 12, 36, 6, 7, 8.67, 1, 48.44, 25.52],
+        [4, 3, 12, 36, 6, 7, 8.0, 2, 42.19, 34.9],
+        [5, 3, 12, 36, 6, 8, 7.33, 0, 29.69, 40.11],
+        [6, 2, 10, 20, 5, 9, 8.0, -2, 31.25, 34.38],
+        [7, 2, 10, 20, 5, 9, 8.67, 0, 37.5, 32.81],
+        [8, 3, 10, 30, 7, 7.5, 8.5, 0.5, 65.63, 44.79],
+        [9, 3, 10, 30, 7, 7.5, 8.0, 0, 62.5, 55.21],
+        [10, 3, 10, 30, 7, 7, 7.33, 0, 56.25, 61.46],
       ]);
     });
   });
