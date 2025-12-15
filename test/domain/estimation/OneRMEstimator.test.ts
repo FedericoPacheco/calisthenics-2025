@@ -1,16 +1,16 @@
 import { suite, test } from "mocha";
 import { assert } from "chai";
-import STUtils from "../../../src/domain/utils/STUtils";
+import OneRMEstimator from "../../../src/domain/estimation/OneRMEstimator";
 
-suite("STUtils", function () {
-  suite("estimate1RmMultipoint()", function () {
+suite("OneRMEstimator", function () {
+  suite("estimateMultipoint()", function () {
     test("should estimate 1RM correctly using multiple points", function () {
       const observations = [
         { weight: 70, bw: 70, reps: 8, rpe: 8 },
         { weight: 80, bw: 70, reps: 5, rpe: 9 },
       ];
 
-      const result = STUtils.estimate1RmMultipoint(observations);
+      const result = OneRMEstimator.estimateMultipoint(observations);
 
       /*
         First:
@@ -29,7 +29,7 @@ suite("STUtils", function () {
       const observations = [{ weight: 70, bw: 70, reps: 10 }];
 
       // @ts-ignore
-      const result = STUtils.estimate1RmMultipoint(observations);
+      const result = OneRMEstimator.estimateMultipoint(observations);
 
       assert.approximately(result, 113.55, 0.1);
     });
@@ -38,7 +38,7 @@ suite("STUtils", function () {
       const observations = [{ weight: 70, bw: 70, reps: 10, rpe: 15 }];
 
       assert.throws(() => {
-        STUtils.estimate1RmMultipoint(observations);
+        OneRMEstimator.estimateMultipoint(observations);
       }, Error);
     });
 
@@ -46,7 +46,7 @@ suite("STUtils", function () {
         const observations = [{ weight: -70, bw: 70, reps: 10, rpe: 8 }];
 
         assert.throws(() => {
-            STUtils.estimate1RmMultipoint(observations);
+            OneRMEstimator.estimateMultipoint(observations);
         }, Error);
     });
 
@@ -54,7 +54,7 @@ suite("STUtils", function () {
         const observations = [{ weight: 70, bw: -70, reps: 10, rpe: 8 }];
 
         assert.throws(() => {
-            STUtils.estimate1RmMultipoint(observations);
+            OneRMEstimator.estimateMultipoint(observations);
         }, Error);
     });
 
@@ -62,7 +62,7 @@ suite("STUtils", function () {
         const observations = [{ weight: 70, bw: 70, reps: -10, rpe: 8 }];
         
         assert.throws(() => {
-            STUtils.estimate1RmMultipoint(observations);
+            OneRMEstimator.estimateMultipoint(observations);
         }, Error);
     });
   });

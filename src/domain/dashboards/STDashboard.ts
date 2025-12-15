@@ -1,4 +1,4 @@
-import STUtils from "../utils/STUtils";
+import OneRMEstimator from "../estimation/OneRMEstimator";
 import GeneralUtils from "../utils/GeneralUtils";
 import { DashboardTemplateMethod } from "./DashboardTemplateMethod";
 import { IOPort } from "../ports/IOPort";

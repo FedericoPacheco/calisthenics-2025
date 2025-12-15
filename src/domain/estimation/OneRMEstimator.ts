@@ -1,4 +1,4 @@
-import GeneralUtils from "./GeneralUtils";
+import GeneralUtils from "../utils/GeneralUtils";
 
 export type StrengthTest = {
   weight: number;
@@ -7,12 +7,12 @@ export type StrengthTest = {
   rpe: number;
 };
 
-export default class STUtils {
-  public static estimate1RM(observation: StrengthTest): number {
-    return STUtils.estimate1RmMultipoint([observation]);
+export default class OneRMEstimator {
+  public static estimate(observation: StrengthTest): number {
+    return OneRMEstimator.estimateMultipoint([observation]);
   }
 
-  public static estimate1RmMultipoint(observations: StrengthTest[]): number {
+  public static estimateMultipoint(observations: StrengthTest[]): number {
     const estimations: number[] = [];
     observations.forEach(({ weight, bw, reps, rpe }) => {
       if (weight < 0) throw new Error("Weight cannot be negative");
@@ -25,22 +25,22 @@ export default class STUtils {
         else adjustedReps = reps + 10 - rpe;
       } else adjustedReps = reps; // i.e. RPE = 10
 
-      estimations.push(STUtils.estimate1RMEpley(weight, bw, adjustedReps));
-      estimations.push(STUtils.estimate1RMBrzycki(weight, bw, adjustedReps));
-      estimations.push(STUtils.estimate1RMBerger(weight, bw, adjustedReps));
+      estimations.push(OneRMEstimator.estimateEpley(weight, bw, adjustedReps));
+      estimations.push(OneRMEstimator.estimateBrzycki(weight, bw, adjustedReps));
+      estimations.push(OneRMEstimator.estimateBerger(weight, bw, adjustedReps));
     });
     return GeneralUtils.average(estimations);
   }
 
-  private static estimate1RMBerger(weight: number, bw: number, reps: number) {
+  private static estimateBerger(weight: number, bw: number, reps: number) {
     return (
       (weight + bw) * (1 / (1.0261 * Math.pow(Math.E, -0.0262 * reps))) - bw
     );
   }
-  private static estimate1RMBrzycki(weight: number, bw: number, reps: number) {
+  private static estimateBrzycki(weight: number, bw: number, reps: number) {
     return ((weight + bw) * 36) / (37 - reps) - bw;
   }
-  private static estimate1RMEpley(weight: number, bw: number, reps: number) {
+  private static estimateEpley(weight: number, bw: number, reps: number) {
     return (weight + bw) * (1 + reps / 30) - bw;
   }
 }

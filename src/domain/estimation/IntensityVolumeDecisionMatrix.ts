@@ -1,4 +1,4 @@
-import STUtils from "../utils/STUtils";
+import OneRMEstimator from "./OneRMEstimator";
 import GeneralUtils from "../utils/GeneralUtils";
 import { KeyValueStorePort } from "../ports/KeyValueStorePort";
 import { IOPort } from "../ports/IOPort";
@@ -85,7 +85,7 @@ export function computeIntensityVolumeMatrix(
   return axes.fractions.map((fraction: number) =>
     axes.reps.map((reps: number) => {
       return computePlateWeight(
-        STUtils.estimate1RM({
+        OneRMEstimator.estimate({
           weight: input.previousE1RM * fraction,
           bw: input.bw,
           reps,

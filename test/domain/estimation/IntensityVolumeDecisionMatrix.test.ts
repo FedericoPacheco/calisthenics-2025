@@ -1,6 +1,6 @@
 import { suite, test, setup, teardown } from 'mocha';
 import { assert } from 'chai';
-import { computeIntensityVolumeMatrix } from '../../../src/domain/periodization/IntensityVolumeDecisionMatrix';
+import { computeIntensityVolumeMatrix } from '../../../src/domain/estimation/IntensityVolumeDecisionMatrix';
 
 suite('e1RMMatrix', function () {
   suite('computeE1RMMatrix()', function () {
