@@ -20,7 +20,7 @@ export default class OneRMEstimator {
       if (reps < 0) throw new Error("Repetitions cannot be negative");
       let adjustedReps;
       if (typeof rpe === "number") {
-        if (!GeneralUtils.isWithin(0, rpe, 10))
+        if (rpe < 0 || rpe > 10)
           throw new Error("RPE value out of range");
         else adjustedReps = reps + 10 - rpe;
       } else adjustedReps = reps; // i.e. RPE = 10
