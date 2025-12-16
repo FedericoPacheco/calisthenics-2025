@@ -1,10 +1,10 @@
-import GeneralUtils from "./GeneralUtils";
+import NumberUtils from "./GeneralUtils";
 
 export default class StatUtils {
   public static average(arr: number[]): number {
     if (!Array.isArray(arr)) throw new Error("Input is not a valid array");
     if (arr.length === 0) return 0;
-    return GeneralUtils.round(
+    return NumberUtils.round(
       arr.reduce((acc, curr) => acc + curr, 0) / arr.length
     );
   }

@@ -3,9 +3,9 @@ import { STDashboard } from "../domain/dashboards/STDashboard";
 import { onPeriodizationEdit } from "../domain/estimation/IntensityVolumeDecisionMatrix";
 import OneRMEstimator, { StrengthTest } from "../domain/estimation/OneRMEstimator";
 import { SWDashboard } from "../domain/dashboards/SWDashboard";
-import GeneralUtils from "../domain/utils/GeneralUtils";
 import GSheetsKeyValueStore from "./adapters/GSheetsKeyValueStore";
 import GSheetsEditEventAdapter from "./adapters/GsheetsEditEventAdapter";
+import TimeUtils from "../domain/utils/TimeUtils";
 
 // Don't forget to add this line. Otherwise, the function won't be exported to the global scope.
 // https://www.npmjs.com/package/gas-webpack-plugin
@@ -222,18 +222,18 @@ function E1RM_MULTIPOINT(
 
 /** @customfunction */
 function GET_HOURS(input: number[][]): number {
-  return GeneralUtils.getHours(input[0]);
+  return TimeUtils.getHours(input[0]);
 }
 (global as any).GET_HOURS = GET_HOURS;
 
 /** @customfunction */
 function GET_MINUTES(input: number[][]): number {
-  return GeneralUtils.getMinutes(input[0]);
+  return TimeUtils.getMinutes(input[0]);
 }
 (global as any).GET_MINUTES = GET_MINUTES;
 
 /** @customfunction */
 function GET_SECONDS(input: number[][]): number {
-  return GeneralUtils.getSeconds(input[0]);
+  return TimeUtils.getSeconds(input[0]);
 }
 (global as any).GET_SECONDS = GET_SECONDS;

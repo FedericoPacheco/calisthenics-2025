@@ -1,4 +1,4 @@
-import GeneralUtils from "../utils/GeneralUtils";
+import NumberUtils from "../utils/GeneralUtils";
 import { DashboardTemplateMethod } from "./DashboardTemplateMethod";
 import { IOPort } from "../ports/IOPort";
 import StatUtils from "../utils/StatUtils";
@@ -83,7 +83,7 @@ export class STDashboard extends DashboardTemplateMethod {
         RPEStability: entry.RPE.map((rpe) => rpe - entry.targetRPE),
         totalVolume: entry.sets * entry.reps,
         relativeIntensity: entry.intensity.map((intensity) =>
-          GeneralUtils.round(
+          NumberUtils.round(
             (intensity / (this.args as STArgs).previous1RM) * 100,
             2
           )

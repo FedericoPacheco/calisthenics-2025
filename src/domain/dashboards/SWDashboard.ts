@@ -1,4 +1,4 @@
-import GeneralUtils from "../utils/GeneralUtils";
+import NumberUtils from "../utils/GeneralUtils";
 import { DashboardTemplateMethod } from "./DashboardTemplateMethod";
 import { IOPort } from "../ports/IOPort";
 import LinAlgUtils from "../utils/LinAlgUtils";
@@ -79,17 +79,17 @@ export class SWDashboard extends DashboardTemplateMethod {
       sessionsPerMicrocycle
     );
     const microcycleMetrics = entriesPerMicrocycle.map((microcycleEntries) => {
-      const medianLeftIntensity = GeneralUtils.round(
+      const medianLeftIntensity = NumberUtils.round(
         StatUtils.median(
           microcycleEntries.map((entry) => entry.leftIntensity).flat()
         )
       );
-      const medianRightIntensity = GeneralUtils.round(
+      const medianRightIntensity = NumberUtils.round(
         StatUtils.median(
           microcycleEntries.map((entry) => entry.rightIntensity).flat()
         )
       );
-      const medianTEC = GeneralUtils.round(
+      const medianTEC = NumberUtils.round(
         StatUtils.median(microcycleEntries.map((entry) => entry.TEC).flat())
       );
 
@@ -111,10 +111,10 @@ export class SWDashboard extends DashboardTemplateMethod {
     const rightFrequencies = StatUtils.relativeFrequencies(rightFingers);
 
     const leftFingerUsage = SWDashboard.FINGERS.map((f) =>
-      GeneralUtils.round(leftFrequencies[f] || 0)
+      NumberUtils.round(leftFrequencies[f] || 0)
     );
     const rightFingerUsage = SWDashboard.FINGERS.map((f) =>
-      GeneralUtils.round(rightFrequencies[f] || 0)
+      NumberUtils.round(rightFrequencies[f] || 0)
     );
 
     const medianLeftIntensity = StatUtils.median(leftFingers);
