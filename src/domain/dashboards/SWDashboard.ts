@@ -1,8 +1,8 @@
-import OneRMEstimator from "../estimation/OneRMEstimator";
 import GeneralUtils from "../utils/GeneralUtils";
 import { DashboardTemplateMethod } from "./DashboardTemplateMethod";
 import { IOPort } from "../ports/IOPort";
 import LinAlgUtils from "../utils/LinAlgUtils";
+import StatUtils from "../utils/StatUtils";
 
 type SWEntry = {
   sets: number;
@@ -80,17 +80,17 @@ export class SWDashboard extends DashboardTemplateMethod {
     );
     const microcycleMetrics = entriesPerMicrocycle.map((microcycleEntries) => {
       const medianLeftIntensity = GeneralUtils.round(
-        GeneralUtils.median(
+        StatUtils.median(
           microcycleEntries.map((entry) => entry.leftIntensity).flat()
         )
       );
       const medianRightIntensity = GeneralUtils.round(
-        GeneralUtils.median(
+        StatUtils.median(
           microcycleEntries.map((entry) => entry.rightIntensity).flat()
         )
       );
       const medianTEC = GeneralUtils.round(
-        GeneralUtils.median(microcycleEntries.map((entry) => entry.TEC).flat())
+        StatUtils.median(microcycleEntries.map((entry) => entry.TEC).flat())
       );
 
       return {
@@ -107,8 +107,8 @@ export class SWDashboard extends DashboardTemplateMethod {
     const leftFingers = entryData.map((entry) => entry.leftIntensity).flat();
     const rightFingers = entryData.map((entry) => entry.rightIntensity).flat();
 
-    const leftFrequencies = GeneralUtils.relativeFrequencies(leftFingers);
-    const rightFrequencies = GeneralUtils.relativeFrequencies(rightFingers);
+    const leftFrequencies = StatUtils.relativeFrequencies(leftFingers);
+    const rightFrequencies = StatUtils.relativeFrequencies(rightFingers);
 
     const leftFingerUsage = SWDashboard.FINGERS.map((f) =>
       GeneralUtils.round(leftFrequencies[f] || 0)
@@ -117,10 +117,10 @@ export class SWDashboard extends DashboardTemplateMethod {
       GeneralUtils.round(rightFrequencies[f] || 0)
     );
 
-    const medianLeftIntensity = GeneralUtils.median(leftFingers);
-    const medianRightIntensity = GeneralUtils.median(rightFingers);
+    const medianLeftIntensity = StatUtils.median(leftFingers);
+    const medianRightIntensity = StatUtils.median(rightFingers);
 
-    const medianTEC = GeneralUtils.median(
+    const medianTEC = StatUtils.median(
       entryData.map((entry) => entry.TEC).flat()
     );
 

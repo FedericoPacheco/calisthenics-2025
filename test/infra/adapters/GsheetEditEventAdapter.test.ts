@@ -223,7 +223,6 @@ suite("GSheetsEditEventAdapter", function () {
       (eventSheetStub.getName as sinon.SinonStub).returns("Sheet2");
 
       adapter = new GSheetsEditEventAdapter(event, "Sheet1", "A1:B2");
-      debugger;
       const result = adapter.shouldHandle();
 
       assert.isFalse(result);

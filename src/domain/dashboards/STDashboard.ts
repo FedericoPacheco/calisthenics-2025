@@ -1,7 +1,7 @@
-import OneRMEstimator from "../estimation/OneRMEstimator";
 import GeneralUtils from "../utils/GeneralUtils";
 import { DashboardTemplateMethod } from "./DashboardTemplateMethod";
 import { IOPort } from "../ports/IOPort";
+import StatUtils from "../utils/StatUtils";
 
 type STEntry = {
   sets: number;
@@ -78,8 +78,6 @@ export class STDashboard extends DashboardTemplateMethod {
   }
 
   public computeMetrics(entryData: STEntry[]): STMetrics {
-    debugger;
-
     const entryMetrics: STEntryMetrics[] = entryData.map((entry: STEntry) => {
       return {
         RPEStability: entry.RPE.map((rpe) => rpe - entry.targetRPE),
@@ -94,11 +92,11 @@ export class STDashboard extends DashboardTemplateMethod {
     });
 
     const globalMetrics: STGlobalMetrics = {
-      movingAvgRelativeIntensity: GeneralUtils.movingAverage(
+      movingAvgRelativeIntensity: StatUtils.movingAverage(
         entryMetrics.map((em) => em.relativeIntensity).flat(),
         3
       ),
-      movingAvgTEC: GeneralUtils.movingAverage(
+      movingAvgTEC: StatUtils.movingAverage(
         entryData.map((entry) => entry.TEC).flat(),
         3
       ),

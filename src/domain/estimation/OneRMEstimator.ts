@@ -1,4 +1,4 @@
-import GeneralUtils from "../utils/GeneralUtils";
+import StatUtils from "../utils/StatUtils";
 
 export type StrengthTest = {
   weight: number;
@@ -29,7 +29,7 @@ export default class OneRMEstimator {
       estimations.push(OneRMEstimator.estimateBrzycki(weight, bw, adjustedReps));
       estimations.push(OneRMEstimator.estimateBerger(weight, bw, adjustedReps));
     });
-    return GeneralUtils.average(estimations);
+    return StatUtils.average(estimations);
   }
 
   private static estimateBerger(weight: number, bw: number, reps: number) {

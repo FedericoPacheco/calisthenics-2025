@@ -1,5 +1,4 @@
 import OneRMEstimator from "./OneRMEstimator";
-import GeneralUtils from "../utils/GeneralUtils";
 import { KeyValueStorePort } from "../ports/KeyValueStorePort";
 import { IOPort } from "../ports/IOPort";
 import { EditEventPort } from "../ports/EditEventPort";
