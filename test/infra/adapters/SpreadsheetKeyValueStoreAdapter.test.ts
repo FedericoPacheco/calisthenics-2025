@@ -1,11 +1,11 @@
 import { suite, test } from "mocha";
 import { assert } from "chai";
 import { stub, restore, spy } from "sinon";
-import GSheetsKeyValueStore from "../../../src/infra/adapters/GSheetsKeyValueStore";
+import GSheetsKeyValueStoreAdapter from "../../../src/infra/adapters/GSheetsKeyValueStoreAdapter";
 
-suite("GSheetsKeyValueStore", () => {
+suite("GSheetsKeyValueStoreAdapter", () => {
   let props: any;
-  let store: GSheetsKeyValueStore;
+  let store: GSheetsKeyValueStoreAdapter;
 
   setup(function () {
     props = {
@@ -17,7 +17,7 @@ suite("GSheetsKeyValueStore", () => {
       getScriptProperties: () => props,
     } as unknown as GoogleAppsScript.Properties.PropertiesService;
 
-    store = new GSheetsKeyValueStore();
+    store = new GSheetsKeyValueStoreAdapter();
   });
 
   teardown(function () {

@@ -3,8 +3,8 @@ import { STDashboard } from "../domain/dashboards/STDashboard";
 import { onPeriodizationEdit } from "../domain/estimation/IntensityVolumeDecisionMatrix";
 import OneRMEstimator, { StrengthTest } from "../domain/estimation/OneRMEstimator";
 import { SWDashboard } from "../domain/dashboards/SWDashboard";
-import GSheetsKeyValueStore from "./adapters/GSheetsKeyValueStore";
-import GSheetsEditEventAdapter from "./adapters/GsheetsEditEventAdapter";
+import GSheetsKeyValueStoreAdapter from "./adapters/GSheetsKeyValueStoreAdapter";
+import GSheetsEditEventAdapter from "./adapters/GSheetsEditEventAdapter";
 import TimeUtils from "../domain/utils/TimeUtils";
 
 // Don't forget to add this line. Otherwise, the function won't be exported to the global scope.
@@ -177,7 +177,7 @@ const e1RMMatrixInput = {
   intensities: new GSheetsIOAdapter("03-STEstimation", "R7:R46"),
   reps: new GSheetsIOAdapter("03-STEstimation", "S6:AA6"),
 };
-const store = new GSheetsKeyValueStore();
+const store = new GSheetsKeyValueStoreAdapter();
 const e1RMMatrixOutput = {
   differences: new GSheetsIOAdapter("03-STEstimation", "S7:AB46"),
 };

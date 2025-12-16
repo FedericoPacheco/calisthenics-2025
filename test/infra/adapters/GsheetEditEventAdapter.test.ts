@@ -1,7 +1,7 @@
 import { suite, test, setup, teardown } from "mocha";
 import { assert } from "chai";
 import { stub, restore } from "sinon";
-import GSheetsEditEventAdapter from "../../../src/infra/adapters/GsheetsEditEventAdapter";
+import GSheetsEditEventAdapter from "../../../src/infra/adapters/GSheetsEditEventAdapter";
 
 // https://developers.google.com/apps-script/guides/triggers/events
 
