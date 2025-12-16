@@ -3,6 +3,7 @@ import GeneralUtils from "../utils/GeneralUtils";
 import { KeyValueStorePort } from "../ports/KeyValueStorePort";
 import { IOPort } from "../ports/IOPort";
 import { EditEventPort } from "../ports/EditEventPort";
+import LinAlgUtils from "../utils/LinAlgUtils";
 
 type e1RMMatrixInput = {
   e1RM: IOPort,
@@ -41,12 +42,12 @@ export function onPeriodizationEdit(
     { fractions, reps },
     { previousE1RM: newE1RM, requiredRPE: newRPE, bw }
   );
-  const plateWeights = GeneralUtils.transpose(
+  const plateWeights = LinAlgUtils.transpose(
     computePlateWeights(fractions, newE1RM)
   );
 
   output.differences.write(
-    GeneralUtils.concatMatricesHorizontally(intensityVolumeMatrix, plateWeights)
+    LinAlgUtils.concatMatricesHorizontally(intensityVolumeMatrix, plateWeights)
   );
 }
 

@@ -1,5 +1,5 @@
 import { IOPort } from "../../domain/ports/IOPort";
-import GeneralUtils from "../../domain/utils/GeneralUtils";
+import LinAlgUtils from "../../domain/utils/LinAlgUtils";
 
 export default class GSheetsIOAdapter implements IOPort {
   private sheet: GoogleAppsScript.Spreadsheet.Sheet | null;
@@ -42,7 +42,7 @@ export default class GSheetsIOAdapter implements IOPort {
       throw new Error(`Error reading reference "${ref}`);
     }
 
-    if (GeneralUtils.isNonEmptyMatrix(values)) {
+    if (LinAlgUtils.isNonEmptyMatrix(values)) {
       values = this.filterEmptyRows(values, minRows);
       values = this.filterEmptyCols(values, minCols);
     }
@@ -51,13 +51,13 @@ export default class GSheetsIOAdapter implements IOPort {
   }
 
   private filterEmptyCols(matrix: any[][], minCols: number = 1) {
-    if (!GeneralUtils.isMatrixWithValues(matrix)) return [[]];
+    if (!LinAlgUtils.isMatrixWithValues(matrix)) return [[]];
 
     const numCols = matrix[0].length;
     for (let j = Math.max(minCols, 1); j < numCols; j++) {
-      const nextCols = GeneralUtils.sliceCols(matrix, j, numCols);
-      if (!GeneralUtils.isMatrixWithValues(nextCols)) {
-        const pastCols = GeneralUtils.sliceCols(matrix, 0, j);
+      const nextCols = LinAlgUtils.sliceCols(matrix, j, numCols);
+      if (!LinAlgUtils.isMatrixWithValues(nextCols)) {
+        const pastCols = LinAlgUtils.sliceCols(matrix, 0, j);
         return pastCols;
       }
     }
@@ -65,13 +65,13 @@ export default class GSheetsIOAdapter implements IOPort {
   }
 
   private filterEmptyRows(matrix: any[][], minRows: number = 1) {
-    if (!GeneralUtils.isMatrixWithValues(matrix)) return [[]];
+    if (!LinAlgUtils.isMatrixWithValues(matrix)) return [[]];
 
     const numRows = matrix.length;
     for (let i = Math.max(minRows, 1); i < numRows; i++) {
-      const nextRows = GeneralUtils.sliceRows(matrix, i, numRows);
-      if (!GeneralUtils.isMatrixWithValues(nextRows)) {
-        const pastRows = GeneralUtils.sliceRows(matrix, 0, i);
+      const nextRows = LinAlgUtils.sliceRows(matrix, i, numRows);
+      if (!LinAlgUtils.isMatrixWithValues(nextRows)) {
+        const pastRows = LinAlgUtils.sliceRows(matrix, 0, i);
         return pastRows;
       }
     }
@@ -101,10 +101,10 @@ export default class GSheetsIOAdapter implements IOPort {
   }
 
   private writeCell(data: any) {
-    if (GeneralUtils.isScalar(data)) {
+    if (LinAlgUtils.isScalar(data)) {
       // Fill with the single value
       return data;
-    } else if (GeneralUtils.isMatrix(data)) {
+    } else if (LinAlgUtils.isMatrix(data)) {
       // Fill with the upper-left value of the matrix
       return data[0][0];
     } else {
@@ -114,9 +114,9 @@ export default class GSheetsIOAdapter implements IOPort {
 
   private writeRange(data: any, range: GoogleAppsScript.Spreadsheet.Range) {
     let finalData: any[][];
-    if (GeneralUtils.isScalar(data)) {
+    if (LinAlgUtils.isScalar(data)) {
       finalData = this.writeSingleValueToRange(data, range);
-    } else if (GeneralUtils.isMatrix(data)) {
+    } else if (LinAlgUtils.isMatrix(data)) {
       finalData = this.writeMatrixToRange(data, range);
     } else throw new Error("Unsupported data structure");
 
@@ -128,13 +128,13 @@ export default class GSheetsIOAdapter implements IOPort {
     range: GoogleAppsScript.Spreadsheet.Range
   ) {
     let finalData: any[][] = [[data]];
-    finalData = GeneralUtils.fillRows(
+    finalData = LinAlgUtils.fillRows(
       finalData,
       range.getNumRows(),
       range.getNumColumns(),
       data
     );
-    finalData = GeneralUtils.fillCols(finalData, range.getNumColumns(), data);
+    finalData = LinAlgUtils.fillCols(finalData, range.getNumColumns(), data);
     return finalData;
   }
 
@@ -147,20 +147,20 @@ export default class GSheetsIOAdapter implements IOPort {
     const areRowsSmaller = data.length < range.getNumRows();
     const areRowsBigger = data.length > range.getNumRows();
     if (areRowsSmaller)
-      finalData = GeneralUtils.fillRows(
+      finalData = LinAlgUtils.fillRows(
         finalData,
         range.getNumRows(),
         range.getNumColumns()
       );
     else if (areRowsBigger)
-      finalData = GeneralUtils.sliceRows(finalData, 0, range.getNumRows());
+      finalData = LinAlgUtils.sliceRows(finalData, 0, range.getNumRows());
 
     const areColsSmaller = data[0].length < range.getNumColumns();
     const areColsBigger = data[0].length > range.getNumColumns();
     if (areColsSmaller)
-      finalData = GeneralUtils.fillCols(finalData, range.getNumColumns());
+      finalData = LinAlgUtils.fillCols(finalData, range.getNumColumns());
     else if (areColsBigger)
-      finalData = GeneralUtils.sliceCols(finalData, 0, range.getNumColumns());
+      finalData = LinAlgUtils.sliceCols(finalData, 0, range.getNumColumns());
 
     return finalData;
   }

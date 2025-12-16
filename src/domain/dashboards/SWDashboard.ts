@@ -2,6 +2,7 @@ import OneRMEstimator from "../estimation/OneRMEstimator";
 import GeneralUtils from "../utils/GeneralUtils";
 import { DashboardTemplateMethod } from "./DashboardTemplateMethod";
 import { IOPort } from "../ports/IOPort";
+import LinAlgUtils from "../utils/LinAlgUtils";
 
 type SWEntry = {
   sets: number;
@@ -73,7 +74,7 @@ export class SWDashboard extends DashboardTemplateMethod {
     entryData: SWEntry[]
   ): SWMicrocycleMetrics[] {
     const sessionsPerMicrocycle = entryData.length / this.microcycleCount;
-    const entriesPerMicrocycle = GeneralUtils.split(
+    const entriesPerMicrocycle = LinAlgUtils.split(
       entryData,
       sessionsPerMicrocycle
     );
