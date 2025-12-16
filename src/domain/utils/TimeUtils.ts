@@ -1,4 +1,4 @@
-import NumberUtils from "./GeneralUtils";
+import NumberUtils from "./NumberUtils";
 
 export default class TimeUtils {
   public static getHours(input: number[]): number {

@@ -1,4 +1,4 @@
-import NumberUtils from "../utils/GeneralUtils";
+import NumberUtils from "../utils/NumberUtils";
 import { DashboardTemplateMethod } from "./DashboardTemplateMethod";
 import { IOPort } from "../ports/IOPort";
 import StatUtils from "../utils/StatUtils";

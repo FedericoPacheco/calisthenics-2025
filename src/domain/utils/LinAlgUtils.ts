@@ -1,11 +1,9 @@
 export default class LinAlgUtils {
   public static concatMatricesHorizontally<T>(A: T[][], B: T[][]): T[][] {
-    if (!Array.isArray(A) || !Array.isArray(A[0])) {
+    if (!LinAlgUtils.isMatrix(A))
       throw new Error("First argument is not a matrix");
-    }
-    if (!Array.isArray(B) || !Array.isArray(B[0])) {
+    if (!LinAlgUtils.isMatrix(B))
       throw new Error("Second argument is not a matrix");
-    }
     if (A.length !== B.length) {
       throw new Error("Matrices have different number of rows");
     }
@@ -13,7 +11,7 @@ export default class LinAlgUtils {
   }
 
   public static transpose<T>(A: T[][]): T[][] {
-    if (!Array.isArray(A) || !Array.isArray(A[0]))
+    if (!LinAlgUtils.isMatrix(A))
       throw new Error("Input is not a valid matrix");
     return A[0].map((_, j) => A.map((row) => row[j]));
   }
