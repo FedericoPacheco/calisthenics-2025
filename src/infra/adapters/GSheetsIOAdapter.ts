@@ -42,7 +42,7 @@ export default class GSheetsIOAdapter implements IOPort {
       throw new Error(`Error reading reference "${ref}`);
     }
 
-    if (LinAlgUtils.isNonEmptyMatrix(values)) {
+    if (!LinAlgUtils.isEmptyTensor(values)) {
       values = this.filterEmptyRows(values, minRows);
       values = this.filterEmptyCols(values, minCols);
     }

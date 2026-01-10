@@ -16,16 +16,25 @@ export default class LinAlgUtils {
     return A[0].map((_, j) => A.map((row) => row[j]));
   }
 
-  public static isMatrix(data: any) {
-    return Array.isArray(data) && Array.isArray(data[0]);
-  }
-
   public static isScalar(data: any) {
     return !Array.isArray(data);
   }
 
-  public static isNonEmptyMatrix(matrix: any) {
-    return LinAlgUtils.isMatrix(matrix) && matrix[0].length > 0;
+  public static isVector(data: any) {
+    return Array.isArray(data) && LinAlgUtils.isScalar(data[0]);
+  }
+
+  public static isMatrix(data: any) {
+    return Array.isArray(data) && LinAlgUtils.isVector(data[0]);
+  }
+
+  public static isEmptyTensor(
+    tensor: any[][][] | any[][] | any[] | any
+  ): boolean {
+    if (LinAlgUtils.isScalar(tensor)) {
+      if (typeof tensor === "undefined" || tensor === null) return true;
+      else return false;
+    } else return LinAlgUtils.isEmptyTensor(tensor[0]);
   }
 
   public static isMatrixWithValues(matrix: any[][]) {
@@ -79,5 +88,34 @@ export default class LinAlgUtils {
       remainder = remainder.slice(size);
     }
     return chunks;
+  }
+
+  public static getObjectFromMatrix(
+    tensor: any | any[] | any[][] | any[][][],
+    keys: string[]
+  ): object[] {
+    let enssembledMatrix: any[][];
+    if (LinAlgUtils.isScalar(tensor)) enssembledMatrix = [[tensor]];
+    else if (LinAlgUtils.isVector(tensor)) enssembledMatrix = [tensor];
+    else if (LinAlgUtils.isMatrix(tensor)) enssembledMatrix = tensor;
+    else {
+      enssembledMatrix = tensor.reduce(
+        (concatenation: any[][], matrix: any[][]) =>
+          LinAlgUtils.concatMatricesHorizontally(concatenation, matrix)
+      );
+    }
+
+    if (LinAlgUtils.isEmptyTensor(enssembledMatrix)) return [];
+
+    const objects: object[] = [];
+    for (let i = 0; i < enssembledMatrix.length; i++) {
+      const obj: Record<string, any> = {};
+      for (let j = 0; j < enssembledMatrix[0].length && j < keys.length; j++) {
+        obj[keys[j]] = enssembledMatrix[i][j];
+      }
+      objects.push(obj);
+    }
+
+    return objects;
   }
 }

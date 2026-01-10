@@ -1,7 +1,9 @@
 import GSheetsIOAdapter from "./adapters/GSheetsIOAdapter";
 import { STDashboard } from "../domain/dashboards/STDashboard";
 import { onPeriodizationEdit } from "../domain/estimation/IntensityVolumeDecisionMatrix";
-import OneRMEstimator, { StrengthTest } from "../domain/estimation/OneRMEstimator";
+import OneRMEstimator, {
+  StrengthTest,
+} from "../domain/estimation/OneRMEstimator";
 import { SWDashboard } from "../domain/dashboards/SWDashboard";
 import GSheetsKeyValueStoreAdapter from "./adapters/GSheetsKeyValueStoreAdapter";
 import GSheetsEditEventAdapter from "./adapters/GSheetsEditEventAdapter";
