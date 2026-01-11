@@ -73,6 +73,17 @@ const OAHSParams = [
       startMicrocycle: 13,
     },
   },
+  {
+    inputs: [
+      new GSheetsIOAdapter("62-SW", "H14:J14"),
+      new GSheetsIOAdapter("62-SW", "H18:J18"),
+    ],
+    output: new GSheetsIOAdapter("04-SWDashboard", "C27:W30"),
+    microcycleCount: 4,
+    args: {
+      startMicrocycle: 17,
+    },
+  },
 ];
 export function runOAHSDashboard() {
   OAHSParams.forEach((mesoParams) => {
@@ -202,10 +213,10 @@ function E1RM(weight: number, bw: number, reps: number, rpe: number): number {
 
 /** @customfunction */
 function E1RM_MULTIPOINT(
-  weights: number[][],
-  bws: number[][],
-  reps: number[][],
-  rpes: number[][]
+  weights: number | number[][],
+  bws: number | number[][],
+  reps: number | number[][],
+  rpes: number | number[][]
 ): number {
   const observations: StrengthTest[] = LinAlgUtils.getObjectFromMatrices(
     [weights, bws, reps, rpes],
