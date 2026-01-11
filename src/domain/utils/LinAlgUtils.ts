@@ -95,7 +95,7 @@ export default class LinAlgUtils {
     return chunks;
   }
 
-  public static getObjectFromMatrix(
+  public static getObjectFromMatrices(
     tensor: any | any[] | any[][] | any[][][],
     keys: string[]
   ): object[] {

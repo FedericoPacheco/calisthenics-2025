@@ -8,6 +8,7 @@ import { SWDashboard } from "../domain/dashboards/SWDashboard";
 import GSheetsKeyValueStoreAdapter from "./adapters/GSheetsKeyValueStoreAdapter";
 import GSheetsEditEventAdapter from "./adapters/GSheetsEditEventAdapter";
 import TimeUtils from "../domain/utils/TimeUtils";
+import LinAlgUtils from "../domain/utils/LinAlgUtils";
 
 // Don't forget to add this line. Otherwise, the function won't be exported to the global scope.
 // https://www.npmjs.com/package/gas-webpack-plugin
@@ -206,15 +207,10 @@ function E1RM_MULTIPOINT(
   reps: number[][],
   rpes: number[][]
 ): number {
-  const observations: StrengthTest[] = [];
-  for (let i = 0; i < weights.length; i++) {
-    observations.push({
-      weight: weights[i][0],
-      bw: bws[i][0],
-      reps: reps[i][0],
-      rpe: rpes[i][0],
-    });
-  }
+  const observations: StrengthTest[] = LinAlgUtils.getObjectFromMatrices(
+    [weights, bws, reps, rpes],
+    ["weight", "bw", "reps", "rpe"]
+  ) as StrengthTest[];
   return OneRMEstimator.estimateMultipoint(observations);
 }
 (global as any).E1RM_MULTIPOINT = E1RM_MULTIPOINT;

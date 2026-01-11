@@ -40,7 +40,7 @@ suite("LinAlgUtils", function () {
       ];
       const keys = ["weight", "bw", "reps", "rpe"];
 
-      const result = LinAlgUtils.getObjectFromMatrix(matrix, keys);
+      const result = LinAlgUtils.getObjectFromMatrices(matrix, keys);
 
       assert.deepEqual(result, [
         { weight: 30, bw: 71.3, reps: 6, rpe: 8.5 },
@@ -55,7 +55,7 @@ suite("LinAlgUtils", function () {
       ];
       const keys = ["a"];
 
-      const result = LinAlgUtils.getObjectFromMatrix(matrix, keys);
+      const result = LinAlgUtils.getObjectFromMatrices(matrix, keys);
 
       assert.deepEqual(result, [{ a: 1 }, { a: 3 }]);
     });
@@ -65,7 +65,7 @@ suite("LinAlgUtils", function () {
       const keys: string[] = ["a", "b"];
 
       debugger;
-      const result = LinAlgUtils.getObjectFromMatrix(matrix, keys);
+      const result = LinAlgUtils.getObjectFromMatrices(matrix, keys);
 
       assert.deepEqual(result, []);
     });
@@ -77,7 +77,7 @@ suite("LinAlgUtils", function () {
       ];
       const keys: string[] = [];
 
-      const result = LinAlgUtils.getObjectFromMatrix(matrix, keys);
+      const result = LinAlgUtils.getObjectFromMatrices(matrix, keys);
 
       assert.deepEqual(result, [{}, {}]);
     });
@@ -87,17 +87,17 @@ suite("LinAlgUtils", function () {
       const keys = ["a", "b"];
 
       // @ts-ignore
-      const result = LinAlgUtils.getObjectFromMatrix(scalar, keys);
+      const result = LinAlgUtils.getObjectFromMatrices(scalar, keys);
 
       assert.deepEqual(result, [{ a: 1 }]);
     });
 
-    test("should handle arrays", function () {
+    test("should handle vectors", function () {
       const array = [1, 2, 3];
       const keys = ["a", "b", "c"];
       
       // @ts-ignore
-      const result = LinAlgUtils.getObjectFromMatrix(array, keys);
+      const result = LinAlgUtils.getObjectFromMatrices(array, keys);
 
       assert.deepEqual(result, [{ a: 1, b: 2, c: 3 }]);
     });
@@ -113,7 +113,7 @@ suite("LinAlgUtils", function () {
       ];
       const keys = ["a", "b", "c", "d"];
 
-      const result = LinAlgUtils.getObjectFromMatrix([matrixA, matrixB], keys);
+      const result = LinAlgUtils.getObjectFromMatrices([matrixA, matrixB], keys);
 
       assert.deepEqual(result, [
         { a: 1, b: 2, c: 5, d: 6 },
