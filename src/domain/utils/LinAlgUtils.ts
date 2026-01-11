@@ -16,16 +16,21 @@ export default class LinAlgUtils {
     return A[0].map((_, j) => A.map((row) => row[j]));
   }
 
+  public static dim(tensor: any[][][] | any[][] | any[] | any): number {
+    if (!Array.isArray(tensor)) return 0;
+    else return 1 + LinAlgUtils.dim(tensor[0]);
+  }
+
   public static isScalar(data: any) {
-    return !Array.isArray(data);
+    return LinAlgUtils.dim(data) === 0;
   }
 
-  public static isVector(data: any) {
-    return Array.isArray(data) && LinAlgUtils.isScalar(data[0]);
+  public static isVector(data: any[]) {
+    return LinAlgUtils.dim(data) === 1;
   }
 
-  public static isMatrix(data: any) {
-    return Array.isArray(data) && LinAlgUtils.isVector(data[0]);
+  public static isMatrix(data: any[][]) {
+    return LinAlgUtils.dim(data) === 2;
   }
 
   public static isEmptyTensor(
