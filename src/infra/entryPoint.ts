@@ -84,6 +84,17 @@ const OAHSParams = [
       startMicrocycle: 17,
     },
   },
+  {
+    inputs: [
+      new GSheetsIOAdapter("72-SW", "H14:J14"),
+      new GSheetsIOAdapter("72-SW", "H18:J18"),
+    ],
+    output: new GSheetsIOAdapter("04-SWDashboard", "C31:W34"),
+    microcycleCount: 4,
+    args: {
+      startMicrocycle: 21,
+    },
+  },
 ];
 export function runOAHSDashboard() {
   OAHSParams.forEach((mesoParams) => {
@@ -91,7 +102,7 @@ export function runOAHSDashboard() {
       mesoParams.inputs,
       mesoParams.output,
       mesoParams.microcycleCount,
-      mesoParams.args
+      mesoParams.args,
     ).run();
   });
 }
@@ -133,7 +144,7 @@ export function runDipsDashboard() {
       mesoParams.inputs,
       mesoParams.output,
       mesoParams.microcycleCount,
-      mesoParams.args
+      mesoParams.args,
     ).run();
   });
 }
@@ -175,7 +186,7 @@ export function runPullUpsDashboard() {
       mesoParams.inputs,
       mesoParams.output,
       mesoParams.microcycleCount,
-      mesoParams.args
+      mesoParams.args,
     ).run();
   });
 }
@@ -196,13 +207,13 @@ const e1RMMatrixOutput = {
   differences: new GSheetsIOAdapter("03-STEstimation", "S7:AB46"),
 };
 (global as any).onPeriodizationEdit = (
-  e: GoogleAppsScript.Events.SheetsOnEdit
+  e: GoogleAppsScript.Events.SheetsOnEdit,
 ) =>
   onPeriodizationEdit(
     new GSheetsEditEventAdapter(e, "03-STEstimation", "O5:O7"),
     e1RMMatrixInput,
     store,
-    e1RMMatrixOutput
+    e1RMMatrixOutput,
   );
 
 /** @customfunction */
@@ -216,11 +227,11 @@ function E1RM_MULTIPOINT(
   weights: number | number[][],
   bws: number | number[][],
   reps: number | number[][],
-  rpes: number | number[][]
+  rpes: number | number[][],
 ): number {
   const observations: StrengthTest[] = LinAlgUtils.getObjectFromMatrices(
     [weights, bws, reps, rpes],
-    ["weight", "bw", "reps", "rpe"]
+    ["weight", "bw", "reps", "rpe"],
   ) as StrengthTest[];
   return OneRMEstimator.estimateMultipoint(observations);
 }
