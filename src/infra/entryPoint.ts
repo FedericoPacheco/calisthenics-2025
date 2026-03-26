@@ -4,7 +4,7 @@ import { onPeriodizationEdit } from "../domain/estimation/IntensityVolumeDecisio
 import OneRMEstimator, {
   StrengthTest,
 } from "../domain/estimation/OneRMEstimator";
-import { SWDashboard } from "../domain/dashboards/SWDashboard";
+import { SWDashboardV1 } from "../domain/dashboards/SWDashboardV1";
 import GSheetsKeyValueStoreAdapter from "./adapters/GSheetsKeyValueStoreAdapter";
 import GSheetsEditEventAdapter from "./adapters/GSheetsEditEventAdapter";
 import TimeUtils from "../domain/utils/TimeUtils";
@@ -98,7 +98,7 @@ const OAHSParams = [
 ];
 export function runOAHSDashboard() {
   OAHSParams.forEach((mesoParams) => {
-    new SWDashboard(
+    new SWDashboardV1(
       mesoParams.inputs,
       mesoParams.output,
       mesoParams.microcycleCount,

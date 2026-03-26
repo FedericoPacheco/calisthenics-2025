@@ -31,14 +31,14 @@ type SWMetrics = {
   microcycle: SWMicrocycleMetrics[];
   mesocycle: SWMesocycleMetrics;
 };
-export class SWDashboard extends DashboardTemplateMethod {
+export class SWDashboardV1 extends DashboardTemplateMethod {
   private static FINGERS = [10, 5, 4, 3, 2, 1, 0];
 
   constructor(
     inputs: IOPort[],
     output: IOPort,
     microcycleCount: number,
-    args: SWArgs
+    args: SWArgs,
   ) {
     super(inputs, output, microcycleCount, args);
   }
@@ -71,26 +71,26 @@ export class SWDashboard extends DashboardTemplateMethod {
   }
 
   private computeMicrocycleMetrics(
-    entryData: SWEntry[]
+    entryData: SWEntry[],
   ): SWMicrocycleMetrics[] {
     const sessionsPerMicrocycle = entryData.length / this.microcycleCount;
     const entriesPerMicrocycle = LinAlgUtils.split(
       entryData,
-      sessionsPerMicrocycle
+      sessionsPerMicrocycle,
     );
     const microcycleMetrics = entriesPerMicrocycle.map((microcycleEntries) => {
       const medianLeftIntensity = NumberUtils.round(
         StatUtils.median(
-          microcycleEntries.map((entry) => entry.leftIntensity).flat()
-        )
+          microcycleEntries.map((entry) => entry.leftIntensity).flat(),
+        ),
       );
       const medianRightIntensity = NumberUtils.round(
         StatUtils.median(
-          microcycleEntries.map((entry) => entry.rightIntensity).flat()
-        )
+          microcycleEntries.map((entry) => entry.rightIntensity).flat(),
+        ),
       );
       const medianTEC = NumberUtils.round(
-        StatUtils.median(microcycleEntries.map((entry) => entry.TEC).flat())
+        StatUtils.median(microcycleEntries.map((entry) => entry.TEC).flat()),
       );
 
       return {
@@ -110,18 +110,18 @@ export class SWDashboard extends DashboardTemplateMethod {
     const leftFrequencies = StatUtils.relativeFrequencies(leftFingers);
     const rightFrequencies = StatUtils.relativeFrequencies(rightFingers);
 
-    const leftFingerUsage = SWDashboard.FINGERS.map((f) =>
-      NumberUtils.round(leftFrequencies[f] || 0)
+    const leftFingerUsage = SWDashboardV1.FINGERS.map((f) =>
+      NumberUtils.round(leftFrequencies[f] || 0),
     );
-    const rightFingerUsage = SWDashboard.FINGERS.map((f) =>
-      NumberUtils.round(rightFrequencies[f] || 0)
+    const rightFingerUsage = SWDashboardV1.FINGERS.map((f) =>
+      NumberUtils.round(rightFrequencies[f] || 0),
     );
 
     const medianLeftIntensity = StatUtils.median(leftFingers);
     const medianRightIntensity = StatUtils.median(rightFingers);
 
     const medianTEC = StatUtils.median(
-      entryData.map((entry) => entry.TEC).flat()
+      entryData.map((entry) => entry.TEC).flat(),
     );
 
     return {
