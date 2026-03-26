@@ -4,7 +4,7 @@ import { stub, restore } from "sinon";
 import { SWDashboardV1 } from "../../../src/domain/dashboards/SWDashboardV1";
 import { IOPort } from "../../../src/domain/ports/IOPort";
 
-suite("SWDashboard", function () {
+suite("SWDashboardV1", function () {
   let controlPanel: SWDashboardV1;
   let inputStub1: IOPort, inputStub2: IOPort;
   let outputStub: IOPort;
