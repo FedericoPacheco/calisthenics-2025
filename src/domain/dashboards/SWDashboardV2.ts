@@ -10,7 +10,8 @@ type SWEntry = {
   suggestedIntensity: string;
   leftIntensity: number[];
   rightIntensity: number[];
-  TEC: number[];
+  leftTEC: number[];
+  rightTEC: number[];
 };
 type SWArgs = {
   startMicrocycle: number;
@@ -18,12 +19,14 @@ type SWArgs = {
 type SWMicrocycleMetrics = {
   medianLeftIntensity: number;
   medianRightIntensity: number;
-  medianTEC: number;
+  medianLeftTEC: number;
+  medianRightTEC: number;
 };
 type SWMesocycleMetrics = {
   medianLeftIntensity: number;
   medianRightIntensity: number;
-  medianTEC: number;
+  medianLeftTEC: number;
+  medianRightTEC: number;
   leftFingerUsage: number[];
   rightFingerUsage: number[];
 };
@@ -59,7 +62,8 @@ export class SWDashboardV2 extends DashboardTemplateMethod {
       suggestedIntensity,
       leftIntensity: workingSets.slice(0, sets),
       rightIntensity: workingSets.slice(sets, sets * 2),
-      TEC: workingSets.slice(sets * 2, sets * 3),
+      leftTEC: workingSets.slice(sets * 2, sets * 3),
+      rightTEC: workingSets.slice(sets * 3, sets * 4),
     };
   }
 
@@ -89,14 +93,22 @@ export class SWDashboardV2 extends DashboardTemplateMethod {
           microcycleEntries.map((entry) => entry.rightIntensity).flat(),
         ),
       );
-      const medianTEC = NumberUtils.round(
-        StatUtils.median(microcycleEntries.map((entry) => entry.TEC).flat()),
+      const medianLeftTEC = NumberUtils.round(
+        StatUtils.median(
+          microcycleEntries.map((entry) => entry.leftTEC).flat(),
+        ),
+      );
+      const medianRightTEC = NumberUtils.round(
+        StatUtils.median(
+          microcycleEntries.map((entry) => entry.rightTEC).flat(),
+        ),
       );
 
       return {
         medianLeftIntensity,
         medianRightIntensity,
-        medianTEC,
+        medianLeftTEC,
+        medianRightTEC,
       };
     });
 
@@ -120,8 +132,11 @@ export class SWDashboardV2 extends DashboardTemplateMethod {
     const medianLeftIntensity = StatUtils.median(leftFingers);
     const medianRightIntensity = StatUtils.median(rightFingers);
 
-    const medianTEC = StatUtils.median(
-      entryData.map((entry) => entry.TEC).flat(),
+    const medianLeftTEC = StatUtils.median(
+      entryData.map((entry) => entry.leftTEC).flat(),
+    );
+    const medianRightTEC = StatUtils.median(
+      entryData.map((entry) => entry.rightTEC).flat(),
     );
 
     return {
@@ -129,7 +144,8 @@ export class SWDashboardV2 extends DashboardTemplateMethod {
       rightFingerUsage,
       medianLeftIntensity,
       medianRightIntensity,
-      medianTEC,
+      medianLeftTEC,
+      medianRightTEC,
     };
   }
 
@@ -140,10 +156,10 @@ export class SWDashboardV2 extends DashboardTemplateMethod {
       metrics.mesocycle.medianLeftIntensity,
       microcycleMetrics.medianRightIntensity,
       metrics.mesocycle.medianRightIntensity,
-      microcycleMetrics.medianTEC,
-      metrics.mesocycle.medianTEC,
-      microcycleMetrics.medianTEC,
-      metrics.mesocycle.medianTEC,
+      microcycleMetrics.medianLeftTEC,
+      metrics.mesocycle.medianLeftTEC,
+      microcycleMetrics.medianRightTEC,
+      metrics.mesocycle.medianRightTEC,
       ...metrics.mesocycle.leftFingerUsage,
       ...metrics.mesocycle.rightFingerUsage,
     ]);

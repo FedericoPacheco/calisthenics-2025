@@ -36,20 +36,28 @@ suite("SWDashboardV2", function () {
       (inputStub1.read as any)
         .onCall(0)
         .returns([[3, '10"', "L: 1 finger (index), R: 1 finger (index)"]]);
-      (inputStub1.read as any).onCall(1).returns([[1, 1, 2, 2, 1, 3, 7, 8, 9]]);
+      (inputStub1.read as any)
+        .onCall(1)
+        .returns([[1, 1, 2, 2, 1, 3, 7, 8, 9, 6, 6, 7]]);
       (inputStub1.read as any)
         .onCall(2)
         .returns([[3, '15"', "L: 1 finger (index), R: 1 finger (index)"]]);
-      (inputStub1.read as any).onCall(3).returns([[3, 4, 5, 5, 4, 3, 7, 8, 9]]);
+      (inputStub1.read as any)
+        .onCall(3)
+        .returns([[3, 4, 5, 5, 4, 3, 7, 8, 9, 7, 8, 6]]);
 
       (inputStub2.read as any)
         .onCall(0)
         .returns([[3, '10"', "L: 1 finger (index), R: 1 finger (index)"]]);
-      (inputStub2.read as any).onCall(1).returns([[1, 1, 1, 1, 1, 2, 8, 8, 7]]);
+      (inputStub2.read as any)
+        .onCall(1)
+        .returns([[1, 1, 1, 1, 1, 2, 8, 8, 7, 6, 7, 7]]);
       (inputStub2.read as any)
         .onCall(2)
         .returns([[3, '15"', "L: 1 finger (index), R: 1 finger (index)"]]);
-      (inputStub2.read as any).onCall(3).returns([[0, 1, 2, 2, 1, 0, 8, 8, 7]]);
+      (inputStub2.read as any)
+        .onCall(3)
+        .returns([[0, 1, 2, 2, 1, 0, 8, 8, 7, 7, 8, 7]]);
 
       controlPanel.run();
 
@@ -57,21 +65,22 @@ suite("SWDashboardV2", function () {
           seq (microcycle), 
           left  median fingers per microcycle and mesocycle,
           right median fingers per microcycle and mesocycle,
-          median TEC per microcycle and mesocycle, repeated twice for compatibility with SWDashboardV2 (assumption to fill missing data: left TEC = right TEC), 
+          left median TEC per microcycle and mesocycle, 
+          right median TEC per microcycle and mesocycle, 
           mesocycle left and right usage per finger (10 i.e. whole palm, 5, 4, 3, 2, 1, 0)
       */
       assert.deepEqual((outputStub.write as any).getCall(0).args[0], [
         [
           1,
           ...[1, 1, 1.5, 2],
-          ...[8, 8, 8, 8],
+          ...[8, 8, 6.5, 7],
           ...[0.0, 0.08, 0.08, 0.08, 0.17, 0.5, 0.08],
           ...[0.0, 0.08, 0.08, 0.17, 0.25, 0.33, 0.08],
         ],
         [
           2,
           ...[2.5, 1, 2.5, 2],
-          ...[8, 8, 8, 8],
+          ...[8, 8, 7, 7],
           ...[0.0, 0.08, 0.08, 0.08, 0.17, 0.5, 0.08],
           ...[0.0, 0.08, 0.08, 0.17, 0.25, 0.33, 0.08],
         ],
@@ -84,7 +93,9 @@ suite("SWDashboardV2", function () {
       (inputStub1.read as any)
         .onCall(0)
         .returns([[3, '10"', "L: 1 finger (index), R: 1 finger (index)"]]);
-      (inputStub1.read as any).onCall(1).returns([[1, 1, 2, 2, 1, 3, 7, 8, 9]]);
+      (inputStub1.read as any)
+        .onCall(1)
+        .returns([[1, 1, 2, 2, 1, 3, 7, 8, 9, 6, 6, 7]]);
 
       const entry = controlPanel.parseEntry(inputStub1, 0);
 
@@ -94,7 +105,8 @@ suite("SWDashboardV2", function () {
         suggestedIntensity: "L: 1 finger (index), R: 1 finger (index)",
         leftIntensity: [1, 1, 2],
         rightIntensity: [2, 1, 3],
-        TEC: [7, 8, 9],
+        leftTEC: [7, 8, 9],
+        rightTEC: [6, 6, 7],
       });
     });
   });
@@ -108,7 +120,8 @@ suite("SWDashboardV2", function () {
           suggestedIntensity: "L: 1 finger (index), R: 1 finger (index)",
           leftIntensity: [1, 1, 2],
           rightIntensity: [2, 1, 3],
-          TEC: [7, 8, 9],
+          leftTEC: [7, 8, 9],
+          rightTEC: [6, 6, 7],
         },
         {
           sets: 3,
@@ -116,7 +129,8 @@ suite("SWDashboardV2", function () {
           suggestedIntensity: "L: 1 finger (index), R: 1 finger (index)",
           leftIntensity: [1, 1, 1],
           rightIntensity: [1, 1, 2],
-          TEC: [8, 8, 7],
+          leftTEC: [8, 8, 7],
+          rightTEC: [7, 8, 6],
         },
         {
           sets: 3,
@@ -124,7 +138,8 @@ suite("SWDashboardV2", function () {
           suggestedIntensity: "L: 1 finger (index), R: 1 finger (index)",
           leftIntensity: [3, 4, 5],
           rightIntensity: [5, 4, 3],
-          TEC: [7, 8, 9],
+          leftTEC: [7, 8, 9],
+          rightTEC: [6, 7, 7],
         },
         {
           sets: 3,
@@ -132,7 +147,8 @@ suite("SWDashboardV2", function () {
           suggestedIntensity: "L: 1 finger (index), R: 1 finger (index)",
           leftIntensity: [0, 1, 2],
           rightIntensity: [2, 1, 0],
-          TEC: [8, 8, 7],
+          leftTEC: [8, 8, 7],
+          rightTEC: [7, 8, 7],
         },
       ];
 
@@ -143,18 +159,21 @@ suite("SWDashboardV2", function () {
           {
             medianLeftIntensity: 1,
             medianRightIntensity: 1.5,
-            medianTEC: 8,
+            medianLeftTEC: 8,
+            medianRightTEC: 6.5,
           },
           {
             medianLeftIntensity: 2.5,
             medianRightIntensity: 2.5,
-            medianTEC: 8,
+            medianLeftTEC: 8,
+            medianRightTEC: 7,
           },
         ],
         mesocycle: {
           medianLeftIntensity: 1,
           medianRightIntensity: 2,
-          medianTEC: 8,
+          medianLeftTEC: 8,
+          medianRightTEC: 7,
           leftFingerUsage: [0.0, 0.08, 0.08, 0.08, 0.17, 0.5, 0.08],
           rightFingerUsage: [0.0, 0.08, 0.08, 0.17, 0.25, 0.33, 0.08],
         },
