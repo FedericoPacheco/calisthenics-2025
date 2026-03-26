@@ -218,21 +218,21 @@ export function runPullUpsDashboard() {
 // 1RM estimation
 
 const e1RMMatrixInput = {
-  e1RM: new GSheetsIOAdapter("03-STEstimation", "O5"),
-  bw: new GSheetsIOAdapter("03-STEstimation", "O6"),
-  requiredRPE: new GSheetsIOAdapter("03-STEstimation", "O7"),
-  intensities: new GSheetsIOAdapter("03-STEstimation", "R7:R46"),
-  reps: new GSheetsIOAdapter("03-STEstimation", "S6:AA6"),
+  e1RM: new GSheetsIOAdapter("03-STEstimation", "P5"),
+  bw: new GSheetsIOAdapter("03-STEstimation", "P6"),
+  requiredRPE: new GSheetsIOAdapter("03-STEstimation", "P7"),
+  intensities: new GSheetsIOAdapter("03-STEstimation", "S7:S46"),
+  reps: new GSheetsIOAdapter("03-STEstimation", "T6:AB6"),
 };
 const store = new GSheetsKeyValueStoreAdapter();
 const e1RMMatrixOutput = {
-  differences: new GSheetsIOAdapter("03-STEstimation", "S7:AB46"),
+  differences: new GSheetsIOAdapter("03-STEstimation", "T7:AC46"),
 };
 (global as any).onPeriodizationEdit = (
   e: GoogleAppsScript.Events.SheetsOnEdit,
 ) =>
   onPeriodizationEdit(
-    new GSheetsEditEventAdapter(e, "03-STEstimation", "O5:O7"),
+    new GSheetsEditEventAdapter(e, "03-STEstimation", "P5:P7"),
     e1RMMatrixInput,
     store,
     e1RMMatrixOutput,
