@@ -55,23 +55,23 @@ suite("SWDashboard", function () {
 
       /* Output format: 
           seq (microcycle), 
-          left median fingers per microcycle and mesocycle,
+          left  median fingers per microcycle and mesocycle,
           right median fingers per microcycle and mesocycle,
-          median TEC per microcycle and mesocycle, 
+          median TEC per microcycle and mesocycle, repeated twice for compatibility with SWDashboardV2 (assumption to fill missing data: left TEC = right TEC), 
           mesocycle left and right usage per finger (10 i.e. whole palm, 5, 4, 3, 2, 1, 0)
       */
       assert.deepEqual((outputStub.write as any).getCall(0).args[0], [
         [
           1,
           ...[1, 1, 1.5, 2],
-          ...[8, 8],
+          ...[8, 8, 8, 8],
           ...[0.0, 0.08, 0.08, 0.08, 0.17, 0.5, 0.08],
           ...[0.0, 0.08, 0.08, 0.17, 0.25, 0.33, 0.08],
         ],
         [
           2,
           ...[2.5, 1, 2.5, 2],
-          ...[8, 8],
+          ...[8, 8, 8, 8],
           ...[0.0, 0.08, 0.08, 0.08, 0.17, 0.5, 0.08],
           ...[0.0, 0.08, 0.08, 0.17, 0.25, 0.33, 0.08],
         ],

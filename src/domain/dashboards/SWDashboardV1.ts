@@ -142,6 +142,8 @@ export class SWDashboardV1 extends DashboardTemplateMethod {
       metrics.mesocycle.medianRightIntensity,
       microcycleMetrics.medianTEC,
       metrics.mesocycle.medianTEC,
+      microcycleMetrics.medianTEC,
+      metrics.mesocycle.medianTEC,
       ...metrics.mesocycle.leftFingerUsage,
       ...metrics.mesocycle.rightFingerUsage,
     ]);
