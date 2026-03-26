@@ -9,6 +9,7 @@ import GSheetsKeyValueStoreAdapter from "./adapters/GSheetsKeyValueStoreAdapter"
 import GSheetsEditEventAdapter from "./adapters/GSheetsEditEventAdapter";
 import TimeUtils from "../domain/utils/TimeUtils";
 import LinAlgUtils from "../domain/utils/LinAlgUtils";
+import { SWDashboardV2 } from "../domain/dashboards/SWDashboardV2";
 
 // Don't forget to add this line. Otherwise, the function won't be exported to the global scope.
 // https://www.npmjs.com/package/gas-webpack-plugin
@@ -34,13 +35,13 @@ import LinAlgUtils from "../domain/utils/LinAlgUtils";
 
 // -------------------------------------------------------------------------------------
 // One arm handstands
-const OAHSParams = [
+const OAHSParamsMesos1To7 = [
   {
     inputs: [
       new GSheetsIOAdapter("22-SW", "H9:J9"),
       new GSheetsIOAdapter("22-SW", "H18:J18"),
     ],
-    output: new GSheetsIOAdapter("04-SWDashboard", "C11:W14"),
+    output: new GSheetsIOAdapter("04-SWDashboard", "C11:Y14"),
     microcycleCount: 4,
     args: {
       startMicrocycle: 1,
@@ -48,7 +49,7 @@ const OAHSParams = [
   },
   {
     inputs: [new GSheetsIOAdapter("32-SW", "H9:J9")],
-    output: new GSheetsIOAdapter("04-SWDashboard", "C15:W18"),
+    output: new GSheetsIOAdapter("04-SWDashboard", "C15:Y18"),
     microcycleCount: 4,
     args: {
       startMicrocycle: 5,
@@ -56,7 +57,7 @@ const OAHSParams = [
   },
   {
     inputs: [new GSheetsIOAdapter("42-SW", "H14:J14")],
-    output: new GSheetsIOAdapter("04-SWDashboard", "C19:W22"),
+    output: new GSheetsIOAdapter("04-SWDashboard", "C19:Y22"),
     microcycleCount: 4,
     args: {
       startMicrocycle: 9,
@@ -67,7 +68,7 @@ const OAHSParams = [
       new GSheetsIOAdapter("52-SW", "H14:J14"),
       new GSheetsIOAdapter("52-SW", "H18:J18"),
     ],
-    output: new GSheetsIOAdapter("04-SWDashboard", "C23:W26"),
+    output: new GSheetsIOAdapter("04-SWDashboard", "C23:Y26"),
     microcycleCount: 4,
     args: {
       startMicrocycle: 13,
@@ -78,7 +79,7 @@ const OAHSParams = [
       new GSheetsIOAdapter("62-SW", "H14:J14"),
       new GSheetsIOAdapter("62-SW", "H18:J18"),
     ],
-    output: new GSheetsIOAdapter("04-SWDashboard", "C27:W30"),
+    output: new GSheetsIOAdapter("04-SWDashboard", "C27:Y30"),
     microcycleCount: 4,
     args: {
       startMicrocycle: 17,
@@ -89,16 +90,37 @@ const OAHSParams = [
       new GSheetsIOAdapter("72-SW", "H14:J14"),
       new GSheetsIOAdapter("72-SW", "H18:J18"),
     ],
-    output: new GSheetsIOAdapter("04-SWDashboard", "C31:W34"),
+    output: new GSheetsIOAdapter("04-SWDashboard", "C31:Y34"),
     microcycleCount: 4,
     args: {
       startMicrocycle: 21,
     },
   },
 ];
+const OAHSParamsMesos8AndBeyond = [
+  {
+    inputs: [
+      new GSheetsIOAdapter("82-SW", "H14:J14"),
+      new GSheetsIOAdapter("82-SW", "H18:J18"),
+    ],
+    output: new GSheetsIOAdapter("04-SWDashboard", "C35:Y38"),
+    microcycleCount: 4,
+    args: {
+      startMicrocycle: 25,
+    },
+  },
+];
 export function runOAHSDashboard() {
-  OAHSParams.forEach((mesoParams) => {
+  OAHSParamsMesos1To7.forEach((mesoParams) => {
     new SWDashboardV1(
+      mesoParams.inputs,
+      mesoParams.output,
+      mesoParams.microcycleCount,
+      mesoParams.args,
+    ).run();
+  });
+  OAHSParamsMesos8AndBeyond.forEach((mesoParams) => {
+    new SWDashboardV2(
       mesoParams.inputs,
       mesoParams.output,
       mesoParams.microcycleCount,
