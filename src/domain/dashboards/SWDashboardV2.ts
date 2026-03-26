@@ -49,12 +49,12 @@ export class SWDashboardV2 extends DashboardTemplateMethod {
   public parseEntry(input: IOPort, microcycle: number): SWEntry {
     const [sets, reps, suggestedIntensity] = input.read()[0];
 
-    input.resizeReference(1, sets * 3);
+    input.resizeReference(1, sets * 4);
     input.moveReference(0, 3);
     const workingSets = input.read()[0];
 
     input.resizeReference(1, 3);
-    input.moveReference(0, sets * 3);
+    input.moveReference(0, sets * 4);
 
     return {
       sets,
