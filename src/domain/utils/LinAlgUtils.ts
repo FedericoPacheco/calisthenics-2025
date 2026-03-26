@@ -34,7 +34,7 @@ export default class LinAlgUtils {
   }
 
   public static isEmptyTensor(
-    tensor: any[][][] | any[][] | any[] | any
+    tensor: any[][][] | any[][] | any[] | any,
   ): boolean {
     if (LinAlgUtils.isScalar(tensor)) {
       if (typeof tensor === "undefined" || tensor === null) return true;
@@ -42,11 +42,18 @@ export default class LinAlgUtils {
     } else return LinAlgUtils.isEmptyTensor(tensor[0]);
   }
 
-  public static isMatrixWithValues(matrix: any[][]) {
-    return (
-      LinAlgUtils.isMatrix(matrix) &&
-      matrix.flat().some((value) => value.length > 0 || value > 0)
-    );
+  public static isTensorWithValues(
+    tensor: any[][][] | any[][] | any[] | any,
+  ): boolean {
+    return tensor
+      .flat(Infinity)
+      .some(
+        (value: any) =>
+          typeof value !== "undefined" &&
+          value != null &&
+          ((typeof value === "string" && value.length > 0) ||
+            (typeof value === "number" && value > 0)),
+      );
   }
 
   public static sliceCols(matrix: any[][], start: number, end: number) {
@@ -61,7 +68,7 @@ export default class LinAlgUtils {
     matrix: any[][],
     numRows: number,
     numCols: number,
-    value: string | number = ""
+    value: string | number = "",
   ) {
     let finalData: any[][] = [...matrix];
     for (let i = matrix.length; i < numRows; i++) {
@@ -73,7 +80,7 @@ export default class LinAlgUtils {
   public static fillCols(
     matrix: any[][],
     numCols: number,
-    value: string | number = ""
+    value: string | number = "",
   ) {
     const finalData: any[][] = [];
     matrix.forEach((row) => {
@@ -97,7 +104,7 @@ export default class LinAlgUtils {
 
   public static getObjectFromMatrices(
     tensor: any | any[] | any[][] | any[][][],
-    keys: string[]
+    keys: string[],
   ): object[] {
     let enssembledMatrix: any[][];
     if (LinAlgUtils.isScalar(tensor)) enssembledMatrix = [[tensor]];
@@ -106,19 +113,23 @@ export default class LinAlgUtils {
     else {
       enssembledMatrix = tensor.reduce(
         (concatenation: any[][], matrix: any[][]) =>
-          LinAlgUtils.concatMatricesHorizontally(concatenation, matrix)
+          LinAlgUtils.concatMatricesHorizontally(concatenation, matrix),
       );
     }
 
-    if (LinAlgUtils.isEmptyTensor(enssembledMatrix)) return [];
-
     const objects: object[] = [];
     for (let i = 0; i < enssembledMatrix.length; i++) {
-      const obj: Record<string, any> = {};
-      for (let j = 0; j < enssembledMatrix[0].length && j < keys.length; j++) {
-        obj[keys[j]] = enssembledMatrix[i][j];
+      if (LinAlgUtils.isTensorWithValues(enssembledMatrix[i])) {
+        const obj: Record<string, any> = {};
+        for (
+          let j = 0;
+          j < enssembledMatrix[0].length && j < keys.length;
+          j++
+        ) {
+          obj[keys[j]] = enssembledMatrix[i][j];
+        }
+        objects.push(obj);
       }
-      objects.push(obj);
     }
 
     return objects;

@@ -26,7 +26,7 @@ export default class GSheetsIOAdapter implements IOPort {
   public read(
     reference?: string,
     minRows?: number,
-    minCols?: number
+    minCols?: number,
   ): any | any[][] {
     const ref = reference || this.defaultReference;
     if (!ref) throw new Error("Reference not provided");
@@ -51,12 +51,12 @@ export default class GSheetsIOAdapter implements IOPort {
   }
 
   private filterEmptyCols(matrix: any[][], minCols: number = 1) {
-    if (!LinAlgUtils.isMatrixWithValues(matrix)) return [[]];
+    if (!LinAlgUtils.isTensorWithValues(matrix)) return [[]];
 
     const numCols = matrix[0].length;
     for (let j = Math.max(minCols, 1); j < numCols; j++) {
       const nextCols = LinAlgUtils.sliceCols(matrix, j, numCols);
-      if (!LinAlgUtils.isMatrixWithValues(nextCols)) {
+      if (!LinAlgUtils.isTensorWithValues(nextCols)) {
         const pastCols = LinAlgUtils.sliceCols(matrix, 0, j);
         return pastCols;
       }
@@ -65,12 +65,12 @@ export default class GSheetsIOAdapter implements IOPort {
   }
 
   private filterEmptyRows(matrix: any[][], minRows: number = 1) {
-    if (!LinAlgUtils.isMatrixWithValues(matrix)) return [[]];
+    if (!LinAlgUtils.isTensorWithValues(matrix)) return [[]];
 
     const numRows = matrix.length;
     for (let i = Math.max(minRows, 1); i < numRows; i++) {
       const nextRows = LinAlgUtils.sliceRows(matrix, i, numRows);
-      if (!LinAlgUtils.isMatrixWithValues(nextRows)) {
+      if (!LinAlgUtils.isTensorWithValues(nextRows)) {
         const pastRows = LinAlgUtils.sliceRows(matrix, 0, i);
         return pastRows;
       }
@@ -125,14 +125,14 @@ export default class GSheetsIOAdapter implements IOPort {
 
   private writeSingleValueToRange(
     data: any,
-    range: GoogleAppsScript.Spreadsheet.Range
+    range: GoogleAppsScript.Spreadsheet.Range,
   ) {
     let finalData: any[][] = [[data]];
     finalData = LinAlgUtils.fillRows(
       finalData,
       range.getNumRows(),
       range.getNumColumns(),
-      data
+      data,
     );
     finalData = LinAlgUtils.fillCols(finalData, range.getNumColumns(), data);
     return finalData;
@@ -140,7 +140,7 @@ export default class GSheetsIOAdapter implements IOPort {
 
   private writeMatrixToRange(
     data: any[][],
-    range: GoogleAppsScript.Spreadsheet.Range
+    range: GoogleAppsScript.Spreadsheet.Range,
   ) {
     let finalData: any[][] = [...data];
 
@@ -150,7 +150,7 @@ export default class GSheetsIOAdapter implements IOPort {
       finalData = LinAlgUtils.fillRows(
         finalData,
         range.getNumRows(),
-        range.getNumColumns()
+        range.getNumColumns(),
       );
     else if (areRowsBigger)
       finalData = LinAlgUtils.sliceRows(finalData, 0, range.getNumRows());
@@ -189,7 +189,7 @@ export default class GSheetsIOAdapter implements IOPort {
     if (!this.defaultReference) throw new Error(`Reference not set`);
 
     const oldRange: GoogleAppsScript.Spreadsheet.Range = this.sheet.getRange(
-      this.defaultReference
+      this.defaultReference,
     );
     const row = oldRange.getRow() + rowDisplacement;
     const col = oldRange.getColumn() + colDisplacement;
@@ -197,7 +197,7 @@ export default class GSheetsIOAdapter implements IOPort {
       row,
       col,
       oldRange.getNumRows(),
-      oldRange.getNumColumns()
+      oldRange.getNumColumns(),
     );
     this.defaultReference =
       newRange?.getA1Notation() || this.defaultReference || "";
@@ -208,13 +208,13 @@ export default class GSheetsIOAdapter implements IOPort {
     if (!this.defaultReference) throw new Error(`Reference not set`);
 
     const oldRange: GoogleAppsScript.Spreadsheet.Range = this.sheet.getRange(
-      this.defaultReference
+      this.defaultReference,
     );
     const newRange = this.sheet.getRange(
       oldRange.getRow(),
       oldRange.getColumn(),
       newRowsCount,
-      newColsCount
+      newColsCount,
     );
     this.defaultReference =
       newRange?.getA1Notation() || this.defaultReference || "";

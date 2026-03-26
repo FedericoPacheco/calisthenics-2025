@@ -95,7 +95,7 @@ suite("LinAlgUtils", function () {
     test("should handle vectors", function () {
       const array = [1, 2, 3];
       const keys = ["a", "b", "c"];
-      
+
       // @ts-ignore
       const result = LinAlgUtils.getObjectFromMatrices(array, keys);
 
@@ -103,7 +103,7 @@ suite("LinAlgUtils", function () {
     });
 
     test("should convert multiple matrices to array of objects correctly", function () {
-      const matrixA = [ 
+      const matrixA = [
         [1, 2],
         [3, 4],
       ];
@@ -113,12 +113,48 @@ suite("LinAlgUtils", function () {
       ];
       const keys = ["a", "b", "c", "d"];
 
-      const result = LinAlgUtils.getObjectFromMatrices([matrixA, matrixB], keys);
+      const result = LinAlgUtils.getObjectFromMatrices(
+        [matrixA, matrixB],
+        keys,
+      );
 
       assert.deepEqual(result, [
         { a: 1, b: 2, c: 5, d: 6 },
         { a: 3, b: 4, c: 7, d: 8 },
       ]);
+    });
+
+    test("should disregard empty rows in a matrix", function () {
+      const matrix = [[1, 2], [], []];
+      const keys = ["a", "b"];
+
+      const result = LinAlgUtils.getObjectFromMatrices(matrix, keys);
+
+      assert.deepEqual(result, [{ a: 1, b: 2 }]);
+    });
+
+    test("should disregard zero-only rows in a matrix", function () {
+      const matrix = [
+        [1, 2],
+        [0, 0],
+      ];
+      const keys = ["a", "b"];
+
+      const result = LinAlgUtils.getObjectFromMatrices(matrix, keys);
+
+      assert.deepEqual(result, [{ a: 1, b: 2 }]);
+    });
+
+    test("should disregard empty-string-only rows in a matrix", function () {
+      const matrix = [
+        [1, 2],
+        ["", ""],
+      ];
+      const keys = ["a", "b"];
+
+      const result = LinAlgUtils.getObjectFromMatrices(matrix, keys);
+
+      assert.deepEqual(result, [{ a: 1, b: 2 }]);
     });
   });
 });
