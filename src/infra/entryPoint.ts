@@ -10,6 +10,7 @@ import GSheetsEditEventAdapter from "./adapters/GSheetsEditEventAdapter";
 import TimeUtils from "../domain/utils/TimeUtils";
 import LinAlgUtils from "../domain/utils/LinAlgUtils";
 import { SWDashboardV2 } from "../domain/dashboards/SWDashboardV2";
+import { STDashboardV2 } from "../domain/dashboards/STDashboardV2";
 
 // Don't forget to add this line. Otherwise, the function won't be exported to the global scope.
 // https://www.npmjs.com/package/gas-webpack-plugin
@@ -120,7 +121,7 @@ export function runOAHSDashboard() {
 
 // -------------------------------------------------------------------------------------
 // Dips
-const dipsParams = [
+const dipsParamsMesos1And2 = [
   {
     inputs: [
       new GSheetsIOAdapter("13-ST", "H14:J14"),
@@ -148,9 +149,58 @@ const dipsParams = [
     },
   },
 ];
+const dipsParamsMesos6AndBeyond = [
+  {
+    inputs: [
+      new GSheetsIOAdapter("63-ST", "H14:J14"),
+      new GSheetsIOAdapter("63-ST", "H22:J22"),
+    ],
+    output: new GSheetsIOAdapter("04-STDashboard", "F79:O98"),
+    microcycleCount: 4,
+    args: {
+      previous1RM: new GSheetsIOAdapter("04-STDashboard", "C12").read(),
+      minSetsJumpPerMicrocycle: [3, 3, 3, 3],
+      startSequenceNumber: 73,
+    },
+  },
+  {
+    inputs: [
+      new GSheetsIOAdapter("73-ST", "H14:J14"),
+      new GSheetsIOAdapter("73-ST", "H22:J22"),
+    ],
+    output: new GSheetsIOAdapter("04-STDashboard", "F99:O118"),
+    microcycleCount: 4,
+    args: {
+      previous1RM: new GSheetsIOAdapter("04-STDashboard", "C13").read(),
+      minSetsJumpPerMicrocycle: [3, 3, 3, 3],
+      startSequenceNumber: 93,
+    },
+  },
+  {
+    inputs: [
+      new GSheetsIOAdapter("83-ST", "H14:J14"),
+      new GSheetsIOAdapter("83-ST", "H22:J22"),
+    ],
+    output: new GSheetsIOAdapter("04-STDashboard", "F119:O154"),
+    microcycleCount: 4,
+    args: {
+      previous1RM: new GSheetsIOAdapter("04-STDashboard", "C14").read(),
+      minSetsJumpPerMicrocycle: [4, 8, 7, 6],
+      startSequenceNumber: 113,
+    },
+  },
+];
 export function runDipsDashboard() {
-  dipsParams.forEach((mesoParams) => {
+  dipsParamsMesos1And2.forEach((mesoParams) => {
     new STDashboardV1(
+      mesoParams.inputs,
+      mesoParams.output,
+      mesoParams.microcycleCount,
+      mesoParams.args,
+    ).run();
+  });
+  dipsParamsMesos6AndBeyond.forEach((mesoParams) => {
+    new STDashboardV2(
       mesoParams.inputs,
       mesoParams.output,
       mesoParams.microcycleCount,
@@ -162,7 +212,7 @@ export function runDipsDashboard() {
 
 // -------------------------------------------------------------------------------------
 // Pull-ups
-const pullUpParams = [
+const pullUpParamsMesos1And2 = [
   {
     inputs: [
       new GSheetsIOAdapter("13-ST", "H10:J10"),
@@ -190,9 +240,58 @@ const pullUpParams = [
     },
   },
 ];
+const pullUpParamsMesos6AndBeyond = [
+  {
+    inputs: [
+      new GSheetsIOAdapter("63-ST", "H10:J10"),
+      new GSheetsIOAdapter("63-ST", "H18:J18"),
+    ],
+    output: new GSheetsIOAdapter("04-STDashboard", "Q79:Z98"),
+    microcycleCount: 4,
+    args: {
+      previous1RM: new GSheetsIOAdapter("04-STDashboard", "D12").read(),
+      minSetsJumpPerMicrocycle: [3, 3, 3, 3],
+      startSequenceNumber: 73,
+    },
+  },
+  {
+    inputs: [
+      new GSheetsIOAdapter("73-ST", "H10:J10"),
+      new GSheetsIOAdapter("73-ST", "H18:J18"),
+    ],
+    output: new GSheetsIOAdapter("04-STDashboard", "Q99:Z118"),
+    microcycleCount: 4,
+    args: {
+      previous1RM: new GSheetsIOAdapter("04-STDashboard", "D13").read(),
+      minSetsJumpPerMicrocycle: [3, 3, 3, 3],
+      startSequenceNumber: 93,
+    },
+  },
+  {
+    inputs: [
+      new GSheetsIOAdapter("83-ST", "H10:J10"),
+      new GSheetsIOAdapter("83-ST", "H18:J18"),
+    ],
+    output: new GSheetsIOAdapter("04-STDashboard", "Q119:Z154"),
+    microcycleCount: 4,
+    args: {
+      previous1RM: new GSheetsIOAdapter("04-STDashboard", "D14").read(),
+      minSetsJumpPerMicrocycle: [4, 8, 7, 6],
+      startSequenceNumber: 113,
+    },
+  },
+];
 export function runPullUpsDashboard() {
-  pullUpParams.forEach((mesoParams) => {
+  pullUpParamsMesos1And2.forEach((mesoParams) => {
     new STDashboardV1(
+      mesoParams.inputs,
+      mesoParams.output,
+      mesoParams.microcycleCount,
+      mesoParams.args,
+    ).run();
+  });
+  pullUpParamsMesos6AndBeyond.forEach((mesoParams) => {
+    new STDashboardV2(
       mesoParams.inputs,
       mesoParams.output,
       mesoParams.microcycleCount,
