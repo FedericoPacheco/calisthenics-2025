@@ -30,12 +30,12 @@ type STMetrics = {
   global: STGlobalMetrics;
 };
 
-export class STDashboard extends DashboardTemplateMethod {
+export class STDashboardV1 extends DashboardTemplateMethod {
   public constructor(
     inputs: IOPort[],
     output: IOPort,
     microcycleCount: number,
-    args: STArgs
+    args: STArgs,
   ) {
     super(inputs, output, microcycleCount, args);
   }
@@ -48,7 +48,7 @@ export class STDashboard extends DashboardTemplateMethod {
     const setsAndAvgsLength =
       Math.max(
         sets,
-        (this.args as STArgs).minSetsJumpPerMicrocycle[microcycle]
+        (this.args as STArgs).minSetsJumpPerMicrocycle[microcycle],
       ) *
         3 +
       2;
@@ -85,8 +85,8 @@ export class STDashboard extends DashboardTemplateMethod {
         relativeIntensity: entry.intensity.map((intensity) =>
           NumberUtils.round(
             (intensity / (this.args as STArgs).previous1RM) * 100,
-            2
-          )
+            2,
+          ),
         ),
       };
     });
@@ -94,11 +94,11 @@ export class STDashboard extends DashboardTemplateMethod {
     const globalMetrics: STGlobalMetrics = {
       movingAvgRelativeIntensity: StatUtils.movingAverage(
         entryMetrics.map((em) => em.relativeIntensity).flat(),
-        3
+        3,
       ),
       movingAvgTEC: StatUtils.movingAverage(
         entryData.map((entry) => entry.TEC).flat(),
-        3
+        3,
       ),
     };
 

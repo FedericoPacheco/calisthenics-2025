@@ -1,5 +1,5 @@
 import GSheetsIOAdapter from "./adapters/GSheetsIOAdapter";
-import { STDashboard } from "../domain/dashboards/STDashboard";
+import { STDashboardV1 } from "../domain/dashboards/STDashboardV1";
 import { onPeriodizationEdit } from "../domain/estimation/IntensityVolumeDecisionMatrix";
 import OneRMEstimator, {
   StrengthTest,
@@ -162,7 +162,7 @@ const dipsParams = [
 ];
 export function runDipsDashboard() {
   dipsParams.forEach((mesoParams) => {
-    new STDashboard(
+    new STDashboardV1(
       mesoParams.inputs,
       mesoParams.output,
       mesoParams.microcycleCount,
@@ -204,7 +204,7 @@ const pullUpParams = [
 ];
 export function runPullUpsDashboard() {
   pullUpParams.forEach((mesoParams) => {
-    new STDashboard(
+    new STDashboardV1(
       mesoParams.inputs,
       mesoParams.output,
       mesoParams.microcycleCount,

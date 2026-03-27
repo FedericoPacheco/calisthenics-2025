@@ -1,11 +1,11 @@
 import { suite, test, setup, teardown } from "mocha";
 import { assert } from "chai";
 import { stub, restore } from "sinon";
-import { STDashboard } from "../../../src/domain/dashboards/STDashboard";
+import { STDashboardV1 } from "../../../src/domain/dashboards/STDashboardV1";
 import { IOPort } from "../../../src/domain/ports/IOPort";
 
-suite("STDashboard", function () {
-  let controlPanel: STDashboard;
+suite("STDashboardV1", function () {
+  let controlPanel: STDashboardV1;
   let inputStub1: IOPort, inputStub2: IOPort;
   let outputStub: IOPort;
 
@@ -21,7 +21,7 @@ suite("STDashboard", function () {
       resizeReference: stub(),
     } as any;
     outputStub = { write: stub() } as any;
-    controlPanel = new STDashboard([inputStub1, inputStub2], outputStub, 2, {
+    controlPanel = new STDashboardV1([inputStub1, inputStub2], outputStub, 2, {
       previous1RM: 80,
       minSetsJumpPerMicrocycle: [2, 2],
       startSequenceNumber: 1,
