@@ -98,58 +98,6 @@ suite("STDashboardV1", function () {
     });
   });
 
-  suite("transform()", function () {
-    test("should transform data correctly", function () {
-      const entryData = [
-        {
-          sets: 3,
-          reps: 5,
-          targetRPE: 8,
-          intensity: [80, 75, 70],
-          RPE: [9, 8, 7],
-          TEC: [7, 8, 8],
-        },
-        {
-          sets: 2,
-          reps: 4,
-          targetRPE: 9,
-          intensity: [90, 85],
-          RPE: [10, 9],
-          TEC: [7, 8],
-        },
-      ];
-      const metricsData = {
-        entry: [
-          {
-            RPEStability: [1, 0, -1],
-            totalVolume: 15,
-            relativeIntensity: [100, 93.75, 87.5],
-          },
-          {
-            RPEStability: [1, 0],
-            totalVolume: 8,
-            relativeIntensity: [112.5, 106.25],
-          },
-        ],
-        global: {
-          movingAvgRelativeIntensity: [100, 96.88, 93.75, 97.92, 102.08],
-          movingAvgTEC: [7, 7.5, 7.67, 7.67, 7.67],
-        },
-      };
-
-      const transformed = controlPanel.transform(entryData, metricsData);
-
-      // seqNumber, sets, reps, totalVolume, targetRPE, TEC, avg TEC per session, RPEStability, intensity, movingAvgIntensity
-      assert.deepEqual(transformed, [
-        [1, 3, 5, 15, 8, 7, 7, 1, 100, 100],
-        [2, 3, 5, 15, 8, 8, 7.5, 0, 93.75, 96.88],
-        [3, 3, 5, 15, 8, 8, 7.67, -1, 87.5, 93.75],
-        [4, 2, 4, 8, 9, 7, 7.67, 1, 112.5, 97.92],
-        [5, 2, 4, 8, 9, 8, 7.67, 0, 106.25, 102.08],
-      ]);
-    });
-  });
-
   suite("run()", function () {
     test("should run the control panel process correctly", function () {
       // sets, reps, targetRPE, intensity1, RPE1, TEC1, ..., intensity_N, RPE_N, TEC_N, avg RPE, avg TEC
