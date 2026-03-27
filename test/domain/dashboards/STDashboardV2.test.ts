@@ -1,11 +1,11 @@
 import { suite, test, setup, teardown } from "mocha";
 import { assert } from "chai";
 import { stub, restore } from "sinon";
-import { STDashboardV1 } from "../../../src/domain/dashboards/STDashboardV1";
+import { STDashboardV2 } from "../../../src/domain/dashboards/STDashboardV2";
 import { IOPort } from "../../../src/domain/ports/IOPort";
 
 suite("STDashboardV2", function () {
-  let controlPanel: STDashboardV1;
+  let controlPanel: STDashboardV2;
   let inputStub1: IOPort, inputStub2: IOPort;
   let outputStub: IOPort;
 
@@ -21,7 +21,7 @@ suite("STDashboardV2", function () {
       resizeReference: stub(),
     } as any;
     outputStub = { write: stub() } as any;
-    controlPanel = new STDashboardV1([inputStub1, inputStub2], outputStub, 2, {
+    controlPanel = new STDashboardV2([inputStub1, inputStub2], outputStub, 2, {
       previous1RM: 80,
       minSetsJumpPerMicrocycle: [2, 2],
       startSequenceNumber: 1,
@@ -34,11 +34,11 @@ suite("STDashboardV2", function () {
 
   suite("parseEntry()", function () {
     test("should parse entry correctly", function () {
-      // sets, reps, targetRPE, intensity1, RPE1, TEC1, ..., intensity_N, RPE_N, TEC_N, avg RPE, avg TEC
+      // sets, reps, targetRPE, intensity1, Pain1, RPE1, TEC1, ..., intensity_N, Pain_N, RPE_N, TEC_N, avg Pain, avg RPE, avg TEC
       (inputStub1.read as any).onCall(0).returns([[3, 5, 6]]);
       (inputStub1.read as any)
         .onCall(1)
-        .returns([[80, 6, 8, 75, 6, 8, 70, 6, 8, 6, 8]]);
+        .returns([[80, 0, 6, 8, 75, 0, 6, 8, 70, 0, 6, 8, 0, 6, 8]]);
 
       const entry = controlPanel.parseEntry(inputStub1, 0);
 
@@ -47,6 +47,7 @@ suite("STDashboardV2", function () {
         reps: 5,
         targetRPE: 6,
         intensity: [80, 75, 70],
+        pain: [0, 0, 0],
         RPE: [6, 6, 6],
         TEC: [8, 8, 8],
       });
@@ -61,6 +62,7 @@ suite("STDashboardV2", function () {
           reps: 5,
           targetRPE: 8,
           intensity: [80, 75, 70],
+          pain: [0, 0, 0],
           RPE: [9, 8, 7],
           TEC: [7, 8, 8],
         },
@@ -71,6 +73,7 @@ suite("STDashboardV2", function () {
           intensity: [90, 85],
           RPE: [10, 9],
           TEC: [7, 8],
+          pain: [1, 0],
         },
       ];
 
@@ -100,26 +103,26 @@ suite("STDashboardV2", function () {
 
   suite("run()", function () {
     test("should run the control panel process correctly", function () {
-      // sets, reps, targetRPE, intensity1, RPE1, TEC1, ..., intensity_N, RPE_N, TEC_N, avg RPE, avg TEC
+      // sets, reps, targetRPE, intensity1, Pain1, RPE1, TEC1, ..., intensity_N, Pain_N, RPE_N, TEC_N, avg Pain, avg RPE, avg TEC
       (inputStub1.read as any).onCall(0).returns([[2, 12, 4]]);
       (inputStub1.read as any)
         .onCall(1)
-        .returns([[11.25, 3, 9, 11.25, 5, 10, "", "", "", 4.0, 9.5]]);
+        .returns([[11.25, 0, 3, 9, 11.25, 1, 5, 10, "", "", "", "", 4.0, 9.5]]);
 
       (inputStub1.read as any).onCall(2).returns([[2, 10, 5]]);
       (inputStub1.read as any)
         .onCall(3)
-        .returns([[25, 3, 9, 30, 5, 9, "", "", "", 4.0, 9.0]]);
+        .returns([[25, 0, 3, 9, 30, 1, 5, 9, "", "", "", "", 4.0, 9.0]]);
 
       (inputStub2.read as any).onCall(0).returns([[3, 12, 6]]);
       (inputStub2.read as any)
         .onCall(1)
-        .returns([[38.75, 7, 7, 33.75, 8, 7, 23.75, 6, 8, 7.0, 7.3]]);
+        .returns([[38.75, 1, 7, 7, 33.75, 2, 8, 7, 23.75, 1, 6, 8, 7.0, 7.3]]);
 
       (inputStub2.read as any).onCall(2).returns([[3, 10, 7]]);
       (inputStub2.read as any)
         .onCall(3)
-        .returns([[52.5, 7.5, 7.5, 50, 7, 7.5, 45.0, 7, 7, 7.2, 7.3]]);
+        .returns([[52.5, 2, 7.5, 7.5, 50, 1, 7, 7.5, 45.0, 0, 7, 7, 7.2, 7.3]]);
 
       controlPanel.run();
 

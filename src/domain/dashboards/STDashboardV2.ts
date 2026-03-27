@@ -8,6 +8,7 @@ type STEntry = {
   reps: number;
   targetRPE: number;
   intensity: number[];
+  pain: number[];
   RPE: number[];
   TEC: number[];
 };
@@ -40,7 +41,7 @@ export class STDashboardV2 extends DashboardTemplateMethod {
     super(inputs, output, microcycleCount, args);
   }
 
-  // Format: Sets, Reps, RPE(target), Intensity1, RPE1, TEC1, ..., Intensity_N, RPE_N, TEC_N, avg RPE, avg TEC
+  // Format: Sets, Reps, RPE(target), Intensity1, Pain1, RPE1, TEC1, ..., Intensity_N, Pain_N, RPE_N, TEC_N, avg Pain, avg RPE, avg TEC
   public parseEntry(input: IOPort, microcycle: number): STEntry {
     const rawTarget = input.read()[0];
     const [sets, reps, targetRPE] = rawTarget;
@@ -50,18 +51,20 @@ export class STDashboardV2 extends DashboardTemplateMethod {
         sets,
         (this.args as STArgs).minSetsJumpPerMicrocycle[microcycle],
       ) *
-        3 +
-      2;
+        4 +
+      3;
     input.resizeReference(1, setsAndAvgsLength);
     input.moveReference(0, rawTarget.length);
     const rawIntensity = input.read()[0];
     const intensity = [],
+      pain = [],
       RPE = [],
       TEC = [];
-    for (let i = 0; i < 3 * sets; i += 3) {
+    for (let i = 0; i < 4 * sets; i += 4) {
       intensity.push(rawIntensity[i]);
-      RPE.push(rawIntensity[i + 1]);
-      TEC.push(rawIntensity[i + 2]);
+      pain.push(rawIntensity[i + 1]);
+      RPE.push(rawIntensity[i + 2]);
+      TEC.push(rawIntensity[i + 3]);
     }
 
     input.resizeReference(1, rawTarget.length);
@@ -72,6 +75,7 @@ export class STDashboardV2 extends DashboardTemplateMethod {
       reps,
       targetRPE,
       intensity,
+      pain,
       RPE,
       TEC,
     };
