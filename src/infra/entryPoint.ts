@@ -189,6 +189,19 @@ const dipsParamsMesos6AndBeyond = [
       startSequenceNumber: 113,
     },
   },
+  {
+    inputs: [
+      new GSheetsIOAdapter("93-ST", "H14:J14"),
+      new GSheetsIOAdapter("93-ST", "H22:J22"),
+    ],
+    output: new GSheetsIOAdapter("04-STDashboard", "F155:O223"),
+    microcycleCount: 4,
+    args: {
+      previous1RM: new GSheetsIOAdapter("04-STDashboard", "C15").read(),
+      minSetsJumpPerMicrocycle: [3, 5, 4, 3],
+      startSequenceNumber: 148,
+    },
+  },
 ];
 export function runDipsDashboard() {
   dipsParamsMesos1And2.forEach((mesoParams) => {
@@ -278,6 +291,19 @@ const pullUpParamsMesos6AndBeyond = [
       previous1RM: new GSheetsIOAdapter("04-STDashboard", "D14").read(),
       minSetsJumpPerMicrocycle: [4, 8, 7, 6],
       startSequenceNumber: 113,
+    },
+  },
+  {
+    inputs: [
+      new GSheetsIOAdapter("93-ST", "H10:J10"),
+      new GSheetsIOAdapter("93-ST", "H18:J18"),
+    ],
+    output: new GSheetsIOAdapter("04-STDashboard", "Q155:Z223"),
+    microcycleCount: 4,
+    args: {
+      previous1RM: new GSheetsIOAdapter("04-STDashboard", "D15").read(),
+      minSetsJumpPerMicrocycle: [3, 5, 4, 3],
+      startSequenceNumber: 148,
     },
   },
 ];
