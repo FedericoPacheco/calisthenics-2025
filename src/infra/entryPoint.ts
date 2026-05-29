@@ -98,6 +98,17 @@ const OAHSParamsMesos8AndBeyond = [
       startMicrocycle: 25,
     },
   },
+  {
+    inputs: [
+      new GSheetsIOAdapter("92-SW", "H14:J14"),
+      new GSheetsIOAdapter("92-SW", "H18:J18"),
+    ],
+    output: new GSheetsIOAdapter("04-SWDashboard", "C39:Y42"),
+    microcycleCount: 4,
+    args: {
+      startMicrocycle: 29,
+    },
+  },
 ];
 export function runOAHSDashboard() {
   OAHSParamsMesos1To7.forEach((mesoParams) => {
