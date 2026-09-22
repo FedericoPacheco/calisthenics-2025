@@ -99,14 +99,22 @@ const OAHSParamsMesos8AndBeyond = [
     },
   },
   {
-    inputs: [
-      new GSheetsIOAdapter("92-SW", "H14:J14"),
-      new GSheetsIOAdapter("92-SW", "H18:J18"),
-    ],
+    inputs: [new GSheetsIOAdapter("92-SW", "H13:J13")],
     output: new GSheetsIOAdapter("04-SWDashboard", "C39:Y42"),
     microcycleCount: 4,
     args: {
       startMicrocycle: 29,
+    },
+  },
+  {
+    inputs: [
+      new GSheetsIOAdapter("10/2-SW", "H13:J13"),
+      new GSheetsIOAdapter("10/2-SW", "H17:J17"),
+    ],
+    output: new GSheetsIOAdapter("04-SWDashboard", "C43:Y46"),
+    microcycleCount: 4,
+    args: {
+      startMicrocycle: 33,
     },
   },
 ];
@@ -202,14 +210,14 @@ const dipsParamsMesos6AndBeyond = [
   },
   {
     inputs: [
-      new GSheetsIOAdapter("93-ST", "H14:J14"),
-      new GSheetsIOAdapter("93-ST", "H22:J22"),
+      new GSheetsIOAdapter("93-ST", "H11:J11"),
+      new GSheetsIOAdapter("93-ST", "H19:J19"),
     ],
-    output: new GSheetsIOAdapter("04-STDashboard", "F155:O223"),
+    output: new GSheetsIOAdapter("04-STDashboard", "F155:O200"),
     microcycleCount: 4,
     args: {
       previous1RM: new GSheetsIOAdapter("04-STDashboard", "C15").read(),
-      minSetsJumpPerMicrocycle: [3, 5, 4, 3],
+      minSetsJumpPerMicrocycle: [3, 3, 3, 3],
       startSequenceNumber: 148,
     },
   },
@@ -309,11 +317,11 @@ const pullUpParamsMesos6AndBeyond = [
       new GSheetsIOAdapter("93-ST", "H10:J10"),
       new GSheetsIOAdapter("93-ST", "H18:J18"),
     ],
-    output: new GSheetsIOAdapter("04-STDashboard", "Q155:Z223"),
+    output: new GSheetsIOAdapter("04-STDashboard", "Q155:Z200"),
     microcycleCount: 4,
     args: {
       previous1RM: new GSheetsIOAdapter("04-STDashboard", "D15").read(),
-      minSetsJumpPerMicrocycle: [3, 5, 4, 3],
+      minSetsJumpPerMicrocycle: [3, 3, 3, 3],
       startSequenceNumber: 148,
     },
   },
